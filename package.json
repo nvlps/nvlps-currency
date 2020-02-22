@@ -2,9 +2,11 @@
   "name": "nvlps-currency",
   "version": "1.0.0",
   "description": "JavaScript Currency Handling Library for Nvlps",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel ./src -d ./lib",
+    "lint": "eslint ./src",
+    "test": "mocha test"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/nvlps/nvlps-currency/issues"
   },
-  "homepage": "https://github.com/nvlps/nvlps-currency#readme"
+  "homepage": "https://github.com/nvlps/nvlps-currency#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1"
+  }
 }
