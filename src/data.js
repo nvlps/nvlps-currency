@@ -11,7 +11,7 @@
  */
 
 import _ from 'lodash';
-import { negotiateLocale } from './locale';
+
 import * as nvLocaleDataJson from '../data/nvlps-locale-data.json';
 import * as nvCurrencyDataJson from '../data/nvlps-currency-data.json';
 
@@ -48,6 +48,17 @@ const nvCurrencyData = nvCurrencyDataJson.default;
  * @property {String} s Currency Symbol (not localized)
  */
 
+/**
+ * Return list of all Locales bundled by nvlps-currency
+ * @return {Array} Array of Locale identifiers
+ *
+ * This can be passed to {negotiateLocale} to find a locale that nvlps-currency
+ * supports given a list of possible user locales.
+ */
+export function allLocales() {
+  return _.keys(nvLocaleData);
+}
+
 function loadLocaleChain(locale, cur) {
   if (! _.has(nvLocaleData, locale)
    || ! _.has(nvLocaleData[locale], 'h')) {
@@ -60,16 +71,20 @@ function loadLocaleChain(locale, cur) {
 * Load Locale Data for the given locale identifier, including parents
 * @param {String} locale Locale Identifier
 * @return {nvLocaleData} Locale Data or null
+*
+* This function does not call {negotiateLocale} so if the desired locale is not
+* in the nvlps-currency data bundle, the function returns null. The caller
+* should call {negotiateLocale} first to ensure that there is a valid locale
+* available for use.
 */
 export function loadLocale(locale) {
   const localeData = {};
-  const allLocales = _.keys(nvLocaleData);
-  const negotiated = negotiateLocale([locale], allLocales);
-  if (negotiated === null) {
+
+  if (! _.has(nvLocaleData, locale)) {
     return null;
   }
 
-  const localeChain = loadLocaleChain(negotiated, [ negotiated ]);
+  const localeChain = loadLocaleChain(locale, [ locale ]);
   _.forEach(localeChain, (l) => {
     _.forIn(nvLocaleData[l], (value, key) => {
       if (key === 'h') {
