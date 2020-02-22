@@ -16,5 +16,8 @@
         "sourceType": "module"
     },
     "rules": {
+        "array-bracket-spacing": "off",
+        "brace-style": "off",
+        "space-unary-ops": "off"
     }
 }

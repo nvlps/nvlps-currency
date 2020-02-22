@@ -12,6 +12,9 @@
  * Copyright (c) 2020 Asymworks, LLC.  All Rights Reserved.
  */
 
+import _ from 'lodash';
+
+/* eslint-disable */
 const LOCALE_ALIASES = {
   'ar': 'ar_SY', 'bg': 'bg_BG', 'bs': 'bs_BA', 'ca': 'ca_ES', 'cs': 'cs_CZ',
   'da': 'da_DK', 'de': 'de_DE', 'el': 'el_GR', 'en': 'en_US', 'es': 'es_ES',
@@ -22,10 +25,11 @@ const LOCALE_ALIASES = {
   'pt': 'pt_PT', 'ro': 'ro_RO', 'ru': 'ru_RU', 'sk': 'sk_SK', 'sl': 'sl_SI',
   'sv': 'sv_SE', 'th': 'th_TH', 'tr': 'tr_TR', 'uk': 'uk_UA'
 };
+/* eslint-enable */
 
 // Shims for Python compatibility
-const _isalpha = (s) => { return s.match(/^[A-Za-z]+$/) !== null }
-const _isdigit = (s) => { return s.match(/^\d+$/) !== null }
+const isalpha = (s) => (s.match(/^[A-Za-z]+$/) !== null);
+const isdigit = (s) => (s.match(/^\d+$/) !== null);
 
 /**
  * Parse a Locale Identifier into its parts
@@ -33,28 +37,32 @@ const _isdigit = (s) => { return s.match(/^\d+$/) !== null }
  * @param {String} separator separator character (defaults to "_")
  * @return {Object} object with language, territory, script, and variant keys
  */
-export function parseLocale(identifier, sep='_') {
-  if (identifier.indexOf('.') !== -1) {
+export function parseLocale(identifier, sep = '_') {
+  let ident = identifier;
+  let script;
+  let territory;
+  let variant;
+
+  if (ident.indexOf('.') !== -1) {
     // this is probably the charset/encoding, which we don't care about
-    [ identifier ] = identifier.split('.', 1);
+    [ ident ] = ident.split('.', 1);
   }
 
-  if (identifier.indexOf('@') !== -1) {
+  if (ident.indexOf('@') !== -1) {
     // this is a locale modifier such as @euro, which we don't care about either
-    [ identifier ] = identifier.split('@', 1);
+    [ ident ] = ident.split('@', 1);
   }
 
-  const parts = identifier.split(sep);
+  const parts = ident.split(sep);
   const language = parts.shift().toLowerCase();
-  var script, territory, variant;
 
-  if (! _isalpha(language)) {
-    throw new Error('Invalid locale language "' + language + '"');
+  if (! isalpha(language)) {
+    throw new Error(`Invalid locale language "${language}"`);
   }
 
   if (parts.length > 0) {
     // Parse script to Title Case
-    if ((parts[0].length === 4) && _isalpha(parts[0])) {
+    if ((parts[0].length === 4) && isalpha(parts[0])) {
       script = parts.shift().toLowerCase();
       script = script[0].toUpperCase() + script.substr(1);
     }
@@ -62,26 +70,27 @@ export function parseLocale(identifier, sep='_') {
 
   if (parts.length > 0) {
     // Parse territory
-    if ((parts[0].length === 2) && _isalpha(parts[0])) {
+    if ((parts[0].length === 2) && isalpha(parts[0])) {
       territory = parts.shift().toUpperCase();
     }
-    else if ((parts[0].length == 3) && _isdigit(parts[0])) {
+    else if ((parts[0].length === 3) && isdigit(parts[0])) {
       territory = parts.shift();
     }
   }
 
   if (parts.length > 0) {
     // Parse variant
-    if (((parts[0].length === 4) && _isdigit(parts[0][0])) ||
-        ((parts[0].length >= 5) && _isalpha(parts[0][0]))) {
+    if (((parts[0].length === 4) && isdigit(parts[0][0]))
+      || ((parts[0].length >= 5) && isalpha(parts[0][0]))) {
       variant = parts.shift();
     }
   }
 
   if (parts.length > 0) {
-    throw new Error('Invalid locale identifier "' + identifier + '"');
+    throw new Error(`Invalid locale identifier "${identifier}"`);
   }
 
+  // eslint-disable-next-line no-alert, object-curly-newline
   return { language, territory, script, variant };
 }
 
@@ -91,7 +100,7 @@ export function parseLocale(identifier, sep='_') {
  * @param {String} separator separator character (defaults to "_")
  * @return {String} locale identifier
  */
-export function generateLocale(parts, sep='_') {
+export function generateLocale(parts, sep = '_') {
   const {
     language,
     territory,
@@ -103,7 +112,7 @@ export function generateLocale(parts, sep='_') {
     throw new Error('"language" key must be provided');
   }
 
-  return [ language, script, territory, variant ].filter(x => (x)).join(sep);
+  return [ language, script, territory, variant ].filter((x) => (x)).join(sep);
 }
 
 /**
@@ -153,17 +162,18 @@ export function generateLocale(parts, sep='_') {
  * dictionary to this function, or you can bypass the behavior althogher by
  * setting the `aliases` parameter to `null`.
  */
-export function negotiateLocale(preferred, available, sep='_', aliases=LOCALE_ALIASES) {
-  const avail = available.map(s => s.toLowerCase());
-  for (const locale of preferred) {
+export function negotiateLocale(preferred, available, sep = '_', aliases = LOCALE_ALIASES) {
+  const avail = available.map((s) => s.toLowerCase());
+  for (let i = 0; i < preferred.length; i += 1) {
+    const locale = preferred[i];
     const ll = locale.toLowerCase();
     if (avail.indexOf(ll) !== -1) {
       return locale;
     }
 
     if (aliases) {
-      if (aliases.hasOwnProperty(ll)) {
-        var alias = aliases[ll];
+      if (_.has(aliases, ll)) {
+        let alias = aliases[ll];
         if (alias) {
           alias = alias.replace('_', sep);
           if (avail.indexOf(alias.toLowerCase()) !== -1) {
@@ -173,7 +183,7 @@ export function negotiateLocale(preferred, available, sep='_', aliases=LOCALE_AL
       }
     }
 
-    const [ parts, ...rest ] = locale.split(sep);
+    const [ parts ] = locale.split(sep);
     if (parts && (avail.indexOf(parts.toLowerCase()) !== -1)) {
       return parts[0];
     }
@@ -207,23 +217,31 @@ export function negotiateLocale(preferred, available, sep='_', aliases=LOCALE_AL
  * - `LC_CTYPE`
  * - `LANG'`
  */
-export function defaultLocale(category=null, aliases=LOCALE_ALIASES) {
+export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
   const varnames = [category, 'LANGUAGE', 'LC_ALL', 'LC_CTYPE', 'LANG'];
-  var locale;
+  let locale;
 
   // Try and load the browser language, if set
   try {
     locale = navigator.language;
-    return generateLocale(parseLocale(locale));
   }
-  catch(err) {
+  catch (err) {
+    /* Failed to load from navigator.language */
+  }
+
+  if (locale) {
+    // Parse using BCF47 style with dash separators
+    return generateLocale(parseLocale(locale, '-'));
   }
 
   // Load from environment variables
-  for (const name of varnames.filter(x => (x))) {
+  const filtered = _.filter(varnames, (x) => (x));
+  for (let i = 0; i < filtered.length; i += 1) {
+    const name = filtered[i];
+
     locale = process.env[name];
     if (locale) {
-      if ((name == 'LANGUAGE') && (locale.indexOf(':') !== -1)) {
+      if ((name === 'LANGUAGE') && (locale.indexOf(':') !== -1)) {
         // the LANGUAGE variable may contain a colon-separated list of
         // language codes; we just pick the language on the list
         [ locale ] = locale.split(':', 1);
@@ -233,7 +251,7 @@ export function defaultLocale(category=null, aliases=LOCALE_ALIASES) {
       if ((tryDefaultLocale === 'C') || (tryDefaultLocale === 'POSIX')) {
         locale = 'en_US_POSIX';
       }
-      else if (aliases && aliases.hasOwnProperty(locale)) {
+      else if (aliases && _.has(aliases, locale)) {
         locale = aliases[locale];
       }
 
@@ -241,6 +259,7 @@ export function defaultLocale(category=null, aliases=LOCALE_ALIASES) {
         return generateLocale(parseLocale(locale));
       }
       catch (err) {
+        /* Continue to next locale */
       }
     }
   }

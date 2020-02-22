@@ -8,4 +8,4 @@ export {
   generateLocale,
   negotiateLocale,
   defaultLocale,
-} from './locale.js';
+} from './locale';
