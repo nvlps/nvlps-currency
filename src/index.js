@@ -7,5 +7,5 @@ export {
   parseLocale,
   generateLocale,
   negotiateLocale,
-  getDefaultLocale,
+  defaultLocale,
 } from './locale.js';
