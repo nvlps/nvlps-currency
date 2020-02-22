@@ -5,8 +5,10 @@
   "main": "src/index.js",
   "scripts": {
     "build": "babel src --out-dir ./dist --source-maps",
+    "build-data": "pipenv run python scripts/gen_currency_data.py ./data",
     "debug": "node --inspect-brk ./dist/index.js",
     "lint": "eslint ./src",
+    "pylint": "flake8",
     "test": "mocha --require @babel/register test/"
   },
   "repository": {
