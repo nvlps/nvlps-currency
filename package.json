@@ -1,0 +1,19 @@
+{
+  "name": "nvlps-currency",
+  "version": "1.0.0",
+  "description": "JavaScript Currency Handling Library for Nvlps",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nvlps/nvlps-currency.git"
+  },
+  "author": "Jonathan Krauss <jkrauss@asymworks.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nvlps/nvlps-currency/issues"
+  },
+  "homepage": "https://github.com/nvlps/nvlps-currency#readme"
+}
