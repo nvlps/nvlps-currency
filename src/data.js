@@ -12,8 +12,8 @@
 
 import _ from 'lodash';
 
-import * as nvLocaleDataJson from '../data/nvlps-locale-data.json';
-import * as nvCurrencyDataJson from '../data/nvlps-currency-data.json';
+import nvLocaleDataJson from '../data/nvlps-locale-data.json';
+import nvCurrencyDataJson from '../data/nvlps-currency-data.json';
 
 /** @todo Not sure why this is needed */
 const nvLocaleData = nvLocaleDataJson.default;
