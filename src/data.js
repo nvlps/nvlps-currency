@@ -12,12 +12,8 @@
 
 import _ from 'lodash';
 
-import nvLocaleDataJson from '../data/nvlps-locale-data.json';
-import nvCurrencyDataJson from '../data/nvlps-currency-data.json';
-
-/** @todo Not sure why this is needed */
-const nvLocaleData = nvLocaleDataJson.default;
-const nvCurrencyData = nvCurrencyDataJson.default;
+import nvLocaleData from '../data/nvlps-locale-data.json';
+import nvCurrencyData from '../data/nvlps-currency-data.json';
 
 /**
  * @typedef {nvLocaleData}
@@ -35,6 +31,7 @@ const nvCurrencyData = nvCurrencyDataJson.default;
  * @property {String} x Superscripting Exponent
  * @property {String} inf Inifinity Symbol
  * @property {String} nan Not-a-Number Symbol
+ * @property {Object} cs Localized Currency Symbols
  * @property {String} c Default Currency for the Locale (ISO 4127 Code)
  */
 
@@ -91,7 +88,17 @@ export function loadLocale(locale) {
         return;
       }
 
-      localeData[key] = value;
+      if (key === 'cs') {
+        if (_.has(localeData, key)) {
+          _.merge(localeData.cs, value);
+        }
+        else {
+          localeData.cs = value;
+        }
+      }
+      else {
+        localeData[key] = value;
+      }
     });
   });
 

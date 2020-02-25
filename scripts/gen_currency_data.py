@@ -33,9 +33,7 @@ ISO4217_URL = 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml'
 XE_ISO4217_URL = 'https://www.xe.com/iso4217.php'
 XE_SYMBOLS_URL = 'https://www.xe.com/symbols.php'
 
-'''
-Manually-Created Map of Global Currencies to Home Territory
-'''
+# Manually-Created Map of Global Currencies to Home Territory
 GLOBAL_CURRENCIES = {
     'ANG': 'NL',    # Netherlands
     'AUD': 'AU',    # Australia
@@ -67,6 +65,181 @@ GLOBAL_CURRENCIES = {
     'XCD': 'SL',    # Saint Lucia (Assigned)
     'ZAR': 'ZA',    # South Africa
 }
+
+# noqa: E501 Adapted from https://github.com/osrec/currencyFormatter.js/blob/master/currencyFormatter.js
+OSREC_SYMBOLS_DATA = '''
+AED: 'د.إ.‏',
+AFN: '؋',
+ALL: 'Lekë',
+AMD: '֏',
+ANG: 'Naf',
+AOA: 'Kz',
+ARS: '$',
+AUD: '$',
+AWG: 'Afl.',
+AZN: '₼',
+BAM: 'KM',
+BBD: '$',
+BDT: '৳',
+BGN: 'лв.',
+BHD: 'د.ب.‏',
+BIF: 'FBu',
+BMD: '$',
+BND: '$',
+BOB: 'Bs',
+BRL: 'R$',
+BSD: '$',
+BTN: 'Nu.',
+BWP: 'P',
+BYN: 'p.',
+BYR: 'р.',
+BZD: '$',
+CAD: '$',
+CDF: 'FC',
+CHF: 'CHF',
+CLP: '$',
+CNY: '￥',
+COP: '$',
+CRC: '₡',
+CUC: '$',
+CUP: '$',
+CVE: '​',
+CZK: 'Kč',
+DJF: 'Fdj',
+DKK: 'kr',
+DOP: '$',
+DZD: 'DA',
+EGP: '£',
+ERN: 'Nfk',
+ETB: 'Br',
+EUR: '€',
+FJD: '$',
+FKP: '£',
+GBP: '£',
+GEL: '₾',
+GHS: 'GH₵',
+GIP: '£',
+GMD: 'D',
+GNF: 'FG',
+GTQ: 'Q',
+GYD: '$',
+HKD: 'HK$',
+HNL: 'L',
+HRK: 'kn',
+HTG: 'G',
+HUF: 'Ft',
+IDR: 'Rp',
+ILS: '₪',
+INR: '₹',
+IQD: 'د.ع.‏',
+IRR: 'ریال',
+ISK: 'kr',
+JMD: '$',
+JOD: 'د.أ.‏',
+JPY: '¥',
+KES: 'Ksh',
+KGS: 'сом',
+KHR: '៛',
+KMF: 'CF',
+KPW: '₩',
+KRW: '₩',
+KWD: 'د.ك.‏',
+KYD: '$',
+KZT: '₸',
+LAK: '₭',
+LBP: 'L£',
+LKR: 'Rs',
+LRD: '$',
+LSL: 'lLS',
+LYD: 'د.ل.‏',
+MAD: 'د.م.‏',
+MDL: 'L',
+MGA: 'Ar',
+MKD: 'den',
+MMK: 'K',
+MNT: '₮',
+MOP: 'MOP$',
+MRO: 'UM',
+MRU: 'UM',
+MUR: 'Rs',
+MWK: 'MK',
+MXN: '$',
+MYR: 'RM',
+MZN: 'MTn',
+NAD: '$',
+NGN: '₦',
+NIO: 'C$',
+NOK: 'kr',
+NPR: 'Rs',
+NZD: '$',
+OMR: 'ر.ع.‏',
+PAB: 'B/.',
+PEN: 'S/.',
+PGK: 'K',
+PHP: '₱',
+PKR: 'ر',
+PLN: 'zł',
+PYG: '₲',
+QAR: 'ر.ق.‏',
+RSD: 'дин.',
+RUB: '₽',
+RWF: 'RF',
+SAR: 'ر.س.‏',
+SBD: '$',
+SCR: 'SR',
+SDG: 'ج.س.',
+SEK: 'kr',
+SGD: '$',
+SHP: '£',
+SLL: 'Le',
+SOS: 'S',
+SRD: '$',
+SSP: '£',
+STD: 'Db',
+STN: 'Db',
+SYP: '£',
+SZL: 'E',
+THB: '฿',
+TMT: 'ТМТ',
+TND: 'DT',
+TOP: 'T$',
+TRY: '₺',
+TTD: '$',
+TWD: '$',
+TZS: 'TSh',
+UAH: '₴',
+UGX: 'USh',
+USD: '$',
+UYU: '$',
+UZS: 'сўм',
+VEF: 'Bs',
+VND: '₫',
+VUV: 'VT',
+WST: 'WS$',
+XAF: 'FCFA',
+XCD: '$',
+XOF: 'CFA',
+XPF: 'CFPF',
+YER: 'ر.ي.‏',
+ZAR: 'R',
+ZMW: 'K'
+'''
+
+
+def load_osrec_data():
+    '''Parse OSREC Data'''
+    osrec_syms = dict()
+    for l in OSREC_SYMBOLS_DATA.splitlines():
+        if ':' not in l:
+            continue
+
+        ccy_, sym_ = l.split(':')
+        ccy = ccy_.strip()
+        sym = sym_.strip().strip('\'",')
+
+        osrec_syms[ccy] = sym
+
+    return osrec_syms
 
 
 def parse_xe_iso4217(url):
@@ -250,7 +423,7 @@ def currencyForLocale(locale, tc):
     return list(sorted(active_ccys, key=lambda x: x[1]))[-1][0]
 
 
-def import_babel_locales(locales):
+def import_babel_locales(locales, ccyList, ccySymbols):
     '''
     Import Locale Data from Babel.
 
@@ -270,8 +443,11 @@ def import_babel_locales(locales):
     - Permille Sign ('pm')
     - Exponential Sign ('e')
     - Superscripting Symbol ('x')
-    - Infinity ('i')
-    - NaN ('n')
+    - Infinity ('inf')
+    - NaN ('nan')
+
+    Currency Symbols
+    - Localized Currency Symbols ('cs')
     '''
     langs = set([parse_locale(l)[0] for l in locales])
     locale_data = dict()
@@ -295,6 +471,14 @@ def import_babel_locales(locales):
             'x'  : L.number_symbols['superscriptingExponent'],
             'inf': L.number_symbols['infinity'],
             'nan': L.number_symbols['nan'],
+
+            # Store localized Currency Symbols that differ from defaults
+            'cs' : dict([
+                (k, v) for k, v in L.currency_symbols.items()
+                if k in ccyList
+                and k in ccySymbols         # noqa: W503
+                and ccySymbols[k] != v      # noqa: W503
+            ]),
         }
 
     # Store Diffs for Locales
@@ -314,6 +498,15 @@ def import_babel_locales(locales):
             'x'  : L.number_symbols['superscriptingExponent'],
             'inf': L.number_symbols['infinity'],
             'nan': L.number_symbols['nan'],
+
+            # Store localized Currency Symbols that differ from defaults
+            'cs' : dict([
+                (k, v) for k, v in L.currency_symbols.items()
+                if k in ccyList
+                and (k not in ccySymbols)       # noqa: W503
+                or (k in ccySymbols             # noqa: W503
+                    and ccySymbols[k] != v)     # noqa: W503
+            ]),
         }
 
         locale_data[l] = {
@@ -321,8 +514,34 @@ def import_babel_locales(locales):
             'h': L.language
         }
         for k in data.keys():
-            if data[k] != locale_data[L.language][k]:
-                locale_data[l][k] = data[k]
+            if k == 'cs':
+                # Handle Currency Symbols
+                locale_data[l]['cs'] = dict()
+
+                parent_keys = set(locale_data[L.language]['cs'].keys())
+                data_keys = set(data['cs'].keys())
+
+                # Handle New Keys
+                for csk in data_keys - parent_keys:
+                    locale_data[l]['cs'][csk] = data['cs'][csk]
+
+                # Handle Overrides
+                for csk in data_keys & parent_keys:
+                    if locale_data[L.language]['cs'][csk] == data['cs'][csk]:
+                        continue
+                    locale_data[l]['cs'][csk] = data['cs'][csk]
+
+                # Handle Unsets
+                for csk in parent_keys - data_keys:
+                    locale_data[l]['cs'][csk] = None
+
+                # Remove Dict if Empty
+                if len(locale_data[l]['cs']) == 0:
+                    del locale_data[l]['cs']
+
+            else:
+                if data[k] != locale_data[L.language][k]:
+                    locale_data[l][k] = data[k]
 
     return locale_data
 
@@ -381,9 +600,43 @@ if __name__ == '__main__':
     ccySymbols = parse_xe_symbols(XE_SYMBOLS_URL)
     ccyData = parse_iso4217_data(ISO4217_URL)
 
+    # Add the 'XXX' Unknown Currency placeholder
+    ccyNames['XXX'] = 'Unknown Currency'
+    ccySymbols['XXX'] = '¤'
+    ccyData['XXX'] = {
+        'name': 'Unknown Currency',
+        'number': 999,
+        'minor': 3,
+        'countries': [  ]
+    }
+
     # nvlps by default supports all the currencies from xe.com
     nvlpsCcyList = ccyNames.keys()
     nvlpsLocales = get_nvlps_locales()
+
+    # Merge symbols with the OSREC Symbols
+    osrec_symbols = load_osrec_data()
+    for ccy in nvlpsCcyList:
+        if ccy not in ccySymbols and ccy in osrec_symbols:
+            ccySymbols[ccy] = osrec_symbols[ccy]
+
+    # Localization of some internationally used symbols are stored more
+    # compactly if the default symbol includes the country code, and the home
+    # locale overrides it with a short symbol since most countries include
+    # the country code.
+    ccySymbols['AUD'] = 'AU$'
+    ccySymbols['CAD'] = 'CA$'
+    ccySymbols['CNY'] = 'CN¥'
+    ccySymbols['HKD'] = 'HK$'
+    ccySymbols['JPY'] = 'JP¥'
+    ccySymbols['MXN'] = 'MX$'
+    ccySymbols['NZD'] = 'NZ$'
+    ccySymbols['TWD'] = 'NT$'
+    ccySymbols['USD'] = 'US$'
+    ccySymbols['XCD'] = 'EC$'
+
+    # The Indian Rupee symbol does not translate properly somehow
+    ccySymbols['INR'] = '₹'
 
     # Load Babel Currency Locales
     ccyLocales = import_babel_currency_locales(ccyNames.keys())
@@ -393,7 +646,7 @@ if __name__ == '__main__':
     nvlpsLocales |= set([v for v in ccyLocaleStrs.values()])
 
     # Load Babel Locale Data
-    localeData = import_babel_locales(nvlpsLocales)
+    localeData = import_babel_locales(nvlpsLocales, nvlpsCcyList, ccySymbols)
 
     # Assemble nvlps Currency Data
     nvlpsCcyData = {
