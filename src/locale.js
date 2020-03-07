@@ -1,20 +1,28 @@
 /**
- * Locale Handling Library for Nvlps
+ * nvlps-currency Currency Library for nvlps.io
  *
- * This is a minimal locale support library for Nvlps to support localization
- * of currency values. Most code is adapted from the Babel project, which can
- * be found at http://babel.pocoo.org/en/latest/
+ * Copyright (c) 2020 Asymworks, LLC.
  *
- * Portions of the code from Babel are
- * Copyright (c) 2013-2019 by the Babel Team
+ * The nvlps-currency library may be freely distributed under the terms of
+ * the BSD license.  For all licensing information, details and documentation:
+ * https://nvlps.io/nvlps-currency
  *
- * All other code is
- * Copyright (c) 2020 Asymworks, LLC.  All Rights Reserved.
+ * nvlps-currency contains currency and money handling routines for the
+ * nvlps.io budgeting software package.  It includes currency information for
+ * most world currencies as well as localized formatting, currency symbols, and
+ * currency names.
  */
 
-import _ from 'lodash';
+import { Currency } from './currency';
+
+// Available Locale Data
+import availLangs from '../data/ccy-l10n.langs.json';
+
+// Default English-Language Data
+import posixData from '../data/ccy-l10n.posix.json';
 
 /* eslint-disable */
+// Language Aliases
 const LOCALE_ALIASES = {
   'ar': 'ar_SY', 'bg': 'bg_BG', 'bs': 'bs_BA', 'ca': 'ca_ES', 'cs': 'cs_CZ',
   'da': 'da_DK', 'de': 'de_DE', 'el': 'el_GR', 'en': 'en_US', 'es': 'es_ES',
@@ -27,7 +35,7 @@ const LOCALE_ALIASES = {
 };
 /* eslint-enable */
 
-// Shims for Python compatibility
+// String Shims
 const isalpha = (s) => (s.match(/^[A-Za-z]+$/) !== null);
 const isdigit = (s) => (s.match(/^\d+$/) !== null);
 
@@ -39,9 +47,9 @@ const isdigit = (s) => (s.match(/^\d+$/) !== null);
  */
 export function parseLocale(identifier, sep = '_') {
   let ident = identifier;
-  let script;
-  let territory;
-  let variant;
+  let script = null;
+  let territory = null;
+  let variant = null;
 
   if (ident.indexOf('.') !== -1) {
     // this is probably the charset/encoding, which we don't care about
@@ -97,7 +105,7 @@ export function parseLocale(identifier, sep = '_') {
 /**
  * Generate a Locale Identifier from its parts
  * @param {Object} parts object with language, territory, script, and variant keys
- * @param {String} separator separator character (defaults to "_")
+ * @param {String} sep separator character (defaults to "_")
  * @return {String} locale identifier
  */
 export function generateLocale(parts, sep = '_') {
@@ -172,7 +180,7 @@ export function negotiateLocale(preferred, available, sep = '_', aliases = LOCAL
     }
 
     if (aliases) {
-      if (_.has(aliases, ll)) {
+      if (Object.prototype.hasOwnProperty.call(aliases, ll)) {
         let alias = aliases[ll];
         if (alias) {
           alias = alias.replace('_', sep);
@@ -190,6 +198,16 @@ export function negotiateLocale(preferred, available, sep = '_', aliases = LOCAL
   }
 
   return null;
+}
+
+// Get the Global Object
+function getGlobal() {
+  /* eslint-disable */
+  if (typeof self !== 'undefined') { return self; }
+  if (typeof window !== 'undefined') { return window; }
+  if (typeof global !== 'undefined') { return global; }
+  /* eslint-enable */
+  throw new Error('unable to locate global object');
 }
 
 /**
@@ -219,23 +237,25 @@ export function negotiateLocale(preferred, available, sep = '_', aliases = LOCAL
  */
 export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
   const varnames = [category, 'LANGUAGE', 'LC_ALL', 'LC_CTYPE', 'LANG'];
+  const globals = getGlobal();
+  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
   let locale;
 
   // Try and load the browser language, if set
-  try {
+  if (has(globals, 'navigator') && has(navigator, 'language')) {
     locale = navigator.language;
-  }
-  catch (err) {
-    /* Failed to load from navigator.language */
-  }
 
-  if (locale) {
     // Parse using BCF47 style with dash separators
     return generateLocale(parseLocale(locale, '-'));
   }
 
+  // Check if we are running in node.js
+  if (! has(globals, 'process') || ! has(process, 'env')) {
+    return null;
+  }
+
   // Load from environment variables
-  const filtered = _.filter(varnames, (x) => (x));
+  const filtered = varnames.filter((x) => (x));
   for (let i = 0; i < filtered.length; i += 1) {
     const name = filtered[i];
 
@@ -251,7 +271,7 @@ export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
       if ((tryDefaultLocale === 'C') || (tryDefaultLocale === 'POSIX')) {
         locale = 'en_US_POSIX';
       }
-      else if (aliases && _.has(aliases, locale)) {
+      else if (aliases && has(aliases, locale)) {
         locale = aliases[locale];
       }
 
@@ -266,3 +286,305 @@ export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
 
   return null;
 }
+
+/**
+ * Registry of Locale Objects
+ * @private
+ */
+const localeRegistry = Object.create(null);
+
+// Shim for Object.hasOwnProperty
+const hasOwnProperty = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+
+// Private Method Function for Locale.getField
+const getField = Symbol('getField');
+const getDictField = Symbol('getDictField');
+
+/**
+ *
+ */
+export class Locale {
+  /**
+   * Class Constructor
+   * @param {String} tag IETF BCP 47 language tag string
+   * @return {Locale} the Locale instance for the given locale tag
+   */
+  constructor(tag) {
+    const tagItems = parseLocale(tag.replace('-', '_'));
+    const normTag = generateLocale(tagItems);
+    let lang;
+
+    // Lookup Locale and Parent Language from Registry
+    if (! hasOwnProperty(localeRegistry, normTag)) {
+      throw new Error(`Locale '${normTag}' is not defined`);
+    }
+
+    const loc = localeRegistry[normTag];
+    if ((loc.lang !== null) && (loc.lang !== normTag)) {
+      if (! hasOwnProperty(localeRegistry, loc.lang)) {
+        throw new Error(`Locale '${loc.lang}' is not defined`);
+      }
+
+      lang = localeRegistry[loc.lang];
+    }
+
+    // Return Singleton if Present
+    if (loc.singleton !== null) {
+      return loc.singleton;
+    }
+
+    // Store this as Singleton
+    loc.singleton = this;
+    this.m_data = loc.data;
+    this.m_lang = lang ? lang.data : null;
+    Object.freeze(loc);
+    Object.freeze(this);
+  }
+
+  /** @private Get Field from Data or Parent Language */
+  [getField](key) {
+    if (hasOwnProperty(this.m_data, key)) {
+      return this.m_data[key];
+    }
+
+    if ((this.m_lang !== null) && hasOwnProperty(this.m_lang, key)) {
+      return this.m_lang[key];
+    }
+
+    return null;
+  }
+
+  /** @private Get a Dictionary Item from Data or Parent Language */
+  [getDictField](dataKey, dictKey) {
+    if (hasOwnProperty(this.m_data, dataKey)) {
+      if (hasOwnProperty(this.m_data[dataKey], dictKey)) {
+        return this.m_data[dataKey][dictKey];
+      }
+    }
+
+    if ((this.m_lang !== null) && (hasOwnProperty(this.m_lang, dataKey))) {
+      if (hasOwnProperty(this.m_lang[dataKey], dictKey)) {
+        return this.m_lang[dataKey][dictKey];
+      }
+    }
+
+    return null;
+  }
+
+  /** Decimal Point Symbol */
+  get decimal() {
+    return this[getField]('d');
+  }
+
+  /** Digit Grouping Symbol */
+  get group() {
+    return this[getField]('g');
+  }
+
+  /** Plus Sign */
+  get plusSign() {
+    return this[getField]('p');
+  }
+
+  /** Minus Sign */
+  get minusSign() {
+    return this[getField]('m');
+  }
+
+  /** Percent Sign */
+  get percentSign() {
+    return this[getField]('pc');
+  }
+
+  /** Permille Sign */
+  get permilleSign() {
+    return this[getField]('pm');
+  }
+
+  /** Exponential Sign */
+  get exponential() {
+    return this[getField]('e');
+  }
+
+  /** Superscripting Exponent */
+  get superscriptingExponent() {
+    return this[getField]('x');
+  }
+
+  /** Infinity String */
+  get inf() {
+    return this[getField]('inf');
+  }
+
+  /** Not-a-Number String */
+  get nan() {
+    return this[getField]('nan');
+  }
+
+  /**
+   * Look up the localized Currency Symbol
+   * @param {String|Currency} ccy Currency Object or ISO 4217 Currency Code
+   * @return {String} Currency Symbol
+   *
+   * If the locale provides a symbol for the currency, it is returned,
+   * otherwise the three-character currency code is returned in upper case.
+   *
+   * // Returns '$'
+   * (new Locale('en_US')).currencySymbol('USD');
+   *
+   * // Returns 'CA$'
+   * (new Locale('en_US')).currencySymbol(new Currency('CAD'));
+   *
+   * // Returns 'CHF'
+   * (new Locale('en_US')).currencySymbol('CHF');
+   */
+  currencySymbol(ccy) {
+    let ccyObj = ccy;
+
+    // Ensure we have a normalized Currency Code
+    if (! (ccy instanceof Currency)) {
+      ccyObj = new Currency(ccy);
+    }
+    const ccyCode = ccyObj.currencyCode;
+    const ccySym = this[getDictField]('cs', ccyCode);
+
+    if (ccySym !== null) {
+      return ccySym;
+    }
+
+    // Fallback is Upper-Case Currency Code
+    return ccyCode;
+  }
+
+  /**
+   * Look up the localized Currency Name
+   * @param {String|Currency} ccy Currency Object or ISO 4217 Currency Code
+   * @return {String} Currency Name
+   *
+   * If the locale provides a name for the currency, it is returned, otherwise
+   * the three-character currency code is returned in upper case.
+   *
+   * // Returns 'US Dollar'
+   * (new Locale('en_US')).currencySymbol('USD');
+   *
+   * // Returns 'Kanadischer Dollar'
+   * (new Locale('de_DE')).currencySymbol(new Currency('CAD'));
+   */
+  currencyName(ccy) {
+    let ccyObj = ccy;
+
+    // Ensure we have a normalized Currency Code
+    if (! (ccy instanceof Currency)) {
+      ccyObj = new Currency(ccy);
+    }
+    const ccyCode = ccyObj.currencyCode;
+    const ccyName = this[getDictField]('cn', ccyCode);
+
+    if (ccyName !== null) {
+      return ccyName;
+    }
+
+    // Fallback is Upper-Case Currency Code
+    return ccyCode;
+  }
+}
+
+/**
+ * Define a new Locale Object
+ * @param {String} tag IETF BCP 47 language tag string
+ * @param {Object} data Locale Data
+ */
+export function registerLocale(tag, data) {
+  const tagItems = parseLocale(tag.replace('-', '_'));
+  if (tagItems === null) {
+    throw new Error(`Invalid Locale Tag '${tag}'`);
+  }
+
+  // Normalize Tag String
+  const normTag = generateLocale(tagItems);
+
+  // Check if the Locale has been defined already
+  if (Object.prototype.hasOwnProperty.call(localeRegistry, normTag)) {
+    throw new Error(`Locale '${normTag}' has already been defined`);
+  }
+
+  const {
+    language: lang, territory, script, variant,
+  } = tagItems;
+
+  if ((territory !== null) || (script !== null) || (variant != null)) {
+    // Ensure the Parent Language exists if this is a Territory
+    if (! Object.prototype.hasOwnProperty.call(localeRegistry, lang)) {
+      throw new Error(`Locale '${lang}' was not registered before '${normTag}'`);
+    }
+  }
+  else {
+    // Ensure all properties are defined if this is a Language
+    const needed = [
+      'd', 'g', 'p', 'm', 'pc', 'pm', 'e', 'x',
+      'inf', 'nan',
+      'np', 'cp', 'ap',
+      'cs', 'cn',
+    ];
+
+    needed.forEach((i) => {
+      if (! Object.prototype.hasOwnProperty.call(data, i)) {
+        throw new Error(`Locale Data for ${normTag} is missing key ${i}`);
+      }
+    });
+  }
+
+  // Add new Locale Data to the Registry
+  localeRegistry[normTag] = {
+    data,
+    lang,
+    singleton: null,
+  };
+
+  // Freeze Symbol List, Name List, and Data Object
+  if (hasOwnProperty(data, 'cs')) {
+    Object.freeze(data.cs);
+  }
+  if (hasOwnProperty(data, 'cn')) {
+    Object.freeze(data.cn);
+  }
+
+  Object.freeze(localeRegistry[normTag].data);
+
+  // Return Locale Object
+  return new Locale(normTag);
+}
+
+/**
+ * Gets the set of available (loaded) locales.
+ * @static
+ * @return {Array} Array of locale tags
+ */
+export function availableLocales() {
+  return Object.keys(localeRegistry);
+}
+
+/**
+ * Gets the list of available languages.
+ * @static
+ * @return {Array} Array of available languages
+ *
+ * This result is the list of languages which can be loaded via a require()
+ * call, but not necessary all that are currently available.  For that, call
+ * availableLocales and filter for languages:
+ *
+ * Array.prototype.forEach(availableLocales(), (x) => {
+ *   const { language, ... } = parseLocale(x);
+ *   // Store language or otherwise process it
+ * });
+ */
+export function availableLanguages() {
+  return availLangs;
+}
+
+// Load Posix Localization Data
+(function loadPosix() {
+  Object.keys(posixData).forEach((k) => {
+    registerLocale(k, posixData[k]);
+  });
+}());
