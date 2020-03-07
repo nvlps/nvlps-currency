@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * nvlps-currency Currency Library for nvlps.io
  *
@@ -12,19 +14,12 @@
  * most world currencies as well as localized formatting, currency symbols, and
  * currency names.
  */
-
-// Currency Class
-export {
-  Currency,
-  registerCurrency,
-  availableCurrencies,
-} from './currency';
-
-// Locale Class
-export {
-  Locale,
-  parseLocale,
-  generateLocale,
-  negotiateLocale,
-  defaultLocale,
-} from './locale';
+import { registerLocale } from '../locale';
+(function() {
+{% if base is not none %}
+registerLocale('{{ lang }}', {{ base }});
+{% endif %}
+{% for loc, json in locs %}
+registerLocale('{{ loc }}', {{ json }});
+{% endfor %}
+}());
