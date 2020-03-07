@@ -1,7 +1,7 @@
 {
   "name": "nvlps-currency",
   "version": "1.0.0",
-  "description": "",
+  "description": "Javascript Currency Library for nvlps",
   "private": true,
   "scripts": {
     "build": "babel src --out-dir ./dist --source-maps",
@@ -11,9 +11,17 @@
     "pylint": "flake8",
     "test": "mocha --require @babel/register test/ --check-leaks --globals navigator,process"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nvlps/nvlps-currency.git"
+  },
+  "bugs": {
+    "url": "https://github.com/nvlps/nvlps-currency/issues"
+  },
+  "homepage": "https://github.com/nvlps/nvlps-currency#readme",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Jonathan Krauss <jkrauss@asymworks.com>",
+  "license": "MIT",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
