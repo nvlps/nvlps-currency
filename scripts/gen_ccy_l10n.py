@@ -3,6 +3,12 @@
 '''
 gen_ccy_l10n.py - Generate Currency Localization Data for nvlps
 
+  Copyright (c) 2020 Asymworks, LLC.
+
+  The nvlps-currency library may be freely distributed under the terms of
+  the BSD license.  For all licensing information, details and documentation:
+  https://nvlps.io/nvlps-currency
+
 This script pulls data from the Unicode CLDR database (via Python babel) which
 deal with number and currency formatting. Localized currency symbols and names
 are also generated and packaged for the nvlps frontend.
