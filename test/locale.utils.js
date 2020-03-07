@@ -57,6 +57,13 @@ describe('nvlps-currency: locale utilities', function() {
       expect(ret).to.have.property('script', null)
       expect(ret).to.have.property('variant', '1999')
     });
+    it('should support locale modifiers as in "en_US@euro"', function() {
+      var ret = parseLocale('en_US@euro')
+      expect(ret).to.have.property('language', 'en')
+      expect(ret).to.have.property('territory', 'US')
+      expect(ret).to.have.property('script', null)
+      expect(ret).to.have.property('variant', null)
+    });
     it('should reject invalid locale "no_not_a_LOCALE_String" with an exception', function() {
       var testFn = function() { parseLocale('no_not_a_LOCALE_String') };
       expect(testFn).to.throw();
@@ -90,6 +97,14 @@ describe('nvlps-currency: locale utilities', function() {
       });
       expect(ret).to.equal('zh_Hans_CN');
     });
+    it('should throw an error if no language key is provided', function() {
+      var testFn = function() {
+        generateLocale({
+          language: false,
+        });
+      }
+      expect(testFn).to.throw();
+    });
   });
 
   describe('negotiateLocale', function() {
@@ -107,6 +122,9 @@ describe('nvlps-currency: locale utilities', function() {
     });
     it('should select "nb_NO" by alias for negotiate_locale(["no", "sv"], ["nb_NO", "sv_SE"])', function() {
       expect(negotiateLocale(["no", "sv"], ["nb_NO", "sv_SE"])).to.equal("nb_NO");
+    });
+    it('should select "en" for negotiateLocale(["de_DE", "en_US"], ["en", "es"])', function() {
+      expect(negotiateLocale(["de_DE", "en_US"], ["en", "es"])).to.equal("en");
     });
   });
 
@@ -175,9 +193,17 @@ describe('nvlps-currency: locale utilities', function() {
       globals.navigator.language = 'de-DE.UTF-8';
       expect(defaultLocale()).to.equal('de_DE');
     });
+    it('should load "en_US" from LANGUAGE="en_US:de_DE" when navigator is unset', function() {
+      globals.process.env['LANGUAGE'] = 'en_US:de_DE';
+      expect(defaultLocale()).to.equal('en_US');
+    });
     it('should load "de_AT" from LANG="de_AT.ISO-8859" when navigator is unset', function() {
       globals.process.env['LANG'] = 'de_AT.ISO-8859';
       expect(defaultLocale()).to.equal('de_AT');
+    });
+    it('should load "de_DE" from LANG="de" when navigator is unset via aliases', function() {
+      globals.process.env['LANG'] = 'de';
+      expect(defaultLocale()).to.equal('de_DE');
     });
     it('should load "en_US_POSIX" from LANG="C" when navigator is unset', function() {
       globals.process.env['LANG'] = 'C';

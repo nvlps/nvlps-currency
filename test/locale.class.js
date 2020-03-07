@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import {
   Locale,
   parseLocale,
+  registerLocale,
   availableLocales,
   availableLanguages,
 } from '../src/locale';
@@ -94,7 +95,147 @@ describe('nvlps-currency: Locale', function() {
       expect(testObj3).to.have.property('decimal', '.');
     });
 
-    it('should load new languages at runtime', function() {
+    it('should load new languages via registerLocale()', function() {
+      var testFn = function() {
+        registerLocale('zz', {
+          ap: '¤#,##0.00;(¤#,##0.00)',
+          cn: {
+            XXX: 'Unknown Currency'
+          },
+          cp: '¤#,##0.00',
+          cs: {
+            XXX: '¤'
+          },
+          d: '.',
+          e: 'E',
+          g: ',',
+          inf: '∞',
+          m: '-',
+          nan: 'NaN',
+          np: '#,##0.###',
+          p: '+',
+          pc: '%',
+          pm: '‰',
+          x: '×'
+        });
+      }
+
+      expect(testFn).to.not.throw();
+    });
+
+    it('should throw an error when a language is redefined', function() {
+      var testFn = function() {
+        registerLocale('en', {
+          ap: '¤#,##0.00;(¤#,##0.00)',
+          cn: {
+            XXX: 'Unknown Currency'
+          },
+          cp: '¤#,##0.00',
+          cs: {
+            XXX: '¤'
+          },
+          d: '.',
+          e: 'E',
+          g: ',',
+          inf: '∞',
+          m: '-',
+          nan: 'NaN',
+          np: '#,##0.###',
+          p: '+',
+          pc: '%',
+          pm: '‰',
+          x: '×'
+        });
+      }
+
+      expect(testFn).to.throw();
+    });
+
+    it('should throw an error when a language is missing properties', function() {
+      var testFn = function() {
+        registerLocale('zy', {
+          //ap: '¤#,##0.00;(¤#,##0.00)',
+          cn: {
+            XXX: 'Unknown Currency'
+          },
+          cp: '¤#,##0.00',
+          cs: {
+            XXX: '¤'
+          },
+          d: '.',
+          e: 'E',
+          g: ',',
+          inf: '∞',
+          m: '-',
+          nan: 'NaN',
+          np: '#,##0.###',
+          p: '+',
+          pc: '%',
+          pm: '‰',
+          x: '×'
+        });
+      }
+
+      expect(testFn).to.throw();
+    });
+
+    it('should throw an error when a locale is registered before its language', function() {
+      var testFn = function() {
+        registerLocale('zx_ZX', {
+          ap: '¤#,##0.00;(¤#,##0.00)',
+          cn: {
+            XXX: 'Unknown Currency'
+          },
+          cp: '¤#,##0.00',
+          cs: {
+            XXX: '¤'
+          },
+          d: '.',
+          e: 'E',
+          g: ',',
+          inf: '∞',
+          m: '-',
+          nan: 'NaN',
+          np: '#,##0.###',
+          p: '+',
+          pc: '%',
+          pm: '‰',
+          x: '×'
+        });
+      }
+
+      expect(testFn).to.throw();
+    });
+
+    it('should throw an error when an invalid locale tag is used', function() {
+      var testFn = function() {
+        registerLocale('zx1', {
+          ap: '¤#,##0.00;(¤#,##0.00)',
+          cn: {
+            XXX: 'Unknown Currency'
+          },
+          cp: '¤#,##0.00',
+          cs: {
+            XXX: '¤'
+          },
+          d: '.',
+          e: 'E',
+          g: ',',
+          inf: '∞',
+          m: '-',
+          nan: 'NaN',
+          np: '#,##0.###',
+          p: '+',
+          pc: '%',
+          pm: '‰',
+          x: '×'
+        });
+      }
+
+      expect(testFn).to.throw();
+    });
+
+    it('should load new languages via require()', function() {
       var testFn1 = function() { return new Locale('de_CH'); }
       var testFn2 = function() { return new Locale('en_CA'); }
       expect(testFn1).to.throw();
@@ -126,15 +267,19 @@ describe('nvlps-currency: Locale', function() {
     it('should provide localized currency symbols', function() {
       var testObj1 = new Locale('en_US');
       var testObj2 = new Locale('en_CA');
+      var testObj3 = new Locale('zz');
       expect(testObj1.currencySymbol('USD')).to.equal('$');
       expect(testObj2.currencySymbol('USD')).to.equal('US$');
+      expect(testObj3.currencySymbol('USD')).to.equal('USD');
     });
 
     it('should provide localized currency names', function() {
       var testObj1 = new Locale('en_US');
       var testObj2 = new Locale('de_DE');
+      var testObj3 = new Locale('zz');
       expect(testObj1.currencyName('CAD')).to.equal('Canadian Dollar');
       expect(testObj2.currencyName('CAD')).to.equal('Kanadischer Dollar');
+      expect(testObj3.currencyName('CAD')).to.equal('CAD');
     });
   });
 });

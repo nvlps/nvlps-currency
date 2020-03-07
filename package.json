@@ -9,7 +9,8 @@
     "build-l10n": "pipenv run python scripts/gen_ccy_l10n.py ./data ./src/locales && prettier --write ./data/*.json ./src/locales/*.js",
     "lint": "eslint ./src && prettier --check ./src/**/*.js",
     "pylint": "flake8",
-    "test": "mocha --require @babel/register test/ --check-leaks --globals navigator,process"
+    "test": "mocha --require @babel/register test/ --check-leaks --globals navigator,process",
+    "coverage": "nyc npm test && nyc report"
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,15 @@
     "url": "https://github.com/nvlps/nvlps-currency/issues"
   },
   "homepage": "https://github.com/nvlps/nvlps-currency#readme",
-  "keywords": [],
+  "keywords": [
+    "currency",
+    "money",
+    "parse",
+    "format",
+    "validate",
+    "i18n",
+    "l10n"
+  ],
   "author": "Jonathan Krauss <jkrauss@asymworks.com>",
   "license": "MIT",
   "devDependencies": {
@@ -31,11 +40,14 @@
     "@typescript-eslint/eslint-plugin": "^2.22.0",
     "@typescript-eslint/parser": "^2.22.0",
     "babel-plugin-inline-json-import": "^0.3.2",
+    "benchmark": "^2.1.4",
     "chai": "^4.2.0",
+    "coveralls": "^3.0.9",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1",
     "mocha": "^7.1.0",
+    "nyc": "^15.0.0",
     "prettier": "~1.19.1",
     "typescript": "^3.8.3",
     "webpack": "^4.42.0",

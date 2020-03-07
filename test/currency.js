@@ -67,6 +67,13 @@ describe('nvlps-currency: Currency', function() {
       expect(testObj).to.have.property('country', null);
     });
 
+    it('should throw an exception when an unknown Currency is accessed', function() {
+      var testFn1 = function() { return new Currency('XYZ'); }
+      var testFn2 = function() { return new Currency(987); }
+      expect(testFn1).to.throw();
+      expect(testFn2).to.throw();
+    });
+
     it('should contain the United States Dollar', function() {
       var testObj = new Currency('USD');
       expect(testObj).to.have.property('currencyCode', 'USD');

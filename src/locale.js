@@ -116,7 +116,7 @@ export function generateLocale(parts, sep = '_') {
     variant,
   } = parts;
 
-  if (! language) {
+  if (typeof language !== 'string') {
     throw new Error('"language" key must be provided');
   }
 
@@ -191,8 +191,8 @@ export function negotiateLocale(preferred, available, sep = '_', aliases = LOCAL
       }
     }
 
-    const [ parts ] = locale.split(sep);
-    if (parts && (avail.indexOf(parts.toLowerCase()) !== -1)) {
+    const parts = locale.split(sep);
+    if (parts && (avail.indexOf(parts[0].toLowerCase()) !== -1)) {
       return parts[0];
     }
   }
@@ -207,6 +207,7 @@ function getGlobal() {
   if (typeof window !== 'undefined') { return window; }
   if (typeof global !== 'undefined') { return global; }
   /* eslint-enable */
+  /* istanbul ignore next this is exceptional and too difficult to mock */
   throw new Error('unable to locate global object');
 }
 
@@ -251,6 +252,7 @@ export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
 
   // Check if we are running in node.js
   if (! has(globals, 'process') || ! has(process, 'env')) {
+    /* istanbul ignore next this is exceptional and difficult to mock */
     return null;
   }
 
@@ -322,7 +324,10 @@ export class Locale {
     const loc = localeRegistry[normTag];
     if ((loc.lang !== null) && (loc.lang !== normTag)) {
       if (! hasOwnProperty(localeRegistry, loc.lang)) {
-        throw new Error(`Locale '${loc.lang}' is not defined`);
+        /* istanbul ignore next
+           this should never occur unless someone messes with localeRegistry
+        */
+        throw new Error(`Internal Error: Language '${loc.lang}' is not defined`);
       }
 
       lang = localeRegistry[loc.lang];
@@ -351,6 +356,7 @@ export class Locale {
       return this.m_lang[key];
     }
 
+    /* istanbul ignore next cannot mock with private method */
     return null;
   }
 
@@ -495,12 +501,8 @@ export class Locale {
  * @param {Object} data Locale Data
  */
 export function registerLocale(tag, data) {
-  const tagItems = parseLocale(tag.replace('-', '_'));
-  if (tagItems === null) {
-    throw new Error(`Invalid Locale Tag '${tag}'`);
-  }
-
   // Normalize Tag String
+  const tagItems = parseLocale(tag.replace('-', '_'));
   const normTag = generateLocale(tagItems);
 
   // Check if the Locale has been defined already
