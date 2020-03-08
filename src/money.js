@@ -205,39 +205,6 @@ export default class Money {
 
   /**
    * Allocate Money Evenly into Groups
-   * @param {Number} numGroups number of groups
-   * @return {Array} array of allocated values
-   */
-  distributeEvenly(numGroups) {
-    if (! ((typeof numGroups === 'number') && Number.isInteger(numGroups) && numGroups > 0)) {
-      throw new Error('Money objects must be distributed among a positive integer number of groups');
-    }
-
-    const amtCents = this.amount.times(new Decimal(10).pow(this.currency.precision)).toint();
-
-    const lowAmt = amtCents.div(numGroups).toint().toNumber();
-    const highAmt = lowAmt + 1;
-    const results = [];
-    const remainder = amtCents.modulo(numGroups).toint().toNumber();
-
-    for (let i = 0; i < remainder; i += 1) {
-      results[i] = new Money(
-        new Decimal(highAmt).times(new Decimal(10).pow(-this.currency.precision)),
-        this.currency,
-      );
-    }
-    for (let i = remainder; i < numGroups; i += 1) {
-      results[i] = new Money(
-        new Decimal(lowAmt).times(new Decimal(10).pow(-this.currency.precision)),
-        this.currency,
-      );
-    }
-
-    return results;
-  }
-
-  /**
-   * Allocate Money Evenly into Groups
    * @param {Array} ratios ratios to allocate
    * @return {Array} array of allocated values
    */
@@ -259,7 +226,8 @@ export default class Money {
 
     // Allocate Money
     for (let i = 0; i < ratios.length; i += 1) {
-      const cents = new Decimal(amtCents).times(ratios[i]).div(total).toint();
+      // ROUND_FLOOR is important here to ensure remainder stays positive
+      const cents = new Decimal(amtCents).times(ratios[i]).div(total).todp(0, Decimal.ROUND_FLOOR);
       results[i] = new Money(
         cents.times(new Decimal(10).pow(-this.currency.precision)),
         this.currency,
@@ -286,7 +254,7 @@ export default class Money {
    */
   distribute(n) {
     if (typeof n === 'number') {
-      return this.distributeEvenly(n);
+      return this.distributeRatios(Array(n).fill(1));
     }
     if (typeof n === 'object') {
       return this.distributeRatios(n);

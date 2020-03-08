@@ -133,7 +133,7 @@ describe('nvlps-currency: Money', function() {
       expect(m2.multiply(1.01, Decimal.ROUND_UP).amount).to.deep.equal(new Decimal('1.13'));
     });
 
-    it('should support even distribution', function() {
+    it('should support even distribution of positive values', function() {
       var m1 = new Money('1.12', 'USD');
       var d = m1.distribute(5);
       expect(d).is.an('array');
@@ -146,16 +146,29 @@ describe('nvlps-currency: Money', function() {
       ]);
     });
 
-    it('should support uneven distribution', function() {
+    it('should support even distribution of negative values', function() {
+      var m1 = new Money('-1.12', 'USD');
+      var d = m1.distribute(5);
+      expect(d).is.an('array');
+      expect(d).to.deep.equal([
+        new Money('-0.22', 'USD'),
+        new Money('-0.22', 'USD'),
+        new Money('-0.22', 'USD'),
+        new Money('-0.23', 'USD'),
+        new Money('-0.23', 'USD'),
+      ]);
+    });
+
+    it('should support uneven distribution of positive numbers', function() {
       var m1 = new Money('1.12', 'USD');
       var d1 = m1.distribute([1, 2, 3, 5]);
       var d2 = m1.distribute([1, 3, 5]);
       expect(d1).is.an('array');
       expect(d1).to.deep.equal([
-        new Money('0.10', 'USD'),
-        new Money('0.20', 'USD'),
-        new Money('0.31', 'USD'),
-        new Money('0.51', 'USD'),
+        new Money('0.11', 'USD'),
+        new Money('0.21', 'USD'),
+        new Money('0.30', 'USD'),
+        new Money('0.50', 'USD'),
       ]);
       expect(d2).is.an('array');
       expect(d2).to.deep.equal([
@@ -163,6 +176,35 @@ describe('nvlps-currency: Money', function() {
         new Money('0.37', 'USD'),
         new Money('0.62', 'USD'),
       ]);
+    });
+
+    it('should support uneven distribution of negative numbers', function() {
+      var m1 = new Money('-1.12', 'USD');
+      var d1 = m1.distribute([1, 2, 3, 5]);
+      var d2 = m1.distribute([1, 3, 5]);
+      expect(d1).is.an('array');
+      expect(d1).to.deep.equal([
+        new Money('-0.10', 'USD'),
+        new Money('-0.20', 'USD'),
+        new Money('-0.31', 'USD'),
+        new Money('-0.51', 'USD'),
+      ]);
+      expect(d2).is.an('array');
+      expect(d2).to.deep.equal([
+        new Money('-0.12', 'USD'),
+        new Money('-0.37', 'USD'),
+        new Money('-0.63', 'USD'),
+      ]);
+    });
+
+    it('should resolve Foemmel\'s Conundrum', function() {
+      var m = new Money('0.05', 'USD');
+      var d = m.distribute([3, 7]);
+      expect(d).is.an('array');
+      expect(d).to.deep.equal([
+        new Money('0.02', 'USD'),
+        new Money('0.03', 'USD'),
+      ])
     });
 
     it('should be comparable', function() {
