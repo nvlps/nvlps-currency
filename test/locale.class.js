@@ -283,6 +283,15 @@ describe('nvlps-currency: Locale', function() {
       expect(testObj).to.have.property('permilleSign', '‰');
     });
 
+    it('should provide default currencies', function() {
+      var testObj1 = new Locale('en_US');
+      var testObj2 = new Locale('en_CA');
+      expect(testObj1.currency).to.equal(new Currency('USD'));
+      expect(testObj2.currency).to.equal(new Currency('CAD'));
+      expect(POSIX.currency).to.equal(new Currency('USD'));
+      expect(new Locale('en').currency).to.equal(new Currency('USD'));
+    });
+
     it('should provide localized currency symbols', function() {
       var testObj1 = new Locale('en_US');
       var testObj2 = new Locale('en_CA');

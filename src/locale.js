@@ -443,6 +443,25 @@ export class Locale {
     return this[getField]('nan');
   }
 
+  /** Default Currency */
+  get currency() {
+    // eslint is confused when a destructure includes both constant and
+    // re-assigned variables
+    let {
+      language, // eslint-disable-line prefer-const
+      territory,
+    } = parseLocale(this.tag);
+
+    if (territory === null) {
+      if (! hasOwnProperty(LOCALE_ALIASES, language)) {
+        return new Currency('XXX');
+      }
+      ({ territory } = parseLocale(LOCALE_ALIASES[language]));
+    }
+
+    return Currency.forCountry(territory);
+  }
+
   /**
    * Look up the localized Currency Symbol
    * @param {String|Currency} ccy Currency Object or ISO 4217 Currency Code

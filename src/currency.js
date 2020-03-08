@@ -110,6 +110,30 @@ export class Currency {
   toString() {
     return `<Currency '${this.m_ccy.isoCode}'>`;
   }
+
+  /**
+   * Get the default Currency for a Country
+   * @param {String} countryCode ISO 3166 Country Code
+   * @return {Currency} default currency for the country
+   *
+   * Iterates through all registered Currency items to find the first one which
+   * matches the given country. If no currencies match, the Unknown Currency
+   * is returned.
+   */
+  static forCountry(countryCode) {
+    let ccy = new Currency('XXX');
+    const ucCode = countryCode.toUpperCase();
+
+    // Iterate Registry to find Country Code
+    Object.keys(ccyRegistry).forEach((code) => {
+      if (ccyRegistry[code].data.country === ucCode) {
+        ccy = new Currency(code);
+      }
+    });
+
+    // Nothing Found
+    return ccy;
+  }
 }
 
 /**
