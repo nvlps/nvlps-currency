@@ -54,6 +54,11 @@ describe('nvlps-currency: Money', function() {
       expect(testObj.amount).to.deep.equal(new Decimal(3.45));
     });
 
+    it('should use locale-default currency if not specified', function() {
+      var testObj1 = new Money('3.45', new Locale('en_CA'));
+      expect(testObj1.currency).to.equal(new Currency('CAD'));
+    });
+
     it('should return frozen objects', function() {
       var testObj = new Money(0);
       expect(testObj).to.be.frozen;

@@ -51,6 +51,15 @@ describe('nvlps-currency: Currency', function() {
       expect(testObj2).to.deep.equal(testObj1);
     });
 
+    it('should lookup currencies by home country', function() {
+      var xxx = new Currency('XXX');
+      var usd = new Currency('USD');
+      var chf = new Currency('CHF');
+      expect(Currency.forCountry('US')).to.equal(usd);
+      expect(Currency.forCountry('CH')).to.equal(chf);
+      expect(Currency.forCountry('XX')).to.equal(xxx);
+    });
+
     it('should return frozen objects', function() {
       var testObj = new Currency('XXX');
       expect(testObj).to.be.frozen;
