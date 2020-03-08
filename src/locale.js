@@ -1,11 +1,11 @@
 /**
  * nvlps-currency Currency Library for nvlps.io
  *
- * Copyright (c) 2020 Asymworks, LLC.
+ *   Copyright (c) 2020 Asymworks, LLC.
  *
- * The nvlps-currency library may be freely distributed under the terms of
- * the BSD license.  For all licensing information, details and documentation:
- * https://nvlps.io/nvlps-currency
+ *   The nvlps-currency library may be freely distributed under the terms of
+ *   the BSD license.  For all licensing information, details and documentation:
+ *   https://nvlps.io/nvlps-currency
  *
  * nvlps-currency contains currency and money handling routines for the
  * nvlps.io budgeting software package.  It includes currency information for
@@ -13,7 +13,9 @@
  * currency names.
  */
 
+import Decimal from 'decimal.js-light';
 import { Currency } from './currency';
+import NumberPattern from './numpattern';
 
 // Available Locale Data
 import availLangs from '../data/ccy-l10n.langs.json';
@@ -183,7 +185,7 @@ export function negotiateLocale(preferred, available, sep = '_', aliases = LOCAL
       if (Object.prototype.hasOwnProperty.call(aliases, ll)) {
         let alias = aliases[ll];
         if (alias) {
-          alias = alias.replace('_', sep);
+          alias = alias.split('_').join(sep);
           if (avail.indexOf(alias.toLowerCase()) !== -1) {
             return alias;
           }
@@ -312,7 +314,7 @@ export class Locale {
    * @return {Locale} the Locale instance for the given locale tag
    */
   constructor(tag) {
-    const tagItems = parseLocale(tag.replace('-', '_'));
+    const tagItems = parseLocale(tag.split('-').join('_'));
     const normTag = generateLocale(tagItems);
     let lang;
 
@@ -340,10 +342,24 @@ export class Locale {
 
     // Store this as Singleton
     loc.singleton = this;
+    this.tag = normTag;
     this.m_data = loc.data;
     this.m_lang = lang ? lang.data : null;
+
+    // Load Number Patterns
+    const np = this[getField]('np');
+    const cp = this[getField]('cp');
+    const ap = this[getField]('ap');
+    this.m_np = np !== null ? new NumberPattern(np) : null;
+    this.m_cp = cp !== null ? new NumberPattern(cp) : null;
+    this.m_ap = ap !== null ? new NumberPattern(ap) : null;
+
+    // Freeze Object
     Object.freeze(loc);
     Object.freeze(this);
+    Object.freeze(this.m_ap);
+    Object.freeze(this.m_cp);
+    Object.freeze(this.m_np);
   }
 
   /** @private Get Field from Data or Parent Language */
@@ -465,6 +481,7 @@ export class Locale {
   /**
    * Look up the localized Currency Name
    * @param {String|Currency} ccy Currency Object or ISO 4217 Currency Code
+   * @param {Numeric} count Number of items (for pluralization)
    * @return {String} Currency Name
    *
    * If the locale provides a name for the currency, it is returned, otherwise
@@ -477,6 +494,8 @@ export class Locale {
    * (new Locale('de_DE')).currencySymbol(new Currency('CAD'));
    */
   currencyName(ccy) {
+    // TODO: Add Pluralization
+
     let ccyObj = ccy;
 
     // Ensure we have a normalized Currency Code
@@ -493,6 +512,115 @@ export class Locale {
     // Fallback is Upper-Case Currency Code
     return ccyCode;
   }
+
+  /**
+   * Return the given decimal number formatted for this locale
+   * @param {Numeric|String|Decimal} number number to format
+   * @param {Boolean} quantize whether to truncate and round high-precision
+   *                           numbers to the format pattern (default: true)
+   * @return {String} formatted string
+   */
+  formatNumber(number, quantize = true) {
+    return this.m_np.apply(number, this, null, true, quantize);
+  }
+
+  /**
+   * Return the given decimal number formatted as currency for this locale
+   * @param {Numeric|String|Decimal} number number to format
+   * @param {String|Currency} currency currency to format as
+   * @param {Boolean} currencyDigits whether or not to use the currency's
+   *                                 precision. If false, the pattern's
+   *                                 precision will be used.
+   * @param {String} formatType either 'standard' or 'accounting'
+   * @param {Boolean} quantize whether decimal numbers should be forcibly
+   *                           quantized to produce a formatted output strictly
+   *                           matching the CLDR definition for the locale
+   */
+  formatCurrency(number, currency, currencyDigits = true,
+    formatType = 'standard', quantize = true)
+  {
+    if ((typeof formatType !== 'string')
+      || ((formatType !== 'standard')
+      && (formatType !== 'accounting'))) {
+      throw new Error(`Unknown currency formatting type ${formatType.toString()}`);
+    }
+
+    if (formatType === 'accounting') {
+      return this.m_ap.apply(number, this, currency, currencyDigits, quantize);
+    }
+
+    return this.m_cp.apply(number, this, currency, currencyDigits, quantize);
+  }
+
+  /**
+   * Parse a String into a Numeric Decimal value
+   * @param {String} string string to Parse
+   * @param {Boolean} strict controls whether numbers formatted in a weird way
+   *                         are accepted or rejected
+   * @return {Decimal} fixed-point number
+   *
+   * Parses a string representation of a number into a numeric value, using the
+   * number formatting rules of this locale (specifically decimal and grouping
+   * symbols). When the given string cannot be parsed, an error is thrown.
+   *
+   * @example
+   * // Returns Decimal(1099.98)
+   * (new Locale('en_US')).parseNumber('1,099.98');
+   * // Returns Decimal(1099.98)
+   * (new Locale('de_DE')).parseNumber('1.099,98');
+   * // Returns Decimal(12345.12)
+   * (new Locale('ru')).parseNumber('12 345,12');
+   *
+   * When the given string cannot be parsed, an exception is raised:
+   * @example
+   * // Error('2,109,998 is not a properly formatted decimal number')
+   *
+   */
+  parseNumber(string, strict = false) {
+    let s = string;
+    let parsedAlt;
+    const d = this.decimal;
+    const g = this.group;
+
+    if ((! strict)
+      && ((g === '\u00a0') // if the grouping symbol is U+00A0 NO-BREAK SPACE,
+       || (g === '\u202f')) // or U+202F NARROW NO-BREAK SPACE
+      && (string.indexOf(g) === -1) // and the string to be parsed does not contain it
+      && (string.indexOf(' ') !== -1)) { // but instead contains a space
+      // then it's reasonable to assume it is taking the place of the
+      // grouping symbol
+      s = s.split(' ').join(g);
+    }
+
+    // Try to parse as a POSIX number
+    const parsed = new Decimal(s.split(g).join('').split(d).join('.'));
+
+    // Check that the number can be re-formatted to original
+    if (strict && (s.indexOf(g) !== -1)) {
+      const proper = this.formatNumber(parsed, false);
+      if ((string !== proper) && (string.replace(/0*$/, '') !== proper + d)) {
+        try {
+          parsedAlt = new Decimal(s.split(d).join('').split(g).join('.'));
+        }
+        catch (e) {
+          if (e instanceof Error && /DecimalError/.test(e.message)) {
+            throw new Error(`${string} is not a properly formatted decimal number. Did you mean ${proper}?`);
+          }
+        }
+
+        const properAlt = this.formatNumber(parsedAlt, false);
+        if (properAlt === proper) {
+          throw new Error(`${string} is not a properly formatted decimal number. Did you mean ${proper}?`);
+        }
+        else {
+          throw new Error(`${string} is not a properly formatted decimal number. Did you mean ${proper} or ${properAlt}?`);
+        }
+      }
+    }
+
+    // Return Parsed Number
+    return parsed;
+  }
 }
 
 /**
@@ -502,7 +630,7 @@ export class Locale {
  */
 export function registerLocale(tag, data) {
   // Normalize Tag String
-  const tagItems = parseLocale(tag.replace('-', '_'));
+  const tagItems = parseLocale(tag.split('-').join('_'));
   const normTag = generateLocale(tagItems);
 
   // Check if the Locale has been defined already
@@ -590,3 +718,6 @@ export function availableLanguages() {
     registerLocale(k, posixData[k]);
   });
 }());
+
+// Export POSIX Locale
+export const POSIX = new Locale('en_US_POSIX');

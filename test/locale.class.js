@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import {
   Locale,
+  POSIX,
   parseLocale,
   registerLocale,
   availableLocales,
@@ -56,6 +57,12 @@ describe('nvlps-currency: Locale', function() {
       expect(testObj.m_lang.cn).to.be.frozen;
       expect(testObj.m_data.cs).to.be.frozen;
       expect(testObj.m_data.cn).to.be.frozen;
+    });
+
+    it('should provide a shortcut to the POSIX locale', function() {
+      var testObj = new Locale('en_US_POSIX');
+      expect(testObj).to.equal(POSIX);
+      expect(testObj).to.deep.equal(POSIX);
     });
   });
 
@@ -237,19 +244,29 @@ describe('nvlps-currency: Locale', function() {
 
     it('should load new languages via require()', function() {
       var testFn1 = function() { return new Locale('de_CH'); }
-      var testFn2 = function() { return new Locale('en_CA'); }
+      var testFn2 = function() { return new Locale('fr_FR'); }
+      var testFn3 = function() { return new Locale('en_CA'); }
       expect(testFn1).to.throw();
       expect(testFn2).to.throw();
+      expect(testFn3).to.throw();
 
       // Load 'de' Language and Locales
       require('../src/locales/de');
       expect(testFn1).to.not.throw();
       expect(testFn2).to.throw();
+      expect(testFn3).to.throw();
+
+      // Load 'fr' Language and Locales
+      require('../src/locales/fr');
+      expect(testFn1).to.not.throw();
+      expect(testFn2).to.not.throw();
+      expect(testFn3).to.throw();
 
       // Load 'en' Language and Locales
       require('../src/locales/en');
       expect(testFn1).to.not.throw();
       expect(testFn2).to.not.throw();
+      expect(testFn3).to.not.throw();
     });
 
     it('should provide data for loaded locales', function() {
@@ -280,6 +297,112 @@ describe('nvlps-currency: Locale', function() {
       expect(testObj1.currencyName('CAD')).to.equal('Canadian Dollar');
       expect(testObj2.currencyName('CAD')).to.equal('Kanadischer Dollar');
       expect(testObj3.currencyName('CAD')).to.equal('CAD');
+    });
+  });
+
+  describe('Number Parsing', function() {
+    it('should parse localized numeric strings', function() {
+      var testObj1 = new Locale('en_US');
+      var testObj2 = new Locale('de_DE');
+      expect(testObj1.parseNumber('1,234.5678').toString()).to.equal('1234.5678');
+      expect(testObj2.parseNumber('1.234,5678').toString()).to.equal('1234.5678');
+    });
+
+    it('should throw an error for invalid numeric strings', function() {
+      var testFn = function() { POSIX.parseNumber('abc') };
+      expect(testFn).to.throw();
+    });
+
+    it('should suggest proper formatting for swapped group and decimal symbols', function() {
+      var testFn1 = function() { (new Locale('en_US')).parseNumber('1.234,56', true) }
+      var testFn2 = function() { (new Locale('de_DE')).parseNumber('0.00', true) }
+      var testFn3 = function() { (new Locale('en_US')).parseNumber('12,34,567.89', true) }
+      expect(testFn1).to.throw(/Did you mean 1.23456 or 1,234.56/);
+      expect(testFn2).to.throw(/Did you mean 0/);
+      expect(testFn3).to.throw(/Did you mean 1,234,567.89/);
+    });
+
+    it('should accept spaces for narrow NBSP groupings in non-strict mode', function() {
+      var testObj1 = new Locale('fr');
+      var bspNumber = '1 234,5678';
+      var nbspNumber = bspNumber.replace(' ', '\u202f');
+      var testFn1 = function() { return testObj1.parseNumber(bspNumber) };
+      var testFn2 = function() { return testObj1.parseNumber(nbspNumber) };
+      expect(testFn1).to.not.throw();
+      expect(testFn2).to.not.throw();
+    });
+
+    it('should not accept spaces for narrow NBSP groupings in strict mode', function() {
+      var testObj1 = new Locale('fr');
+      var bspNumber = '1 234,5678';
+      var nbspNumber = bspNumber.replace(' ', '\u202f');
+      var testFn1 = function() { return testObj1.parseNumber(bspNumber, true) };
+      var testFn2 = function() { return testObj1.parseNumber(nbspNumber, true) };
+      expect(testFn1).to.throw();
+      expect(testFn2).to.not.throw();
+    });
+  });
+
+  describe('Number Formatting', function() {
+    it('should format positive and negative numbers with rounding', function() {
+      var L1 = new Locale('en_US');
+      var L2 = new Locale('de_DE');
+      expect(L1.formatNumber(1.2344)).to.equal('1.234');
+      expect(L1.formatNumber(1.2345)).to.equal('1.235');
+      expect(L1.formatNumber(-1.2345)).to.equal('-1.235');
+      expect(L2.formatNumber(1.2344)).to.equal('1,234');
+    });
+
+    it('should format numbers with proper grouping', function() {
+      var L1 = new Locale('en_US');
+      var L2 = new Locale('de_DE');
+      var L3 = new Locale('fr_FR');
+      expect(L1.formatNumber(12345.67)).to.equal('12,345.67');
+      expect(L2.formatNumber(12345.67)).to.equal('12.345,67');
+      expect(L3.formatNumber(12345.67)).to.equal('12\u202f345,67');
+    });
+
+    it('should support mixed grouping sizes', function() {
+      require('../src/locales/hi');
+      var L = new Locale('hi');
+      expect(L.formatNumber(1234567.89)).to.equal('12,34,567.89');
+    });
+
+    it('should not round when quantization is turned off', function() {
+      var L1 = new Locale('en_US');
+      expect(L1.formatNumber(1.2344, true)).to.equal('1.234');
+      expect(L1.formatNumber(1.2344, false)).to.equal('1.2344');
+    });
+  });
+
+  describe('Currency Formatting', function() {
+    it('should format currencies with POSIX formatting', function() {
+      expect(POSIX.formatCurrency(1.23, 'USD')).to.equal('$\u00a01.23');
+    });
+
+    it('should format currencies with localized formatting', function() {
+      var L1 = new Locale('en_US');
+      var L2 = new Locale('de_DE');
+      expect(L1.formatCurrency(1234.56, 'USD')).to.equal('$1,234.56');
+      expect(L2.formatCurrency(1234.56, 'USD')).to.equal('1.234,56\u00a0$');
+    });
+
+    it('should format currencies with localized symbols', function() {
+      var L1 = new Locale('en_US');
+      var L2 = new Locale('en_CA');
+      expect(L1.formatCurrency(1234.56, 'USD')).to.equal('$1,234.56');
+      expect(L2.formatCurrency(1234.56, 'USD')).to.equal('US$1,234.56');
+    });
+
+    it('should format currencies with accounting formats', function() {
+      var L = new Locale('en_US');
+      expect(L.formatCurrency( 12345.67, 'USD', true, 'accounting')).to.equal('$12,345.67');
+      expect(L.formatCurrency(-12345.67, 'USD', true, 'accounting')).to.equal('($12,345.67)');
+    });
+
+    it('should throw an error for invalid currency formats', function() {
+      var testFn = function() { POSIX.formatCurrency(1.23, 'USD', true, 'unknown') };
+      expect(testFn).to.throw('Unknown currency formatting type unknown');
     });
   });
 });
