@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 import Decimal from 'decimal.js-light';
+import { Locale, POSIX } from '../src/locale';
 import Money from '../src/money';
 import {
   Currency,
@@ -207,6 +208,27 @@ describe('nvlps-currency: Money', function() {
       expect(m2).to.have.property('currency', m1.currency);
       expect(m2).to.have.property('amount');
       expect(m2.amount).to.deep.equal(new Decimal('2.54'));
+    });
+
+    it('should support localized formatting', function() {
+      var m1 = new Money(1234567.89, 'EUR');
+      var m2 = new Money(-3.50, 'CAD');
+      var L1 = new Locale('en_CA');
+      var L2 = new Locale('de_DE');
+
+      expect(m1.format()).to.equal('€\u00a01234567.89');
+      expect(m1.format(POSIX, 'accounting')).to.equal('€1,234,567.89');
+      expect(m1.format(L1)).to.equal('€1,234,567.89');
+      expect(m1.format(L1, 'accounting')).to.equal('€1,234,567.89');
+      expect(m1.format(L2)).to.equal('1.234.567,89\u00a0€');
+      expect(m1.format(L2, 'accounting')).to.equal('1.234.567,89\u00a0€');
+
+      expect(m2.format()).to.equal('-CA$\u00a03.50');
+      expect(m2.format(POSIX, 'accounting')).to.equal('(CA$3.50)');
+      expect(m2.format(L1)).to.equal('-$3.50');
+      expect(m2.format(L1, 'accounting')).to.equal('($3.50)');
+      expect(m2.format(L2)).to.equal('-3,50\u00a0CA$');
+      expect(m2.format(L2, 'accounting')).to.equal('-3,50\u00a0CA$');
     });
   });
 });

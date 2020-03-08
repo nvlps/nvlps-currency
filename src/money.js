@@ -302,6 +302,21 @@ export default class Money {
   }
 
   /**
+   * Format the Money as a localized currency string
+   * @param {Locale} locale locale to use for formatting (defaults to POSIX)
+   * @param {String} formatType either 'standard' or 'accounting'
+   */
+  format(locale = POSIX, formatType = 'standard') {
+    return locale.formatCurrency(
+      this.amt,
+      this.ccy,
+      true,
+      formatType,
+      true,
+    );
+  }
+
+  /**
    * @return {String} String Representation of the Money
    *
    * Returns a string representation of the money of the form
