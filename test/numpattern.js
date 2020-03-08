@@ -294,6 +294,17 @@ describe('nvlps-currency: NumberPattern', function() {
       )).to.equal('1,234,567.89\u00a0US Dollar');
     });
 
+    it('should format currencies with currency-specified precision', function() {
+      var testNp = new NumberPattern('¤\u00a0#,##0.00');
+      expect(testNp.apply(
+        1234567.89,
+        new Locale('en_US'),
+        new Currency('XXX'),
+        true,
+        true
+      )).to.equal('¤\u00a01,234,567.890000');
+    });
+
     it('should pad numbers to minimum length', function() {
       var testNp1 = new NumberPattern('000.000');
       var testNp2 = new NumberPattern('000.#');

@@ -13,7 +13,7 @@
  * currency names.
  */
 
-import NumberPattern from './numpattern';
+import Money from './money';
 
 // Currency Class
 export {
@@ -31,5 +31,5 @@ export {
   defaultLocale,
 } from './locale';
 
-// Number Formatter
-export { NumberPattern };
+// Money Class
+export { Money };

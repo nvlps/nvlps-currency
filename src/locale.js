@@ -514,6 +514,30 @@ export class Locale {
   }
 
   /**
+   * Format a Number with a given Number Pattern
+   * @param {Numeric|String|Decimal} number number to format
+   * @param {String} pattern pattern to use for formatting
+   * @param {String|Currency} currency currency to format as
+   * @param {Boolean} currencyDigits whether or not to use the currency's
+   *                                 precision. If false, the pattern's
+   *                                 precision will be used.
+   * @param {Boolean} quantize whether to truncate and round high-precision
+   *                           numbers to the format pattern (default: true)
+   * @return {String} formatted string
+   */
+  formatNumberWithPattern(number, pattern, currency = null,
+    currencyDigits = true, quantize = true)
+  {
+    return (new NumberPattern(pattern)).apply(
+      number,
+      this,
+      currency,
+      currencyDigits,
+      quantize,
+    );
+  }
+
+  /**
    * Return the given decimal number formatted for this locale
    * @param {Numeric|String|Decimal} number number to format
    * @param {Boolean} quantize whether to truncate and round high-precision

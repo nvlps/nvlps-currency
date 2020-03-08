@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { Currency } from '../src/currency';
 import {
   Locale,
   POSIX,
@@ -7,6 +8,7 @@ import {
   availableLocales,
   availableLanguages,
 } from '../src/locale';
+
 
 describe('nvlps-currency: Locale', function() {
   describe('Accessors', function() {
@@ -373,6 +375,11 @@ describe('nvlps-currency: Locale', function() {
       expect(L1.formatNumber(1.2344, true)).to.equal('1.234');
       expect(L1.formatNumber(1.2344, false)).to.equal('1.2344');
     });
+
+    it('should support formatting with custom patterns', function() {
+      var L1 = new Locale('en_US');
+      expect(L1.formatNumberWithPattern(1.2344, '#,##0.00')).to.equal('1.23');
+    });
   });
 
   describe('Currency Formatting', function() {
@@ -403,6 +410,16 @@ describe('nvlps-currency: Locale', function() {
     it('should throw an error for invalid currency formats', function() {
       var testFn = function() { POSIX.formatCurrency(1.23, 'USD', true, 'unknown') };
       expect(testFn).to.throw('Unknown currency formatting type unknown');
+    });
+
+    it('should support formatting with custom patterns', function() {
+      var L1 = new Locale('en_US');
+      var fmtAmt = L1.formatNumberWithPattern(
+        1.2344,
+        '#,##0.00',
+        new Currency('XXX'),
+      );
+      expect(fmtAmt).to.equal('1.234400');
     });
   });
 });
