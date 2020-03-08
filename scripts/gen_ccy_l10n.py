@@ -171,8 +171,12 @@ def load_locale_data(locales):
 
         data = load_for_locale(ll, parent_data)
 
-        if data is not None:
-            locale_data[lang][ll] = data
+        # Always store the locale key even if there are no overrides. This helps
+        # the Locale loader not freak out when it can't find a locale key and
+        # does not take up much extra room in the JSON.
+        locale_data[lang][ll] = data if data is not None else dict()
+        #if data is not None:
+        #    locale_data[lang][ll] = data
 
     return locale_data
 

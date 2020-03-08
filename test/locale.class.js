@@ -364,7 +364,7 @@ describe('nvlps-currency: Locale', function() {
 
     it('should support mixed grouping sizes', function() {
       require('../src/locales/hi');
-      var L = new Locale('hi');
+      var L = new Locale('hi_IN');
       expect(L.formatNumber(1234567.89)).to.equal('12,34,567.89');
     });
 

@@ -3,11 +3,11 @@
 /**
  * nvlps-currency Currency Library for nvlps.io
  *
- * Copyright (c) 2020 Asymworks, LLC.
+ *   Copyright (c) 2020 Asymworks, LLC.
  *
- * The nvlps-currency library may be freely distributed under the terms of
- * the BSD license.  For all licensing information, details and documentation:
- * https://nvlps.io/nvlps-currency
+ *   The nvlps-currency library may be freely distributed under the terms of
+ *   the BSD license.  For all licensing information, details and documentation:
+ *   https://nvlps.io/nvlps-currency
  *
  * nvlps-currency contains currency and money handling routines for the
  * nvlps.io budgeting software package.  It includes currency information for
@@ -231,11 +231,33 @@ import { registerLocale } from '../locale';
     }
   });
 
+  registerLocale('fr_BF', {});
+
+  registerLocale('fr_BJ', {});
+
+  registerLocale('fr_BL', {});
+
+  registerLocale('fr_CF', {});
+
+  registerLocale('fr_CG', {});
+
+  registerLocale('fr_CI', {});
+
+  registerLocale('fr_CM', {});
+
+  registerLocale('fr_FR', {});
+
+  registerLocale('fr_GA', {});
+
+  registerLocale('fr_GF', {});
+
   registerLocale('fr_GN', {
     cs: {
       GNF: 'FG'
     }
   });
+
+  registerLocale('fr_GP', {});
 
   registerLocale('fr_HT', {
     cs: {
@@ -247,11 +269,31 @@ import { registerLocale } from '../locale';
     g: '.'
   });
 
+  registerLocale('fr_MC', {});
+
+  registerLocale('fr_MF', {});
+
+  registerLocale('fr_MQ', {});
+
+  registerLocale('fr_NC', {});
+
+  registerLocale('fr_PF', {});
+
+  registerLocale('fr_PM', {});
+
+  registerLocale('fr_RE', {});
+
   registerLocale('fr_SC', {
     cs: {
       SCR: 'SR'
     }
   });
 
-  registerLocale('fr_FR', {});
+  registerLocale('fr_TD', {});
+
+  registerLocale('fr_TG', {});
+
+  registerLocale('fr_WF', {});
+
+  registerLocale('fr_YT', {});
 })();

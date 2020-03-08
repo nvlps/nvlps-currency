@@ -3,11 +3,11 @@
 /**
  * nvlps-currency Currency Library for nvlps.io
  *
- * Copyright (c) 2020 Asymworks, LLC.
+ *   Copyright (c) 2020 Asymworks, LLC.
  *
- * The nvlps-currency library may be freely distributed under the terms of
- * the BSD license.  For all licensing information, details and documentation:
- * https://nvlps.io/nvlps-currency
+ *   The nvlps-currency library may be freely distributed under the terms of
+ *   the BSD license.  For all licensing information, details and documentation:
+ *   https://nvlps.io/nvlps-currency
  *
  * nvlps-currency contains currency and money handling routines for the
  * nvlps.io budgeting software package.  It includes currency information for
@@ -233,16 +233,30 @@ import { registerLocale } from '../locale';
     }
   });
 
+  registerLocale('ar_AE', {});
+
+  registerLocale('ar_BH', {});
+
   registerLocale('ar_DZ', {
     d: ',',
     g: '.'
   });
+
+  registerLocale('ar_EG', {});
+
+  registerLocale('ar_EH', {});
+
+  registerLocale('ar_IQ', {});
+
+  registerLocale('ar_JO', {});
 
   registerLocale('ar_KM', {
     cs: {
       KMF: 'CF'
     }
   });
+
+  registerLocale('ar_KW', {});
 
   registerLocale('ar_LB', {
     d: ',',
@@ -264,16 +278,28 @@ import { registerLocale } from '../locale';
     g: '.'
   });
 
+  registerLocale('ar_OM', {});
+
+  registerLocale('ar_PS', {});
+
+  registerLocale('ar_QA', {});
+
+  registerLocale('ar_SA', {});
+
+  registerLocale('ar_SD', {});
+
   registerLocale('ar_SS', {
     cs: {
       GBP: 'GB£'
     }
   });
 
+  registerLocale('ar_SY', {});
+
   registerLocale('ar_TN', {
     d: ',',
     g: '.'
   });
 
-  registerLocale('ar_SY', {});
+  registerLocale('ar_YE', {});
 })();
