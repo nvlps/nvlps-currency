@@ -13,21 +13,5 @@
  * currency names.
  */
 
-import Currency from './currency';
-import Money from './money';
-
-// Currency Class
-export { Currency };
-
-// Locale Class
-export {
-  Locale,
-  parseLocale,
-  generateLocale,
-  negotiateLocale,
-  defaultLocale,
-  availableLocales,
-} from './locale';
-
-// Money Class
-export { Money };
+{% for lang in langs %}import './{{ lang }}';
+{% endfor %}

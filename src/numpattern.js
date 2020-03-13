@@ -18,7 +18,7 @@
  */
 
 import Decimal from 'decimal.js-light';
-import { Currency } from './currency';
+import Currency from './currency';
 
 /**
  * Splits a string into a list, starting from the right.
@@ -499,7 +499,7 @@ export default class NumberPattern {
     }
 
     // Force fractional precision based on currency defaults
-    if ((currency instanceof Currency) && currencyDigits) {
+    if (Currency.isCurrency(currency) && currencyDigits) {
       fracPrec = { min: currency.precision, max: currency.precision };
     }
 
@@ -562,11 +562,11 @@ export default class NumberPattern {
     // Apply Currency Symbol
     if (retval.indexOf('¤') !== -1) {
       let ccyCode;
-      if (currency instanceof Currency) {
+      if (Currency.isCurrency(currency)) {
         ccyCode = currency.currencyCode;
       }
       else {
-        const c = new Currency(currency);
+        const c = Currency(currency);
         ccyCode = c.currencyCode;
       }
 

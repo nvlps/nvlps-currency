@@ -1,19 +1,18 @@
 import { expect } from 'chai';
-import { Currency } from '../src/currency';
+import Currency from '../src/currency';
 import {
   Locale,
   POSIX,
   parseLocale,
   registerLocale,
-  registerLocales,
   availableLocales,
   availableLanguages,
 } from '../src/locale';
 
-import DE from '../src/locales/de';
-import EN from '../src/locales/en';
-import FR from '../src/locales/fr';
-import HI from '../src/locales/hi';
+import '../src/locales/de';
+import '../src/locales/en';
+import '../src/locales/fr';
+import '../src/locales/hi';
 
 describe('nvlps-currency: Locale', function() {
   describe('Accessors', function() {
@@ -257,31 +256,15 @@ describe('nvlps-currency: Locale', function() {
       expect(testFn).to.throw();
     });
 
-    it('should load new languages via registerLocales()', function() {
+    it('should load new languages via ES6 imports', function() {
       var testFn1 = function() { return new Locale('de_CH'); }
       var testFn2 = function() { return new Locale('fr_FR'); }
       var testFn3 = function() { return new Locale('en_CA'); }
-      expect(testFn1).to.throw();
-      expect(testFn2).to.throw();
-      expect(testFn3).to.throw();
-
-      // Load 'de' Language and Locales
-      registerLocales(DE);
-      expect(testFn1).to.not.throw();
-      expect(testFn2).to.throw();
-      expect(testFn3).to.throw();
-
-      // Load 'fr' Language and Locales
-      registerLocales(FR);
-      expect(testFn1).to.not.throw();
-      expect(testFn2).to.not.throw();
-      expect(testFn3).to.throw();
-
-      // Load 'en' Language and Locales
-      registerLocales(EN);
+      var testFn4 = function() { return new Locale('es_MX'); }
       expect(testFn1).to.not.throw();
       expect(testFn2).to.not.throw();
       expect(testFn3).to.not.throw();
+      expect(testFn4).to.throw();
     });
 
     it('should provide data for loaded locales', function() {
@@ -299,10 +282,10 @@ describe('nvlps-currency: Locale', function() {
     it('should provide default currencies', function() {
       var testObj1 = new Locale('en_US');
       var testObj2 = new Locale('en_CA');
-      expect(testObj1.currency).to.equal(new Currency('USD'));
-      expect(testObj2.currency).to.equal(new Currency('CAD'));
-      expect(POSIX.currency).to.equal(new Currency('USD'));
-      expect(new Locale('en').currency).to.equal(new Currency('USD'));
+      expect(testObj1.currency).to.equal(Currency('USD'));
+      expect(testObj2.currency).to.equal(Currency('CAD'));
+      expect(POSIX.currency).to.equal(Currency('USD'));
+      expect(new Locale('en').currency).to.equal(Currency('USD'));
     });
 
     it('should provide localized currency symbols', function() {
@@ -387,7 +370,6 @@ describe('nvlps-currency: Locale', function() {
     });
 
     it('should support mixed grouping sizes', function() {
-      registerLocales(HI);
       var L = new Locale('hi_IN');
       expect(L.formatNumber(1234567.89)).to.equal('12,34,567.89');
     });
@@ -439,7 +421,7 @@ describe('nvlps-currency: Locale', function() {
       var fmtAmt = L1.formatNumberWithPattern(
         1.2344,
         '#,##0.00',
-        new Currency('XXX'),
+        Currency('XXX'),
       );
       expect(fmtAmt).to.equal('1.234400');
     });

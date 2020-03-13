@@ -1,28 +1,24 @@
 import { expect } from 'chai';
-import {
-  Currency,
-  registerCurrency,
-  availableCurrencies
-} from '../src/currency';
+import Currency from '../src/currency';
 
 describe('nvlps-currency: Currency', function() {
   describe('Accessors', function() {
-    it('should have a public accessor constructor', function() {
-      var testFn = function() { return new Currency('XXX'); }
+    it('should have a public accessor', function() {
+      var testFn = function() { return Currency('XXX'); }
       expect(testFn).to.not.throw();
     });
 
     it('should have only one instance per currency', function() {
-      var testObj1 = new Currency('XXX');
-      var testObj2 = new Currency('XXX');
+      var testObj1 = Currency('XXX');
+      var testObj2 = Currency('XXX');
       expect(testObj2).to.equal(testObj1);
       expect(testObj2).to.deep.equal(testObj1);
     });
 
     it('should be case insensitive', function() {
-      var testObj1 = new Currency('XXX');
-      var testObj2 = new Currency('xxx');
-      var testObj3 = new Currency('XxX');
+      var testObj1 = Currency('XXX');
+      var testObj2 = Currency('xxx');
+      var testObj3 = Currency('XxX');
       expect(testObj2).to.equal(testObj1);
       expect(testObj3).to.equal(testObj1);
       expect(testObj2).to.deep.equal(testObj1);
@@ -32,7 +28,7 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should return an array of available currencies', function() {
-      var ccyList = availableCurrencies();
+      var ccyList = Currency.all();
       expect(ccyList).to.be.an('array');
       expect(ccyList.length).to.be.at.least(1);
       expect(ccyList[0]).to.be.an('object');
@@ -43,8 +39,8 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should lookup the currencies by ISO Letter Code or Number', function() {
-      var testObj1 = new Currency('XXX');
-      var testObj2 = new Currency(999);
+      var testObj1 = Currency('XXX');
+      var testObj2 = Currency(999);
       expect(testObj1).to.be.an('object');
       expect(testObj2).to.be.an('object')
       expect(testObj2).to.equal(testObj1);
@@ -52,16 +48,16 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should lookup currencies by home country', function() {
-      var xxx = new Currency('XXX');
-      var usd = new Currency('USD');
-      var chf = new Currency('CHF');
+      var xxx = Currency('XXX');
+      var usd = Currency('USD');
+      var chf = Currency('CHF');
       expect(Currency.forCountry('US')).to.equal(usd);
       expect(Currency.forCountry('CH')).to.equal(chf);
       expect(Currency.forCountry('XX')).to.equal(xxx);
     });
 
     it('should return frozen objects', function() {
-      var testObj = new Currency('XXX');
+      var testObj = Currency('XXX');
       expect(testObj).to.be.frozen;
       expect(testObj.m_ccy).to.be.frozen;
     });
@@ -69,7 +65,7 @@ describe('nvlps-currency: Currency', function() {
 
   describe('Behavior and Data', function() {
     it('should contain a valid Unknown Currency placeholder', function() {
-      var testObj = new Currency('XXX');
+      var testObj = Currency('XXX');
       expect(testObj).to.have.property('currencyCode', 'XXX');
       expect(testObj).to.have.property('numericCode', 999);
       expect(testObj).to.have.property('precision', 6);
@@ -77,14 +73,14 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should throw an exception when an unknown Currency is accessed', function() {
-      var testFn1 = function() { return new Currency('XYZ'); }
-      var testFn2 = function() { return new Currency(987); }
+      var testFn1 = function() { return Currency('XYZ'); }
+      var testFn2 = function() { return Currency(987); }
       expect(testFn1).to.throw();
       expect(testFn2).to.throw();
     });
 
     it('should contain the United States Dollar', function() {
-      var testObj = new Currency('USD');
+      var testObj = Currency('USD');
       expect(testObj).to.have.property('currencyCode', 'USD');
       expect(testObj).to.have.property('numericCode', 840);
       expect(testObj).to.have.property('precision', 2);
@@ -92,7 +88,7 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should contain the European Union Euro', function() {
-      var testObj = new Currency('EUR');
+      var testObj = Currency('EUR');
       expect(testObj).to.have.property('currencyCode', 'EUR');
       expect(testObj).to.have.property('numericCode', 978);
       expect(testObj).to.have.property('precision', 2);
@@ -100,7 +96,7 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should contain the Australian Dollar', function() {
-      var testObj = new Currency('AUD');
+      var testObj = Currency('AUD');
       expect(testObj).to.have.property('currencyCode', 'AUD');
       expect(testObj).to.have.property('numericCode', 36);
       expect(testObj).to.have.property('precision', 2);
@@ -108,7 +104,7 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should contain the Canadian Dollar', function() {
-      var testObj = new Currency('CAD');
+      var testObj = Currency('CAD');
       expect(testObj).to.have.property('currencyCode', 'CAD');
       expect(testObj).to.have.property('numericCode', 124);
       expect(testObj).to.have.property('precision', 2);
@@ -116,7 +112,7 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should contain the Swiss Franc', function() {
-      var testObj = new Currency('CHF');
+      var testObj = Currency('CHF');
       expect(testObj).to.have.property('currencyCode', 'CHF');
       expect(testObj).to.have.property('numericCode', 756);
       expect(testObj).to.have.property('precision', 2);
@@ -124,18 +120,18 @@ describe('nvlps-currency: Currency', function() {
     });
 
     it('should throw an error when a currency is redefiend', function() {
-      var testFn = function() { registerCurrency('USD', 840, 2, 'US'); }
+      var testFn = function() { Currency.register('USD', 840, 2, 'US'); }
       expect(testFn).to.throw();
     });
 
     it('should resolve to a meaningful string', function() {
-      var testObj = new Currency('XXX');
+      var testObj = Currency('XXX');
       expect(String(testObj)).to.equal("<Currency 'XXX'>");
     });
 
     it('should support adding a new currency', function() {
-      var nCcys = availableCurrencies().length;
-      var newCcy = registerCurrency('ZZZ', 998, 3, 'XX');
+      var nCcys = Currency.all().length;
+      var newCcy = Currency.register('ZZZ', 998, 3, 'XX');
       var testObj;
 
       expect(newCcy).to.have.property('currencyCode', 'ZZZ');
@@ -143,8 +139,8 @@ describe('nvlps-currency: Currency', function() {
       expect(newCcy).to.have.property('precision', 3);
       expect(newCcy).to.have.property('country', 'XX');
 
-      var testObj1 = new Currency('ZZZ');
-      var testObj2 = new Currency(998);
+      var testObj1 = Currency('ZZZ');
+      var testObj2 = Currency(998);
 
       expect(testObj1).to.equal(newCcy);
       expect(testObj1).to.deep.equal(newCcy);
@@ -152,7 +148,15 @@ describe('nvlps-currency: Currency', function() {
       expect(testObj2).to.equal(newCcy);
       expect(testObj2).to.deep.equal(newCcy);
 
-      expect(availableCurrencies().length).to.equal(nCcys + 1);
+      expect(Currency.all().length).to.equal(nCcys + 1);
+    });
+
+    it('should support checking whether an object is a Currency', function() {
+      var testObj1 = Currency('USD');
+      var testObj2 = { currencyCode: 'USD', numericCode: 840, precision: 2, country: 'US' };
+      expect(testObj1).to.deep.equal(testObj2);
+      expect(Currency.isCurrency(testObj1)).to.be.true;
+      expect(Currency.isCurrency(testObj2)).to.be.false;
     });
   });
 });

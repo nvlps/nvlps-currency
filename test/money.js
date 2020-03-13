@@ -2,11 +2,7 @@ import { expect } from 'chai';
 import Decimal from 'decimal.js-light';
 import { Locale, POSIX } from '../src/locale';
 import Money from '../src/money';
-import {
-  Currency,
-  registerCurrency,
-  availableCurrencies
-} from '../src/currency';
+import Currency from '../src/currency';
 
 describe('nvlps-currency: Money', function() {
   describe('Constructors', function() {
@@ -16,25 +12,25 @@ describe('nvlps-currency: Money', function() {
     });
 
     it('should accept a Currency type', function() {
-      var testCcy = new Currency('USD');
+      var testCcy = Currency('USD');
       var testObj = new Money(0, testCcy);
       expect(testObj.currency).to.equal(testCcy);
     });
 
     it('should accept an ISO 4217 currency code', function() {
-      var testCcy = new Currency('USD');
+      var testCcy = Currency('USD');
       var testObj = new Money(0, 'USD');
       expect(testObj.currency).to.equal(testCcy);
     });
 
     it('should accept an ISO 4127 numeric code', function() {
-      var testCcy = new Currency('USD');
+      var testCcy = Currency('USD');
       var testObj = new Money(0, 840);
       expect(testObj.currency).to.equal(testCcy);
     });
 
     it('should default to Unknown Currency', function() {
-      var testCcy = new Currency('XXX');
+      var testCcy = Currency('XXX');
       var testObj = new Money(0);
       expect(testObj.currency).to.equal(testCcy);
     });
@@ -56,7 +52,7 @@ describe('nvlps-currency: Money', function() {
 
     it('should use locale-default currency if not specified', function() {
       var testObj1 = new Money('3.45', new Locale('en_CA'));
-      expect(testObj1.currency).to.equal(new Currency('CAD'));
+      expect(testObj1.currency).to.equal(Currency('CAD'));
     });
 
     it('should return frozen objects', function() {

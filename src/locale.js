@@ -14,22 +14,11 @@
  */
 
 import Decimal from 'decimal.js-light';
-import { Currency } from './currency';
+import Currency from './currency';
 import NumberPattern from './numpattern';
 
 // Default English-Language Data
-import posixData from './locales/posix';
-
-// Available Locale Data
-const availLangs = [
-  'af', 'ak', 'am', 'ar', 'az', 'be', 'bem', 'bg', 'bm', 'bn', 'bs', 'ca',
-  'cs', 'da', 'de', 'dz', 'el', 'en', 'es', 'et', 'fa', 'fi', 'fo', 'fr',
-  'ha', 'he', 'hi', 'hr', 'hu', 'hy', 'id', 'is', 'it', 'ja', 'ka', 'kea',
-  'kl', 'km', 'ko', 'ky', 'lo', 'lt', 'lv', 'mfe', 'mg', 'mk', 'mn', 'ms',
-  'mt', 'my', 'nb', 'ne', 'nl', 'pl', 'pt', 'rn', 'ro', 'ru', 'rw', 'si',
-  'sk', 'sl', 'sn', 'so', 'sq', 'sr', 'sv', 'sw', 'tg', 'th', 'ti', 'tk',
-  'to', 'tr', 'uk', 'ur', 'uz', 'vi', 'wo', 'yue', 'zh',
-];
+import posixData from './posix';
 
 /* eslint-disable */
 // Language Aliases
@@ -468,7 +457,7 @@ export class Locale {
 
     if (territory === null) {
       if (! hasOwnProperty(LOCALE_ALIASES, language)) {
-        return new Currency('XXX');
+        return Currency('XXX');
       }
       ({ territory } = parseLocale(LOCALE_ALIASES[language]));
     }
@@ -488,7 +477,7 @@ export class Locale {
    * (new Locale('en_US')).currencySymbol('USD');
    *
    * // Returns 'CA$'
-   * (new Locale('en_US')).currencySymbol(new Currency('CAD'));
+   * (new Locale('en_US')).currencySymbol(Currency('CAD'));
    *
    * // Returns 'CHF'
    * (new Locale('en_US')).currencySymbol('CHF');
@@ -498,7 +487,7 @@ export class Locale {
 
     // Ensure we have a normalized Currency Code
     if (! (ccy instanceof Currency)) {
-      ccyObj = new Currency(ccy);
+      ccyObj = Currency(ccy);
     }
     const ccyCode = ccyObj.currencyCode;
     const ccySym = this[getDictField]('cs', ccyCode);
@@ -524,7 +513,7 @@ export class Locale {
    * (new Locale('en_US')).currencySymbol('USD');
    *
    * // Returns 'Kanadischer Dollar'
-   * (new Locale('de_DE')).currencySymbol(new Currency('CAD'));
+   * (new Locale('de_DE')).currencySymbol(Currency('CAD'));
    */
   currencyName(ccy) {
     // TODO: Add Pluralization
@@ -533,7 +522,7 @@ export class Locale {
 
     // Ensure we have a normalized Currency Code
     if (! (ccy instanceof Currency)) {
-      ccyObj = new Currency(ccy);
+      ccyObj = Currency(ccy);
     }
     const ccyCode = ccyObj.currencyCode;
     const ccyName = this[getDictField]('cn', ccyCode);
@@ -750,6 +739,7 @@ export function registerLocales(localeData) {
   });
 }
 
+
 /**
  * Gets the set of available (loaded) locales.
  * @static
@@ -757,24 +747,6 @@ export function registerLocales(localeData) {
  */
 export function availableLocales() {
   return Object.keys(localeRegistry);
-}
-
-/**
- * Gets the list of available languages.
- * @static
- * @return {Array} Array of available languages
- *
- * This result is the list of languages which can be loaded via a require()
- * call, but not necessary all that are currently available.  For that, call
- * availableLocales and filter for languages:
- *
- * Array.prototype.forEach(availableLocales(), (x) => {
- *   const { language, ... } = parseLocale(x);
- *   // Store language or otherwise process it
- * });
- */
-export function availableLanguages() {
-  return availLangs;
 }
 
 // Load Posix Localization Data

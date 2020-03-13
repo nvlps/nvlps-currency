@@ -182,7 +182,7 @@ def load_locale_data(locales):
     return locale_data
 
 
-def save_js_modules(data, posix_data, js_filename_tmpl):
+def save_js_modules(data, posix_data, posix_file, js_filename_tmpl):
     '''
     Save Locale Data as Javascript Modules
 
@@ -191,14 +191,14 @@ def save_js_modules(data, posix_data, js_filename_tmpl):
     folder.
     '''
     env = Environment(loader=FileSystemLoader(os.path.dirname(sys.argv[0])))
-    template = env.get_template('ccy-l10n.js.j2')
+    template_posix = env.get_template('l10n-posix.js.j2')
+    template_module = env.get_template('l10n-module.js.j2')
 
     # Save POSIX Data as Module
-    with open(js_filename_tmpl.format('posix'), 'w') as f:
+    with open(posix_file, 'w') as f:
         posix_base = posix_data['en']
         posix_locs = [(k, v) for k, v in posix_data.items() if k != 'en']
-        f.write(template.render(
-            name='POSIX',
+        f.write(template_posix.render(
             lang='en',
             base=posix_base,
             locs=posix_locs
@@ -218,7 +218,7 @@ def save_js_modules(data, posix_data, js_filename_tmpl):
                 for lk in data[lang].keys() if lk != lang]
 
         with open(js_filename_tmpl.format(lang.lower()), 'w') as f:
-            f.write(template.render(
+            f.write(template_module.render(
                 name=lang.upper(),
                 lang=lang,
                 base=base,
@@ -234,6 +234,14 @@ if __name__ == '__main__':
         'js_path', metavar='<LOCALE PATH>', type=str, nargs=1,
         help='Javascript Locale Output Path'
     )
+    parser.add_argument(
+        '--posix', metavar='<POSIX PATH>', type=str, nargs=1,
+        help='POSIX Locale Output File'
+    )
+    parser.add_argument(
+        '--index', metavar='<INDEX>', type=str, nargs=1,
+        help='Javascript Locale Index File'
+    )
 
     # Parse Command Line Arguments
     args = parser.parse_args()
@@ -243,6 +251,8 @@ if __name__ == '__main__':
     js_filename = os.path.abspath(
         os.path.join(jsOutputPath, '{}.js')
     )
+    index_file = args.index[0] if args.index else js_filename.format('index')
+    posix_file = args.posix[0] if args.posix else js_filename.format('posix')
 
     # Load Localization Data from Babel
     data = load_locale_data(NVLPS_LOCALE_LIST)
@@ -265,4 +275,10 @@ if __name__ == '__main__':
     del data['en']['en_US_POSIX']
 
     # Save Javascript Modules
-    save_js_modules(data, posix_data, js_filename)
+    save_js_modules(data, posix_data, posix_file, js_filename)
+
+    # Save All Locales Index File
+    env = Environment(loader=FileSystemLoader(os.path.dirname(sys.argv[0])))
+    template = env.get_template('l10n-index.js.j2')
+    with open(index_file, 'w') as f:
+        f.write(template.render(langs=sorted(data.keys())))

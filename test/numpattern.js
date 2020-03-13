@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import Decimal from 'decimal.js-light';
-import { Currency } from '../src/currency';
+import Currency from '../src/currency';
 import { Locale } from '../src/locale';
 import NumberPattern from '../src/numpattern';
 
@@ -288,7 +288,7 @@ describe('nvlps-currency: NumberPattern', function() {
       expect(testNp.apply(
         1234567.89,
         new Locale('en_US'),
-        new Currency('USD'),
+        Currency('USD'),
         true,
         true
       )).to.equal('1,234,567.89\u00a0US Dollar');
@@ -299,7 +299,7 @@ describe('nvlps-currency: NumberPattern', function() {
       expect(testNp.apply(
         1234567.89,
         new Locale('en_US'),
-        new Currency('XXX'),
+        Currency('XXX'),
         true,
         true
       )).to.equal('¤\u00a01,234,567.890000');

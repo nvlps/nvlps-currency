@@ -6,7 +6,7 @@
   "scripts": {
     "build": "babel src --out-dir ./dist --source-maps",
     "build-ccy": "pipenv run python scripts/gen_ccy_data.py ./src/ccy-data.js && prettier --write ./src/ccy-data.js",
-    "build-l10n": "pipenv run python scripts/gen_ccy_l10n.py ./src/locales && prettier --write ./src/locales/*.js",
+    "build-l10n": "pipenv run python scripts/gen_ccy_l10n.py --index ./src/locales/index.js --posix ./src/posix.js ./src/locales && prettier --write ./src/posix.js && prettier --write ./src/locales/*.js",
     "lint": "eslint ./src && prettier --check ./src/**/*.js",
     "pylint": "flake8",
     "test": "mocha --require @babel/register test/ --check-leaks --globals navigator,process",

@@ -15,7 +15,7 @@
 
 import Decimal from 'decimal.js-light';
 import { Locale, POSIX } from './locale';
-import { Currency } from './currency';
+import Currency from './currency';
 
 /**
  *
@@ -46,13 +46,13 @@ export default class Money {
 
     // Load Currency (defaults to Unknown Currency)
     if (ccy === null) {
-      this.ccy = new Currency('XXX');
+      this.ccy = Currency('XXX');
     }
     else if (ccy instanceof Locale) {
       this.ccy = ccy.currency;
     }
-    else if (! (ccy instanceof Currency)) {
-      this.ccy = new Currency(ccy);
+    else if (! Currency.isCurrency(ccy)) {
+      this.ccy = Currency(ccy);
     }
     else {
       this.ccy = ccy;

@@ -23,82 +23,36 @@ import ccyData from './ccy-data';
 const ccyRegistry = Object.create(null);
 
 /**
- * ISO 4127 Currency Class
- * @typedef Currency
+ * ISO 4127 Currency Data Class
+ * @typedef CurrencyData
  * @type {Object}
  * @property {String} currencyCode ISO 4127 Currency Code
  * @property {Number} numericCode  ISO 4127 Numeric Code
  * @property {Number} precision    Number of Fractional Digits
+ * @property {String} country      ISO 3166 Country Code
  *
  * Represents a currency. Currencies are identified by their ISO 4217 currency
  * codes. Visit the ISO web site for more information.
  *
- * This class is designed so that there is never more than one Currency
- * instance for any given currency. A Currency instance may be obtained by
- * passing a Currency Code to the Currency constructor, or using the
- * Currency.getCurrency static class method.
+ * This class is not exported and is not intended to be created directly. Use
+ * the Currency and Currency.register functions to obtain CurrencyData
+ * instances.
  */
-export class Currency {
+class CurrencyData {
   /**
    * Class Constructor
-   * @param {String|Number} isoCode ISO 4127 Currency Code (string or numeric)
-   * @return {Currency} the Currency instance for the given currency code
+   * @param {String} ccyCode      ISO 4127 Currency Code
+   * @param {Number} numericCode  ISO 4127 Numeric Code
+   * @param {Number} precision    Number of Fractional Digits
+   * @param {String} country   ISO 3166 Country Code for the Currency's Home
+   * @return {Currency} New Currency Object
    */
-  constructor(isoCode) {
-    let ccy = null;
-
-    if (typeof isoCode === 'string') {
-      // Direct Lookup from Registry
-      if (! Object.prototype.hasOwnProperty.call(ccyRegistry, isoCode.toUpperCase())) {
-        throw new Error(`Currency '${isoCode}' is not defined`);
-      }
-
-      ccy = ccyRegistry[isoCode.toUpperCase()];
-    }
-
-    if (typeof isoCode === 'number') {
-      // Iterate Registry to find Numeric Code
-      Object.keys(ccyRegistry).forEach((code) => {
-        if (ccyRegistry[code].data.numericCode === isoCode) {
-          ccy = ccyRegistry[code];
-        }
-      });
-    }
-
-    // Currency is not registered
-    if (ccy === null) {
-      throw new Error(`Currency with code ${isoCode} is not defined`);
-    }
-
-    // Return Singleton if Present
-    if (ccy.singleton !== null) {
-      return ccy.singleton;
-    }
-
-    // Store this as Singleton
-    ccy.singleton = this;
-    this.m_ccy = ccy.data;
+  constructor(ccyCode, numericCode, precision, country) {
+    this.currencyCode = ccyCode;
+    this.numericCode = numericCode;
+    this.precision = precision;
+    this.country = country;
     Object.freeze(this);
-  }
-
-  /** ISO 4217 Currency Code */
-  get currencyCode() {
-    return this.m_ccy.isoCode;
-  }
-
-  /** ISO 4217 Numeric Code */
-  get numericCode() {
-    return this.m_ccy.numericCode;
-  }
-
-  /** Number of Fractional Digits */
-  get precision() {
-    return this.m_ccy.precision;
-  }
-
-  /** ISO 3166 Country Code for the currency's home country */
-  get country() {
-    return this.m_ccy.country;
   }
 
   /**
@@ -108,41 +62,76 @@ export class Currency {
    * "<Currency 'XXX'>" where "XXX" is the three-letter ISO 4127 Currency Code.
    */
   toString() {
-    return `<Currency '${this.m_ccy.isoCode}'>`;
-  }
-
-  /**
-   * Get the default Currency for a Country
-   * @param {String} countryCode ISO 3166 Country Code
-   * @return {Currency} default currency for the country
-   *
-   * Iterates through all registered Currency items to find the first one which
-   * matches the given country. If no currencies match, the Unknown Currency
-   * is returned.
-   */
-  static forCountry(countryCode) {
-    let ccy = new Currency('XXX');
-    const ucCode = countryCode.toUpperCase();
-
-    // Iterate Registry to find Country Code
-    Object.keys(ccyRegistry).forEach((code) => {
-      if (ccyRegistry[code].data.country === ucCode) {
-        ccy = new Currency(code);
-      }
-    });
-
-    // Nothing Found
-    return ccy;
+    return `<Currency '${this.currencyCode}'>`;
   }
 }
 
 /**
+ * Load a Currency Object from its ISO 4127 Code
+ * @param {String|Number} code ISO 4127 Currency Code (string or numeric)
+ * @return {CurrencyData} the Currency instance for the given currency code
+ */
+function Currency(code) {
+  if (code instanceof CurrencyData) {
+    return code;
+  }
+  if (typeof code === 'string') {
+    // Direct Lookup from Registry
+    if (! Object.prototype.hasOwnProperty.call(ccyRegistry, code.toUpperCase())) {
+      throw new Error(`Currency '${code}' is not defined`);
+    }
+
+    return ccyRegistry[code.toUpperCase()];
+  }
+  if (typeof code === 'number') {
+    let ccy = null;
+    // Iterate Registry to find Numeric Code
+    Object.keys(ccyRegistry).forEach((ccyCode) => {
+      if (ccyRegistry[ccyCode].numericCode === code) {
+        ccy = ccyRegistry[ccyCode];
+      }
+    });
+    if (ccy !== null) {
+      return ccy;
+    }
+  }
+
+  throw new Error(`Currency with code ${code} is not defined`);
+}
+
+/**
+ * Get the default Currency for a Country
+ * @param {String} countryCode ISO 3166 Country Code
+ * @return {Currency} default currency for the country
+ * @static
+ *
+ * Iterates through all registered Currency items to find the first one which
+ * matches the given country. If no currencies match, the Unknown Currency
+ * is returned.
+ */
+Currency.forCountry = function forCountry(countryCode) {
+  let ccy = Currency('XXX');
+  const ucCode = countryCode.toUpperCase();
+
+  // Iterate Registry to find Country Code
+  Object.keys(ccyRegistry).forEach((code) => {
+    if (ccyRegistry[code].country === ucCode) {
+      ccy = ccyRegistry[code];
+    }
+  });
+
+  // Return Result or Unknown Currency
+  return ccy;
+};
+
+/**
  * Define a new Currency Object
- * @param {String} isoCode      ISO 4127 Currency Code
+ * @param {String} currencyCode ISO 4127 Currency Code
  * @param {Number} numericCode  ISO 4127 Numeric Code
  * @param {Number} precision    Number of Fractional Digits
  * @param {String} country   ISO 3166 Country Code for the Currency's Home
- * @return {Currency} New Currency Object
+ * @return {CurrencyData} New Currency Object
+ * @static
  *
  * This function defines a new {Currency} object if it does not already exist
  * and enters it into the runtime currency registry, after which it can be
@@ -150,39 +139,46 @@ export class Currency {
  *
  * If the currency already exists, an Error will be thrown.
  */
-export function registerCurrency(isoCode, numericCode, precision, country) {
-  const ucCode = isoCode.toUpperCase();
+Currency.register = function registerCurrency(currencyCode, numericCode, precision, country) {
+  const ucCode = currencyCode.toUpperCase();
   if (Object.prototype.hasOwnProperty.call(ccyRegistry, ucCode)) {
-    throw new Error(`Currency '${isoCode}' has already been defined`);
+    throw new Error(`Currency '${currencyCode}' has already been defined`);
   }
 
   // Add new Currency Data to the Registry
-  ccyRegistry[ucCode] = {
-    data: {
-      isoCode: ucCode, numericCode, precision, country,
-    },
-    singleton: null,
-  };
+  ccyRegistry[ucCode] = new CurrencyData(
+    currencyCode, numericCode, precision, country,
+  );
 
-  Object.freeze(ccyRegistry[ucCode].data);
-
-  // This will set the 'singleton' field in the registry and freeze it
-  return new Currency(ucCode);
-}
+  // Return the Currency Data object
+  return ccyRegistry[ucCode];
+};
 
 /**
- * Gets the set of available currencies.
- * @static
+ * Gets the set of all available currencies.
  * @return {Array} Array of {Currency} objects
+ * @static
  */
-export function availableCurrencies() {
+Currency.all = function allCurrencies() {
   const ccys = [];
-  Object.keys(ccyRegistry).forEach((code) => {
-    ccys.push(ccyRegistry[code].singleton);
+  Object.keys(ccyRegistry).forEach((ccyCode) => {
+    ccys.push(ccyRegistry[ccyCode]);
   });
-
   return ccys;
-}
+};
+
+/**
+ * Check if an Object is a CurrencyData Instance
+ * @param {Object} obj object to test
+ * @return {Boolean} true if the obj is a CurrencyData instance
+ * @static
+ */
+Currency.isCurrency = function isCurrency(obj) {
+  return (obj instanceof CurrencyData);
+};
+
+// Export the Currency function
+export default Currency;
 
 // Load Currency Data
 (function loadCurrencyData() {
@@ -191,6 +187,6 @@ export function availableCurrencies() {
       n, p, c,
     } = ccyData[ccy];
 
-    registerCurrency(ccy, n, p, c);
+    Currency.register(ccy, n, p, c);
   });
 }());
