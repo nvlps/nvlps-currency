@@ -11,6 +11,12 @@ describe('nvlps-currency: Money', function() {
       expect(testFn).to.not.throw();
     });
 
+    it('should have copy constructor semantics', function() {
+      var m1 = new Money(1, 'USD');
+      var m2 = new Money(m1);
+      expect(m1).to.deep.equal(m2);
+    });
+
     it('should accept a Currency type', function() {
       var testCcy = Currency('USD');
       var testObj = new Money(0, testCcy);
@@ -58,6 +64,11 @@ describe('nvlps-currency: Money', function() {
     it('should return frozen objects', function() {
       var testObj = new Money(0);
       expect(testObj).to.be.frozen;
+    });
+
+    it('should throw errors for incorrect amount types', function() {
+      var testFn = function() { new Money([ '1.30' ]) };
+      expect(testFn).to.throw();
     });
   });
 
@@ -121,12 +132,23 @@ describe('nvlps-currency: Money', function() {
       expect(m5.amount).to.deep.equal(new Decimal('2.50'));
     });
 
+    it('should throw an error for math involving two different currencies', function() {
+      var m1 = new Money('0.50', 'USD');
+      var m2 = new Money('0.50', 'EUR');
+      var testFn1 = function() { return m1.add(m2) };
+      var testFn2 = function() { return m1.subtract(m2) };
+      expect(testFn1).to.throw();
+      expect(testFn2).to.throw();
+    });
+
     it('should support multiplication', function() {
       var m1 = new Money('1.11', 'XXX');
       var m2 = new Money('1.11', 'USD');
+      var testFn = function() { return m1.multiply(m2) };
       expect(m1.multiply(1.01).amount).to.deep.equal(new Decimal('1.1211'));
       expect(m2.multiply(1.01).amount).to.deep.equal(new Decimal('1.12'));
       expect(m2.multiply(1.01, Decimal.ROUND_UP).amount).to.deep.equal(new Decimal('1.13'));
+      expect(testFn).to.throw();
     });
 
     it('should support even distribution of positive values', function() {
@@ -203,6 +225,13 @@ describe('nvlps-currency: Money', function() {
       ])
     });
 
+    it('should throw errors for invalid distribution arguments', function() {
+      var testFn1 = function() { return new Money('1').distribute('into thirds') }
+      var testFn2 = function() { return new Money('1').distribute({ 'first': 1, 'second': 1 }) }
+      expect(testFn1).to.throw()
+      expect(testFn2).to.throw()
+    });
+
     it('should be comparable', function() {
       var m1 = new Money('2.51');
       var m2 = new Money('2.52');
@@ -213,6 +242,7 @@ describe('nvlps-currency: Money', function() {
       expect(m1.cmp(m2)).to.equal(-1);
       expect(m2.cmp(m1)).to.equal(1);
       expect(m1.cmp(m4)).to.equal(0);
+      expect(m1.cmp(2)).to.equal(1);
     });
 
     it('should provide helper comparison operations', function() {

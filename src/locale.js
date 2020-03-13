@@ -730,17 +730,6 @@ export function registerLocale(tag, data) {
 }
 
 /**
- * Register Multiple Locales
- * @param {Object} localeData
- */
-export function registerLocales(localeData) {
-  Object.keys(localeData).forEach((k) => {
-    registerLocale(k, localeData[k]);
-  });
-}
-
-
-/**
  * Gets the set of available (loaded) locales.
  * @static
  * @return {Array} Array of locale tags
@@ -750,7 +739,11 @@ export function availableLocales() {
 }
 
 // Load Posix Localization Data
-registerLocales(posixData);
+(function registerPosix() {
+  Object.keys(posixData).forEach((k) => {
+    registerLocale(k, posixData[k]);
+  });
+}());
 
 // Export POSIX Locale
 export const POSIX = new Locale('en_US_POSIX');

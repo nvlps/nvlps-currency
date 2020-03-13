@@ -41,19 +41,6 @@ describe('nvlps-currency: Locale', function() {
       expect(locItems).to.have.property('variant');
     });
 
-    it('should return an array of available language tags', function() {
-      var list = availableLanguages();
-      expect(list).to.be.an('array');
-      expect(list.length).to.be.at.least(1);
-      expect(list[0]).to.be.a('string');
-
-      var locItems = parseLocale(list[0]);
-      expect(locItems).to.have.property('language');
-      expect(locItems).to.have.property('territory', null);
-      expect(locItems).to.have.property('script', null);
-      expect(locItems).to.have.property('variant', null);
-    });
-
     it('should return frozen objects', function() {
       var testObj = new Locale('en_US_POSIX');
       expect(testObj).to.be.frozen;
@@ -286,6 +273,11 @@ describe('nvlps-currency: Locale', function() {
       expect(testObj2.currency).to.equal(Currency('CAD'));
       expect(POSIX.currency).to.equal(Currency('USD'));
       expect(new Locale('en').currency).to.equal(Currency('USD'));
+    });
+
+    it('should return Unknown Currency for languages without a default country', function() {
+      var testObj1 = new Locale('zz');
+      expect(testObj1.currency).to.equal(Currency('XXX'));
     });
 
     it('should provide localized currency symbols', function() {
