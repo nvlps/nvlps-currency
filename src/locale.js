@@ -17,11 +17,19 @@ import Decimal from 'decimal.js-light';
 import { Currency } from './currency';
 import NumberPattern from './numpattern';
 
-// Available Locale Data
-import availLangs from '../data/ccy-l10n.langs.json';
-
 // Default English-Language Data
-import posixData from '../data/ccy-l10n.posix.json';
+import posixData from './locales/posix';
+
+// Available Locale Data
+const availLangs = [
+  'af', 'ak', 'am', 'ar', 'az', 'be', 'bem', 'bg', 'bm', 'bn', 'bs', 'ca',
+  'cs', 'da', 'de', 'dz', 'el', 'en', 'es', 'et', 'fa', 'fi', 'fo', 'fr',
+  'ha', 'he', 'hi', 'hr', 'hu', 'hy', 'id', 'is', 'it', 'ja', 'ka', 'kea',
+  'kl', 'km', 'ko', 'ky', 'lo', 'lt', 'lv', 'mfe', 'mg', 'mk', 'mn', 'ms',
+  'mt', 'my', 'nb', 'ne', 'nl', 'pl', 'pt', 'rn', 'ro', 'ru', 'rw', 'si',
+  'sk', 'sl', 'sn', 'so', 'sq', 'sr', 'sv', 'sw', 'tg', 'th', 'ti', 'tk',
+  'to', 'tr', 'uk', 'ur', 'uz', 'vi', 'wo', 'yue', 'zh',
+];
 
 /* eslint-disable */
 // Language Aliases
@@ -241,7 +249,8 @@ function getGlobal() {
 export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
   const varnames = [category, 'LANGUAGE', 'LC_ALL', 'LC_CTYPE', 'LANG'];
   const globals = getGlobal();
-  const has = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+  // This has method seems more reliable than hasOwnProperty for builtins
+  const has = (o, k) => typeof o[k] !== 'undefined';
   let locale;
 
   // Try and load the browser language, if set
@@ -345,6 +354,11 @@ export class Locale {
     this.tag = normTag;
     this.m_data = loc.data;
     this.m_lang = lang ? lang.data : null;
+
+    this.language = tagItems.language;
+    this.territory = tagItems.territory;
+    this.script = tagItems.script;
+    this.variant = tagItems.variant;
 
     // Load Number Patterns
     const np = this[getField]('np');
@@ -685,13 +699,7 @@ export function registerLocale(tag, data) {
     language: lang, territory, script, variant,
   } = tagItems;
 
-  if ((territory !== null) || (script !== null) || (variant != null)) {
-    // Ensure the Parent Language exists if this is a Territory
-    if (! Object.prototype.hasOwnProperty.call(localeRegistry, lang)) {
-      throw new Error(`Locale '${lang}' was not registered before '${normTag}'`);
-    }
-  }
-  else {
+  if ((territory === null) && (script === null) && (variant === null)) {
     // Ensure all properties are defined if this is a Language
     const needed = [
       'd', 'g', 'p', 'm', 'pc', 'pm', 'e', 'x',
@@ -705,6 +713,10 @@ export function registerLocale(tag, data) {
         throw new Error(`Locale Data for ${normTag} is missing key ${i}`);
       }
     });
+  }
+  else if (! Object.prototype.hasOwnProperty.call(localeRegistry, lang)) {
+    // Ensure the Parent Language exists if this is a Territory
+    throw new Error(`Locale '${lang}' was not registered before '${normTag}'`);
   }
 
   // Add new Locale Data to the Registry
@@ -726,6 +738,16 @@ export function registerLocale(tag, data) {
 
   // Return Locale Object
   return new Locale(normTag);
+}
+
+/**
+ * Register Multiple Locales
+ * @param {Object} localeData
+ */
+export function registerLocales(localeData) {
+  Object.keys(localeData).forEach((k) => {
+    registerLocale(k, localeData[k]);
+  });
 }
 
 /**
@@ -756,11 +778,7 @@ export function availableLanguages() {
 }
 
 // Load Posix Localization Data
-(function loadPosix() {
-  Object.keys(posixData).forEach((k) => {
-    registerLocale(k, posixData[k]);
-  });
-}());
+registerLocales(posixData);
 
 // Export POSIX Locale
 export const POSIX = new Locale('en_US_POSIX');

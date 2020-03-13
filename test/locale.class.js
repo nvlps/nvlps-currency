@@ -5,10 +5,15 @@ import {
   POSIX,
   parseLocale,
   registerLocale,
+  registerLocales,
   availableLocales,
   availableLanguages,
 } from '../src/locale';
 
+import DE from '../src/locales/de';
+import EN from '../src/locales/en';
+import FR from '../src/locales/fr';
+import HI from '../src/locales/hi';
 
 describe('nvlps-currency: Locale', function() {
   describe('Accessors', function() {
@@ -69,6 +74,14 @@ describe('nvlps-currency: Locale', function() {
   });
 
   describe('Behavior and Data', function() {
+    it('should expose the parsed locale tag fields', function() {
+      var testObj = new Locale('en_US_POSIX');
+      expect(testObj).to.have.property('language', 'en');
+      expect(testObj).to.have.property('territory', 'US');
+      expect(testObj).to.have.property('script', null);
+      expect(testObj).to.have.property('variant', 'POSIX');
+    });
+
     it('should contain number formatting symbols', function() {
       var testObj = new Locale('en_US_POSIX');
       expect(testObj).to.have.property('decimal', '.');
@@ -244,7 +257,7 @@ describe('nvlps-currency: Locale', function() {
       expect(testFn).to.throw();
     });
 
-    it('should load new languages via require()', function() {
+    it('should load new languages via registerLocales()', function() {
       var testFn1 = function() { return new Locale('de_CH'); }
       var testFn2 = function() { return new Locale('fr_FR'); }
       var testFn3 = function() { return new Locale('en_CA'); }
@@ -253,19 +266,19 @@ describe('nvlps-currency: Locale', function() {
       expect(testFn3).to.throw();
 
       // Load 'de' Language and Locales
-      require('../src/locales/de');
+      registerLocales(DE);
       expect(testFn1).to.not.throw();
       expect(testFn2).to.throw();
       expect(testFn3).to.throw();
 
       // Load 'fr' Language and Locales
-      require('../src/locales/fr');
+      registerLocales(FR);
       expect(testFn1).to.not.throw();
       expect(testFn2).to.not.throw();
       expect(testFn3).to.throw();
 
       // Load 'en' Language and Locales
-      require('../src/locales/en');
+      registerLocales(EN);
       expect(testFn1).to.not.throw();
       expect(testFn2).to.not.throw();
       expect(testFn3).to.not.throw();
@@ -374,7 +387,7 @@ describe('nvlps-currency: Locale', function() {
     });
 
     it('should support mixed grouping sizes', function() {
-      require('../src/locales/hi');
+      registerLocales(HI);
       var L = new Locale('hi_IN');
       expect(L.formatNumber(1234567.89)).to.equal('12,34,567.89');
     });

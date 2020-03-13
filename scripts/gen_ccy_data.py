@@ -18,6 +18,7 @@ Sources:
 
 import argparse
 import json
+import os
 import requests
 import sys
 
@@ -27,6 +28,7 @@ except ImportError:
     from xml.etree import ElementTree
 
 from babel.core import get_global
+from jinja2 import Environment, FileSystemLoader
 
 from ccy_lists import NVLPS_CURRENCY_LIST
 
@@ -143,6 +145,22 @@ def parse_iso4217_data(url):
     return currencies
 
 
+def save_js_modules(data, js_filename):
+    '''
+    Save Currency Data as Javascript Module
+
+    Saves currency data as a Javascript module based on the Jinja2 template
+    which is expected to be loaded from 'ccy-data.js.j2' in the current module
+    folder.
+    '''
+    env = Environment(loader=FileSystemLoader(os.path.dirname(sys.argv[0])))
+    template = env.get_template('ccy-data.js.j2')
+
+    # Save Currency Data
+    with open(js_filename, 'w') as f:
+        f.write(template.render(data=data))
+
+
 def import_currency_locales():
     '''Import Unicode CLDR Data from Babel (map Currency to home Locale)'''
     locale_map = {}
@@ -170,22 +188,12 @@ if __name__ == '__main__':
     )
     parser.add_argument(
         'output', metavar='PATH', type=str, nargs=1,
-        help='JSON Output File (default is ccy-data.json)'
-    )
-    parser.add_argument(
-        '--indent', nargs=1, type=int,
-        help='JSON Indentation Level (if omitted, JSON will be minified)'
+        help='Javascript Output File (default is ./ccy-data.js)'
     )
 
     # Parse Command Line Arguments
     args = parser.parse_args()
-    outputPath = args.output[0] if args.output else './ccy-data.json'
-    indentSize = args.indent[0] if args.indent else None
-
-    # Create JSON Dump Arguments
-    dump_args = { 'sort_keys': True }
-    if indentSize is not None:
-        dump_args['indent'] = indentSize
+    outputPath = args.output[0] if args.output else './ccy-data.js'
 
     # Download xe.com and ISO 4217 Data
     ccyData = parse_iso4217_data(ISO4217_URL)
@@ -209,9 +217,8 @@ if __name__ == '__main__':
         data[ccy] = {
             'n': ccyData[ccy]['number'],
             'p': ccyData[ccy]['minor'],
-            'c': ccyCountries[ccy],
+            'c': json.dumps(ccyCountries[ccy]).replace('"', "'"),
         }
 
-    # Store Currency Data in JSON
-    with open(outputPath, 'w') as f:
-        json.dump(data, f, ensure_ascii=False, **dump_args)
+    # Store Currency Data in Javascript
+    save_js_modules(data, outputPath)

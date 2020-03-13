@@ -14,7 +14,7 @@
  */
 
 // Currency Data
-import ccyData from '../data/ccy-data.json';
+import ccyData from './ccy-data';
 
 /**
  * Registry of Currency Objects

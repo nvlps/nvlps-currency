@@ -29,6 +29,8 @@ export {
   generateLocale,
   negotiateLocale,
   defaultLocale,
+  availableLanguages,
+  availableLocales,
 } from './locale';
 
 // Money Class

@@ -182,7 +182,7 @@ def load_locale_data(locales):
     return locale_data
 
 
-def save_js_modules(data, js_filename_tmpl):
+def save_js_modules(data, posix_data, js_filename_tmpl):
     '''
     Save Locale Data as Javascript Modules
 
@@ -192,6 +192,17 @@ def save_js_modules(data, js_filename_tmpl):
     '''
     env = Environment(loader=FileSystemLoader(os.path.dirname(sys.argv[0])))
     template = env.get_template('ccy-l10n.js.j2')
+
+    # Save POSIX Data as Module
+    with open(js_filename_tmpl.format('posix'), 'w') as f:
+        posix_base = posix_data['en']
+        posix_locs = [(k, v) for k, v in posix_data.items() if k != 'en']
+        f.write(template.render(
+            name='POSIX',
+            lang='en',
+            base=posix_base,
+            locs=posix_locs
+        ))
 
     # Save Files by Language as Modules
     lang_keys = sorted(data.keys())
@@ -208,6 +219,7 @@ def save_js_modules(data, js_filename_tmpl):
 
         with open(js_filename_tmpl.format(lang.lower()), 'w') as f:
             f.write(template.render(
+                name=lang.upper(),
                 lang=lang,
                 base=base,
                 locs=locs
@@ -219,36 +231,15 @@ if __name__ == '__main__':
         description='Generate nvlps Currency and Locale Data from Unicode CLDR'
     )
     parser.add_argument(
-        'json_path', metavar='<JSON PATH>', type=str, nargs=1,
-        help='JSON Output Path'
-    )
-    parser.add_argument(
-        'js_path', metavar='<JS PATH>', type=str, nargs=1,
-        help='Javascript Output Path'
-    )
-    parser.add_argument(
-        '--indent', nargs=1, type=int,
-        help='JSON Indentation Level (if omitted, JSON will be minified)'
+        'js_path', metavar='<LOCALE PATH>', type=str, nargs=1,
+        help='Javascript Locale Output Path'
     )
 
     # Parse Command Line Arguments
     args = parser.parse_args()
-    jsonOutputPath = args.json_path[0] if args.json_path else '.'
     jsOutputPath = args.js_path[0] if args.js_path else '.'
-    indentSize = args.indent[0] if args.indent else None
-
-    # Create JSON Dump Arguments
-    dump_args = { 'sort_keys': True, 'ensure_ascii': False }
-    if indentSize is not None:
-        dump_args['indent'] = indentSize
 
     # Create Output File Template
-    list_filename = os.path.abspath(
-        os.path.join(jsonOutputPath, 'ccy-l10n.json')
-    )
-    json_filename = os.path.abspath(
-        os.path.join(jsonOutputPath, 'ccy-l10n.{}.json')
-    )
     js_filename = os.path.abspath(
         os.path.join(jsOutputPath, '{}.js')
     )
@@ -261,23 +252,17 @@ if __name__ == '__main__':
         if lang in data and loc not in data[lang]:
             data[lang][loc] = dict()
 
-    # Save List of Languages
-    with open(json_filename.format('langs'), 'w') as f:
-        json.dump(sorted(data.keys()), f, **dump_args)
-
-    # Save the en_US_POSIX data to a special file
-    with open(json_filename.format('posix'), 'w') as f:
-        json.dump({
-            'en':           data['en']['en'],           # noqa: E241
-            'en_US':        data['en']['en_US'],        # noqa: E241
-            'en_US_POSIX':  data['en']['en_US_POSIX'],  # noqa: E241
-        }, f, **dump_args)
-
     # Remove en, en_US, and en_US_POSIX from the 'en' Data since they will
-    # be preloaded by nvlps-currency
+    # be preloaded by nvlps-currency from the special 'posix' file
+    posix_data = {
+        'en':           data['en']['en'],           # noqa: E241
+        'en_US':        data['en']['en_US'],        # noqa: E241
+        'en_US_POSIX':  data['en']['en_US_POSIX'],  # noqa: E241
+    }
+
     del data['en']['en']
     del data['en']['en_US']
     del data['en']['en_US_POSIX']
 
     # Save Javascript Modules
-    save_js_modules(data, js_filename)
+    save_js_modules(data, posix_data, js_filename)

@@ -308,7 +308,6 @@ export default class NumberPattern {
   /**
    * Class Constructor
    * @param {String} pattern Pattern String
-   * @param {}
    */
   constructor(pattern) {
     this.pattern = pattern;
