@@ -22,11 +22,13 @@ export { Currency };
 // Locale Class
 export {
   Locale,
+  POSIX,
   parseLocale,
   generateLocale,
   negotiateLocale,
   defaultLocale,
   availableLocales,
+  registerLocale,
 } from './locale';
 
 // Money Class

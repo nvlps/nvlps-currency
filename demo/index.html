@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>nvlps Currency Test</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/pure-min.css">
+    <link rel="stylesheet" href="css/demo.css">
+  </head>
+  <body>
+    <header>
+      <h1>nvlps-currency demo</h1>
+      <h2>Localized Currency Library Testbed</h2>
+      <p>This page contains a short demo of the localized currency formatting
+      and parsing functionality of the <code>nvlps-currency</code> library.</p>
+    </header>
+    <div class="content">
+      <div class="pure-g">
+        <div class="pure-u-7-12">
+          <div class="inner-content">
+            <h2>Select Locale and Amount</h4>
+            <form class="pure-form pure-form-aligned">
+              <fieldset>
+                <div class="pure-control-group">
+                  <label for="locale">Locale</label>
+                  <select id="locale" name="locale"></select>
+                </div>
+                <div class="pure-control-group">
+                  <label for="currency">Currency</label>
+                  <select id="currency" name="currency"></select>
+                </div>
+              </fieldset>
+              <fieldset>
+                <div class="pure-control-group">
+                  <label for="amount">Amount</label>
+                  <input type="tel" id="amount" name="amount" value="" />
+                </div>
+              </fieldset>
+            </form>
+          </div>
+          <div class="inner-content">
+            <h2>How to Use</h2>
+            <p>First select the desired locale and currency, then enter an amount into the
+            amount field. The formatted value appears below, localized for the selected
+            locale. Number parsing is also localized, so entering <code>1,23</code> is
+            an error in the <code>en-US</code> locale, but a valid decimal number in
+            the <code>de-DE</code> locale.</p>
+            <p>Query arguments may be passed to the page to pre-set the input fields. The
+            page accepts the following arguments:</p>
+            <dl>
+              <dt><code>locale</code></dt><dd>BCP-47 locale</dd>
+              <dt><code>currency</code></dt><dd>ISO 4127 Currency Code or Number</dd>
+              <dt><code>amount</code></dt><dd>Amount of Currency (localized number)</dd>
+            </dl>
+            <p>The page by default only loads data for English German) speaking
+            locales. To add additional languages, open the page source and add a
+            <code>&lt;script&gt;</code> tag pointing to
+            <code>&quot;../dist/locales/{{lang}}.js&quot;</code> (where
+            <code>{{lang}}</code>
+            is the two-letter ISO 3166 language code) immediately after the two for
+            <code>en</code> and <code>de</code>.
+          </div>
+        </div>
+        <div class="pure-u-5-12">
+          <div class="inner-content">
+            <h2>Formatted Currency</h2>
+            <div id="error">Error Message</div>
+            <table class="nvlps-results pure-table pure-table-horizontal">
+              <tbody>
+                <tr><th>Parsed to POSIX</th><td id="oParsed"></td></tr>
+                <tr><th>Formatted as Number</th><td id="oNumber"></td></tr>
+                <tr><th>Formatted as Currency</th><td id="oCurrency"></td></tr>
+                <tr><th>Formatted as Accounting</th><td id="oAccounting"></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="inner-content">
+            <h2>Locale Data</h2>
+            <table class="nvlps-table pure-table pure-table-horizontal">
+              <tbody>
+                <!-- Currency Formatting -->
+                <tr><th>Currency Code</th><td id="dCcyCode"></tr>
+                <tr><th>Currency Symbol</th><td id="dCcySym"></td></tr>
+
+                <!-- Number Formatting -->
+                <tr><th>Decimal Symbol</th><td id="dDecimal"></td></tr>
+                <tr><th>Grouping Symbol</th><td id="dGrouping"></td></tr>
+                <tr><th>Number Format</th><td id="dNumPattern"></td></tr>
+                <tr><th>Currency Format</th><td id="dCcyPattern"></td></tr>
+                <tr><th>Accounting Format</th><td id="dAcctPattern"></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="../dist/nvlps-currency.bundle.js"></script>
+
+    <script>
+
+      // getQueryString Utility Function
+      function getQueryString(field, url) {
+        var href = url ? url : window.location.href;
+        var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
+        var string = reg.exec(href);
+        return string ? string[1] : null;
+      };
+
+      // Application State
+      var defaultLocale = nvlps.currency.POSIX;
+      var defaultCcy = nvlps.currency.Currency('USD');
+      var defaultAmt = 0;
+
+      if (getQueryString('locale')) {
+        defaultLocale = new nvlps.currency.Locale(getQueryString('locale'));
+      }
+      if (getQueryString('currency')) {
+        defaultCcy = nvlps.currency.Currency(getQueryString('currency'));
+      }
+
+      var state = {
+        locale: defaultLocale,                          // Selected Locale
+        currency: defaultCcy,                           // Selected Currency
+        amount: 0,                                      // Input Amount
+        money: new nvlps.currency.Money(0, defaultCcy), // Input Money
+      };
+
+      // Update Data for selected Currency
+      function updateCurrencyData() {
+        const ccySym = state.locale.currencySymbol(state.currency);
+        document.getElementById('dCcyCode').innerHTML = `<code>${state.currency.currencyCode}</code>`;
+        document.getElementById('dCcySym').innerHTML = `<code>${ccySym}</code>`;
+      }
+
+      // Update Data for selected Locale
+      function updateLocaleData() {
+        document.getElementById('dDecimal').innerHTML = `<code>${state.locale.decimal}</code>`;
+        document.getElementById('dGrouping').innerHTML = `<code>${state.locale.group}</code>`;
+        document.getElementById('dNumPattern').innerHTML = `<code>${state.locale.m_np.pattern}</code>`;
+        document.getElementById('dCcyPattern').innerHTML = `<code>${state.locale.m_cp.pattern}</code>`;
+        document.getElementById('dAcctPattern').innerHTML = `<code>${state.locale.m_ap.pattern}</code>`;
+
+        const s = document.getElementById("currency");
+        var c = null;
+        if (s !== null) {
+          for (let i = 0; i < s.options.length; i += 1) {
+            c = nvlps.currency.Currency(s.options[i].value);
+            s.options[i].text = `${c.currencyCode} – ${state.locale.currencyName(c)}`;
+          }
+        }
+      }
+
+      // Update Parse and Format Results
+      function updateResults() {
+        const value = document.getElementById("amount").value || "0";
+        const errEl = document.getElementById("error");
+
+        try {
+          const parsed = state.locale.parseNumber(value, true);
+
+          state.amount = parsed;
+          state.money = new nvlps.currency.Money(parsed, state.currency);
+
+          document.getElementById('oParsed').innerHTML = `<code>${state.amount.toString()}</code>`;
+          document.getElementById('oNumber').innerHTML = `<code>${state.locale.formatNumber(state.amount)}</code>`;
+          document.getElementById('oCurrency').innerHTML = `<code>${state.money.format(state.locale, 'standard')}</code>`;
+          document.getElementById('oAccounting').innerHTML = `<code>${state.money.format(state.locale, 'accounting')}</code>`;
+
+          errEl.innerHTML = '';
+          errEl.style.display = 'none';
+        }
+        catch (e) {
+          document.getElementById('oParsed').innerHTML = `<code>error</code>`;
+          document.getElementById('oNumber').innerHTML = `<code>error</code>`;
+          document.getElementById('oCurrency').innerHTML = `<code>error</code>`;
+          document.getElementById('oAccounting').innerHTML = `<code>error</code>`;
+
+          errEl.innerHTML = e.toString();
+          errEl.style.display = 'block';
+        }
+      }
+
+      // Set the Locale
+      function setLocale(l) {
+        const L = new nvlps.currency.Locale(l);
+        state.locale = L;
+
+        updateLocaleData();
+        updateCurrencyData();
+        updateResults();
+      }
+
+      // Set the Currency
+      function setCurrency(c) {
+        const C = nvlps.currency.Currency(c);
+        state.currency = C;
+
+        updateCurrencyData();
+        updateResults();
+      }
+
+      // Assign Event Handlers
+      document.getElementById("amount").addEventListener("input", (e) => {
+        updateResults(event.target.value);
+      });
+      document.getElementById("locale").addEventListener("input", (e) => {
+        const s = e.target;
+        setLocale(s.options[s.selectedIndex].value);
+      });
+      document.getElementById("currency").addEventListener("input", (e) => {
+        const s = e.target;
+        setCurrency(s.options[s.selectedIndex].value);
+      });
+
+      // Initialize Select Items
+      function loadLocales(e) {
+        var i = s = 0;
+        nvlps.currency.availableLocales().map((l) => {
+          var opt = document.createElement('option');
+          opt.text = l;
+          opt.value = l;
+          e.add(opt);
+          if (state.locale.tag.toLowerCase() == l.toLowerCase()) {
+            s = i;
+          }
+          i += 1;
+        });
+        e.selectedIndex = s;
+      }
+
+      function loadCurrencies(e) {
+        var i = s = 0;
+        nvlps.currency.Currency.all().map((c) => {
+          var opt = document.createElement('option');
+          opt.value = c.currencyCode;
+          e.add(opt);
+          if (state.currency.currencyCode == c.currencyCode) {
+            s = i;
+          }
+          i += 1;
+        });
+        e.selectedIndex = s;
+      }
+
+      // Initialize Data
+      loadLocales(document.getElementById('locale'));
+      loadCurrencies(document.getElementById('currency'));
+
+      document.getElementById('amount').value = getQueryString('amount');
+
+      updateLocaleData();
+      updateCurrencyData();
+      updateResults();
+    </script>
+  </body>
+</html>

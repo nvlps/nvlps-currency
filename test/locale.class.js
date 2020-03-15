@@ -303,8 +303,10 @@ describe('nvlps-currency: Locale', function() {
     it('should parse localized numeric strings', function() {
       var testObj1 = new Locale('en_US');
       var testObj2 = new Locale('de_DE');
-      expect(testObj1.parseNumber('1,234.5678').toString()).to.equal('1234.5678');
-      expect(testObj2.parseNumber('1.234,5678').toString()).to.equal('1234.5678');
+      expect(testObj1.parseNumber('1,234.5678', true).toString()).to.equal('1234.5678');
+      expect(testObj1.parseNumber('1,234.5678', false).toString()).to.equal('1234.5678');
+      expect(testObj2.parseNumber('1.234,5678', true).toString()).to.equal('1234.5678');
+      expect(testObj2.parseNumber('1.234,5678', false).toString()).to.equal('1234.5678');
     });
 
     it('should throw an error for invalid numeric strings', function() {
