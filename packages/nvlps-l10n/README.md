@@ -7,13 +7,15 @@ localization using Unicode CLDR data.
 
 This library is the Localization component of nvlps-currency.
 
+For more information, see the [nvlps-currency respository README](https://github.com/nvlps/nvlps-currency/blob/master/README.md).
+
 Installation
 ------------
 
-Install nvlps-currency-l10n by running:
+Install nvlps-currency localizations by running:
 
 ```shell
-npm install nvlps-currency-l10n
+yarn add @nvlps/l10n
 ```
 
 Contribute
