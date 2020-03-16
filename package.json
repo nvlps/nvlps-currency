@@ -1,10 +1,9 @@
 {
   "name": "nvlps-currency",
-  "version": "1.0.0",
+  "version": "0.7.0",
   "description": "Javascript Currency Library for nvlps",
-  "private": true,
-  "main": "lib/nvlps-currency.cjs.js",
-  "module": "lib/nvlps-currency.es.js",
+  "main": "lib/nvlps-currency.min.js",
+  "module": "src/nvlps-currency.js",
   "scripts": {
     "build": "cross-env BABEL_ENV=build node build",
     "build-ccy": "pipenv run python scripts/gen_ccy_data.py ./src/lib/ccy-data.js && prettier --write ./src/lib/ccy-data.js",
@@ -19,8 +18,12 @@
   },
   "size-limit": [
     {
-      "limit": "19.99 KB",
+      "limit": "135 KB",
       "path": "lib/nvlps-currency.min.js"
+    },
+    {
+      "limit": "15 KB",
+      "path": "dist/nvlps-currency.min.js"
     }
   ],
   "repository": {

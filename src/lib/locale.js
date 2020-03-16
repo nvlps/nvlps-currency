@@ -281,15 +281,15 @@ export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
   let locale;
 
   // Try and load the browser language, if set
-  if (has(globals, 'navigator') && has(navigator, 'language')) {
-    locale = navigator.language;
+  if (has(globals, 'navigator') && has(globals.navigator, 'language')) {
+    locale = globals.navigator.language;
 
     // Parse using BCF47 style with dash separators
     return generateLocale(parseLocale(locale, '-'));
   }
 
   // Check if we are running in node.js
-  if (!has(globals, 'process') || !has(process, 'env')) {
+  if (!has(globals, 'process') || !has(globals.process, 'env')) {
     /* istanbul ignore next this is exceptional and difficult to mock */
     return null;
   }
@@ -299,7 +299,7 @@ export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
   for (let i = 0; i < filtered.length; i += 1) {
     const name = filtered[i];
 
-    locale = process.env[name];
+    locale = globals.process.env[name];
     if (locale) {
       if (name === 'LANGUAGE' && locale.indexOf(':') !== -1) {
         // the LANGUAGE variable may contain a colon-separated list of
