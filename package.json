@@ -1,6 +1,6 @@
 {
   "name": "nvlps-currency",
-  "version": "0.7.3",
+  "version": "0.8.0",
   "description": "Javascript Currency Library for nvlps",
   "main": "lib/nvlps-currency.min.js",
   "module": "src/nvlps-currency.js",
