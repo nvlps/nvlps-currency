@@ -6,7 +6,7 @@ import {
   availableLocales,
   parseLocale,
   registerLocale,
- } from 'nvlps-currency';
+} from '@nvlps/currency';
 
 import '../src/locales/de';
 import '../src/locales/en';
