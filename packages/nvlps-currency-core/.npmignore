@@ -1,0 +1,24 @@
+# OSX
+.DS_Store
+
+# npm
+node_modules
+yarn.lock
+package-lock.json
+
+# dev
+test
+types
+build
+.babelrc
+.editorconfig
+.esdoc.json
+.eslintrc.json
+.prettierrc.json
+.nyc_output
+
+#doc
+CONTRIBUTING.md
+docs
+
+#other
