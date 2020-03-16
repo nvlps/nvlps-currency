@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nvlps-currency/l10n": "^0.10.0",
-    "nvlps-currency": "^0.10.1"
+    "@nvlps/currency": "^0.10.1",
+    "@nvlps/l10n": "^0.10.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
