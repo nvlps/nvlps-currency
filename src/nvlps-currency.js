@@ -13,14 +13,5 @@
  * currency names.
  */
 
-import Currency from './lib/currency';
-import Money from './lib/money';
-
-// Currency Class
-export { Currency };
-
-// Locale Class
-export * from './lib/locale';
-
-// Money Class
-export { Money };
+export * from './lib/index';
+export * from './nvlps-locales';

@@ -182,7 +182,7 @@ def load_locale_data(locales):
     return locale_data
 
 
-def save_js_modules(data, posix_data, posix_file, es6_tmpl, web_tmpl):
+def save_js_modules(data, posix_data, posix_file, es6_tmpl, lib_path):
     '''
     Save Locale Data as Javascript Modules
 
@@ -192,14 +192,14 @@ def save_js_modules(data, posix_data, posix_file, es6_tmpl, web_tmpl):
     '''
     env = Environment(loader=FileSystemLoader(os.path.dirname(sys.argv[0])))
     template_es6 = env.get_template('l10n-module-es6.js.j2')
-    template_web = env.get_template('l10n-module-web.js.j2')
+    template_posix = env.get_template('l10n-module-posix.js.j2')
 
     # Save POSIX Data as Module
     if posix_file is not None:
         with open(posix_file, 'w') as f:
             posix_base = posix_data['en']
             posix_locs = [(k, v) for k, v in posix_data.items() if k != 'en']
-            f.write(template_es6.render(
+            f.write(template_posix.render(
                 name='POSIX',
                 lang='en',
                 base=posix_base,
@@ -219,23 +219,17 @@ def save_js_modules(data, posix_data, posix_file, es6_tmpl, web_tmpl):
         locs = [(lk, json.dumps(data[lang][lk], **dump_args))
                 for lk in data[lang].keys() if lk != lang]
 
-        if es6_tmpl is not None:
-            with open(es6_tmpl.format(lang.lower()), 'w') as f:
-                f.write(template_es6.render(
-                    name=lang.upper(),
-                    lang=lang,
-                    base=base,
-                    locs=locs
-                ))
-
-        if web_tmpl is not None:
-            with open(web_tmpl.format(lang.lower()), 'w') as f:
-                f.write(template_web.render(
-                    name=lang.upper(),
-                    lang=lang,
-                    base=base,
-                    locs=locs
-                ))
+        with open(es6_tmpl.format(lang.lower()), 'w') as f:
+            f.write(template_es6.render(
+                name=lang.upper(),
+                lang=lang,
+                base=base,
+                locs=locs,
+                path=os.path.relpath(
+                    os.path.abspath(lib_path),
+                    os.path.dirname(es6_tmpl)
+                )
+            ))
 
 
 if __name__ == '__main__':
@@ -243,38 +237,34 @@ if __name__ == '__main__':
         description='Generate nvlps Currency and Locale Data from Unicode CLDR'
     )
     parser.add_argument(
-        '--es6', metavar='<ES6 PATH>', type=str, nargs=1,
+        'es6', metavar='<ES6 PATH>', type=str, nargs=1,
         help='ECMAScript 6 Module Output Path'
     )
     parser.add_argument(
-        '--web', metavar='<WEB PATH>', type=str, nargs=1,
-        help='Web Module Output Path'
+        '--posix', metavar='<POSIX PATH>', type=str, nargs=1, required=True,
+        help='POSIX Locale Output File'
     )
     parser.add_argument(
-        '--posix', metavar='<POSIX PATH>', type=str, nargs=1,
-        help='POSIX Locale Output File'
+        '--index', metavar='<INDEX PATH>', type=str, nargs=1,
+        help='Index Module Output Path'
+    )
+    parser.add_argument(
+        '--lib', metavar='<LIB PATH>', type=str, nargs=1, required=True,
+        help='Path to Library Root (locale.js must reside in this directory)'
     )
 
     # Parse Command Line Arguments
     args = parser.parse_args()
     es6OutputPath = args.es6[0] if args.es6 else None
-    webOutputPath = args.web[0] if args.web else None
-
-    if es6OutputPath is None and webOutputPath is None:
-        sys.stderr.write('At least one of --es6 or --web must be specified\n')
-        sys.exit(1)
 
     # Create Output File Template
     es6_template = None if es6OutputPath is None else os.path.abspath(
         os.path.join(es6OutputPath, '{}.js')
     )
-    web_template = None if webOutputPath is None else os.path.abspath(
-        os.path.join(webOutputPath, '{}.js')
-    )
 
-    posix_file = args.posix[0] if args.posix \
-        else es6_template.format('posix') if es6_template is not None \
-        else None
+    posix_file = args.posix[0] if args.posix else None
+    index_file = args.index[0] if args.index else None
+    lib_path = args.lib[0] if args.lib else None
 
     # Load Localization Data from Babel
     data = load_locale_data(NVLPS_LOCALE_LIST)
@@ -297,13 +287,19 @@ if __name__ == '__main__':
     del data['en']['en_US_POSIX']
 
     # Save Javascript Modules
-    save_js_modules(data, posix_data, posix_file, es6_template, web_template)
+    save_js_modules(data, posix_data, posix_file, es6_template, lib_path)
 
     # Save All Locales Index File
-    if es6OutputPath is not None:
+    if index_file is not None:
         env = Environment(
             loader=FileSystemLoader(os.path.dirname(sys.argv[0]))
         )
         template = env.get_template('l10n-index.js.j2')
-        with open(es6_template.format('index'), 'w') as f:
-            f.write(template.render(langs=sorted(data.keys())))
+        with open(index_file, 'w') as f:
+            f.write(template.render(
+                langs=sorted(data.keys()),
+                path=os.path.relpath(
+                    os.path.dirname(es6_template),
+                    os.path.dirname(index_file)
+                )
+            ))

@@ -10,14 +10,10 @@ import {
   availableLanguages,
 } from '../src/lib/locale';
 
-import { EN, DE, FR, HI } from '../src/locales/es6';
-
-before(function() {
-  registerLocales(EN);
-  registerLocales(DE);
-  registerLocales(FR);
-  registerLocales(HI);
-});
+import '../src/locales/de';
+import '../src/locales/en';
+import '../src/locales/fr';
+import '../src/locales/hi';
 
 describe('nvlps-currency: Locale', function() {
   describe('Accessors', function() {

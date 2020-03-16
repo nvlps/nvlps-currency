@@ -6,15 +6,23 @@
   "main": "lib/nvlps-currency.cjs.js",
   "module": "lib/nvlps-currency.es.js",
   "scripts": {
-    "build": "babel src --out-dir ./dist --source-maps",
+    "build": "cross-env BABEL_ENV=build node build",
     "build-ccy": "pipenv run python scripts/gen_ccy_data.py ./src/lib/ccy-data.js && prettier --write ./src/lib/ccy-data.js",
-    "build-l10n": "pipenv run python scripts/gen_ccy_l10n.py --posix ./src/lib/posix.js --es6 ./src/locales/es6 --web ./src/locales/web && prettier --write ./src/lib/posix.js && prettier --write ./src/locales/**/*.js",
+    "build-l10n": "pipenv run python scripts/gen_ccy_l10n.py --posix ./src/lib/posix.js  --index ./src/nvlps-locales.js --lib ./src/lib ./src/locales && prettier --write ./src/lib/posix.js && prettier --write ./src/nvlps-locales.js && prettier --write ./src/locales/*.js",
     "dist-l10n": "for f in `ls src/locales/web/*.js` ; do npx terser $f -o dist/nvlps-l10n.$(basename $f) -c -m ; done",
     "lint": "eslint ./src && prettier --check ./src/**/*.js",
     "pylint": "flake8",
-    "test": "mocha --require @babel/register test/ --check-leaks --globals navigator,process",
+    "test": "cross-env BABEL_ENV=test npm run mocha",
+    "mocha": "mocha --require @babel/register test/ --check-leaks --globals navigator,process",
+    "size": "npm run build && size-limit",
     "coverage": "nyc npm test && nyc report"
   },
+  "size-limit": [
+    {
+      "limit": "19.99 KB",
+      "path": "lib/nvlps-currency.min.js"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nvlps/nvlps-currency.git"
@@ -42,11 +50,13 @@
     "@babel/register": "^7.8.6",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
+    "@size-limit/preset-big-lib": "^4.4.0",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
     "babel-plugin-inline-json-import": "^0.3.2",
     "benchmark": "^2.1.4",
     "chai": "^4.2.0",
+    "cross-env": "^7.0.2",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^6.8.0",
@@ -62,8 +72,10 @@
     "nyc": "^15.0.0",
     "prettier": "~1.19.1",
     "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-resolve": "0.0.1-predev.1",
     "rollup-plugin-terser": "^5.3.0",
+    "size-limit": "^4.4.0",
     "typescript": "^3.8.3"
   },
   "dependencies": {
