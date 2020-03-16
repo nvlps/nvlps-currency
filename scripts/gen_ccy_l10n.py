@@ -193,7 +193,7 @@ def load_locale_data(locales):
     return locale_data
 
 
-def save_js_modules(data, posix_data, posix_file, es6_tmpl, lib_path):
+def save_js_modules(data, posix_data, posix_file, es6_tmpl):
     '''
     Save Locale Data as Javascript Modules
 
@@ -235,11 +235,7 @@ def save_js_modules(data, posix_data, posix_file, es6_tmpl, lib_path):
                 name=lang.upper(),
                 lang=lang,
                 base=base,
-                locs=locs,
-                path=os.path.relpath(
-                    os.path.abspath(lib_path),
-                    os.path.dirname(es6_tmpl)
-                )
+                locs=locs
             ))
 
 
@@ -259,10 +255,6 @@ if __name__ == '__main__':
         '--index', metavar='<INDEX PATH>', type=str, nargs=1,
         help='Index Module Output Path'
     )
-    parser.add_argument(
-        '--lib', metavar='<LIB PATH>', type=str, nargs=1, required=True,
-        help='Path to Library Root (locale.js must reside in this directory)'
-    )
 
     # Parse Command Line Arguments
     args = parser.parse_args()
@@ -275,7 +267,6 @@ if __name__ == '__main__':
 
     posix_file = args.posix[0] if args.posix else None
     index_file = args.index[0] if args.index else None
-    lib_path = args.lib[0] if args.lib else None
 
     # Load Localization Data from Babel
     data = load_locale_data(NVLPS_LOCALE_LIST)
@@ -298,7 +289,7 @@ if __name__ == '__main__':
     del data['en']['en_US_POSIX']
 
     # Save Javascript Modules
-    save_js_modules(data, posix_data, posix_file, es6_template, lib_path)
+    save_js_modules(data, posix_data, posix_file, es6_template)
 
     # Save All Locales Index File
     if index_file is not None:
