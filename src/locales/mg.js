@@ -111,7 +111,9 @@ const MG = {
     },
   },
 
-  mg_MG: {},
+  mg_MG: {
+    c: 'MGA',
+  },
 };
 
 registerLocales(MG);

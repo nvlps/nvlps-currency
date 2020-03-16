@@ -214,7 +214,9 @@ const FO = {
     },
   },
 
-  fo_FO: {},
+  fo_FO: {
+    c: 'DKK',
+  },
 };
 
 registerLocales(FO);

@@ -216,6 +216,7 @@ const DA = {
       ZAR: 'sydafrikansk rand',
       ZMW: 'zambisk kwacha',
     },
+    c: 'DKK',
   },
 
   da_DK: {},

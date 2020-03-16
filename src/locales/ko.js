@@ -214,9 +214,12 @@ const KO = {
       ZAR: '남아프리카 랜드',
       ZMW: '잠비아 콰쳐',
     },
+    c: 'KRW',
   },
 
-  ko_KP: {},
+  ko_KP: {
+    c: 'KPW',
+  },
 
   ko_KR: {},
 };

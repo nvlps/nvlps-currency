@@ -215,7 +215,9 @@ const HY = {
     },
   },
 
-  hy_AM: {},
+  hy_AM: {
+    c: 'AMD',
+  },
 };
 
 registerLocales(HY);

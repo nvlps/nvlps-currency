@@ -20,6 +20,7 @@ import os
 import sys
 
 from babel.core import parse_locale, Locale
+from babel.numbers import get_territory_currencies
 from jinja2 import Environment, FileSystemLoader
 
 from ccy_lists import NVLPS_CURRENCY_LIST, NVLPS_LOCALE_LIST, \
@@ -36,7 +37,7 @@ def make_locale_overlay(child, parent, dict_only=False):
     None values
     '''
     simple_keys = ('d', 'g', 'p', 'm', 'pc', 'pm', 'e', 'x', 'inf', 'nan',
-                   'np', 'cp', 'ap')
+                   'np', 'cp', 'ap', 'c')
     dict_keys = ('cs', 'cn')
 
     if not dict_only:
@@ -99,6 +100,7 @@ def load_for_locale(locale, parent):
     --------------------------
     - Localized Currency Symbols
     - Localized Currency Names
+    - Local Default Currency
     '''
     L = Locale.parse(locale)
     data = dict()
@@ -133,6 +135,15 @@ def load_for_locale(locale, parent):
             if k in NVLPS_CURRENCY_LIST
         ]),
     }
+
+    # Load Locale Currency
+    territory = L.territory
+    if (territory is None) and (L.language in NVLPS_LOCALE_ALIASES):
+        territory = parse_locale(NVLPS_LOCALE_ALIASES[L.language])[1]
+    if territory is not None:
+        currencies = get_territory_currencies(territory)
+        if currencies and len(currencies) > 0:
+            data['c'] = currencies[0]
 
     # Remove Redundant Information contained in Parent
     if parent is not None:

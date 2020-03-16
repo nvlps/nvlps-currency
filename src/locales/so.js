@@ -218,9 +218,12 @@ const SO = {
     cs: {
       DJF: 'Fdj',
     },
+    c: 'DJF',
   },
 
-  so_SO: {},
+  so_SO: {
+    c: 'SOS',
+  },
 };
 
 registerLocales(SO);

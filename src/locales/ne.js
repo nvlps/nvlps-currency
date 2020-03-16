@@ -215,7 +215,9 @@ const NE = {
     },
   },
 
-  ne_NP: {},
+  ne_NP: {
+    c: 'NPR',
+  },
 };
 
 registerLocales(NE);

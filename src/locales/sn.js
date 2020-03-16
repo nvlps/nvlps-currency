@@ -110,7 +110,9 @@ const SN = {
     },
   },
 
-  sn_ZW: {},
+  sn_ZW: {
+    c: 'USD',
+  },
 };
 
 registerLocales(SN);

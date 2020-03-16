@@ -486,21 +486,11 @@ export class Locale {
 
   /** Default Currency */
   get currency() {
-    // eslint is confused when a destructure includes both constant and
-    // re-assigned variables
-    let {
-      language, // eslint-disable-line prefer-const
-      territory,
-    } = parseLocale(this.tag);
-
-    if (territory === null) {
-      if (!hasOwnProperty(LOCALE_ALIASES, language)) {
-        return Currency('XXX');
-      }
-      ({ territory } = parseLocale(LOCALE_ALIASES[language]));
+    const ccy = this[getField]('c');
+    if (ccy === null) {
+      return new Currency('XXX');
     }
-
-    return Currency.forCountry(territory);
+    return new Currency(ccy);
   }
 
   /**

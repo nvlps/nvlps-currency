@@ -216,7 +216,9 @@ const MY = {
     },
   },
 
-  my_MM: {},
+  my_MM: {
+    c: 'MMK',
+  },
 };
 
 registerLocales(MY);

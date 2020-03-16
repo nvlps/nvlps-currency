@@ -215,6 +215,7 @@ const LV = {
       ZAR: 'Dienvidāfrikas rends',
       ZMW: 'Zambijas kvača',
     },
+    c: 'EUR',
   },
 
   lv_LV: {},

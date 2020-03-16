@@ -72,7 +72,9 @@ const TO = {
     },
   },
 
-  to_TO: {},
+  to_TO: {
+    c: 'TOP',
+  },
 };
 
 registerLocales(TO);

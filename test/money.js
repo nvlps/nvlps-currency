@@ -4,6 +4,10 @@ import { Locale, POSIX } from '../src/lib/locale';
 import Money from '../src/lib/money';
 import Currency from '../src/lib/currency';
 
+import '../src/locales/de';
+import '../src/locales/en';
+import '../src/locales/fr';
+
 describe('nvlps-currency: Money', function() {
   describe('Constructors', function() {
     it('should have a public constructor', function() {
@@ -54,6 +58,12 @@ describe('nvlps-currency: Money', function() {
     it('should accept String amounts', function() {
       var testObj = new Money('3.45');
       expect(testObj.amount).to.deep.equal(new Decimal(3.45));
+    });
+
+    it('should accept localized String amounts', function() {
+      var testObj = new Money('3 456.78', new Locale('fr_FR'));
+      expect(testObj.currency).to.equal(new Currency('EUR'));
+      expect(testObj.amount).to.deep.equal(new Decimal(3456.78));
     });
 
     it('should use locale-default currency if not specified', function() {

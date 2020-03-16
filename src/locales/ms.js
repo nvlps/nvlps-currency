@@ -222,9 +222,12 @@ const MS = {
     cs: {
       BND: '$',
     },
+    c: 'BND',
   },
 
-  ms_MY: {},
+  ms_MY: {
+    c: 'MYR',
+  },
 };
 
 registerLocales(MS);

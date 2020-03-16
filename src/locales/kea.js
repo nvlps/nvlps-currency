@@ -216,7 +216,9 @@ const KEA = {
     },
   },
 
-  kea_CV: {},
+  kea_CV: {
+    c: 'CVE',
+  },
 };
 
 registerLocales(KEA);

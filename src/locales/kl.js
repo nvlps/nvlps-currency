@@ -65,7 +65,9 @@ const KL = {
     },
   },
 
-  kl_GL: {},
+  kl_GL: {
+    c: 'DKK',
+  },
 };
 
 registerLocales(KL);

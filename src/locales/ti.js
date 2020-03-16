@@ -74,6 +74,7 @@ const TI = {
     cs: {
       ERN: 'Nfk',
     },
+    c: 'ERN',
   },
 };
 

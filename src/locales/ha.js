@@ -114,7 +114,9 @@ const HA = {
     },
   },
 
-  ha_NE: {},
+  ha_NE: {
+    c: 'XOF',
+  },
 };
 
 registerLocales(HA);

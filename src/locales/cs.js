@@ -215,6 +215,7 @@ const CS = {
       ZAR: 'jihoafrický rand',
       ZMW: 'zambijská kwacha',
     },
+    c: 'CZK',
   },
 
   cs_CZ: {},

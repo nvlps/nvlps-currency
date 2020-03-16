@@ -214,6 +214,7 @@ const IS = {
       ZAR: 'suðurafrískt rand',
       ZMW: 'sambísk kvaka',
     },
+    c: 'ISK',
   },
 
   is_IS: {},

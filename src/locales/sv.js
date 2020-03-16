@@ -225,9 +225,12 @@ const SV = {
       ZAR: 'sydafrikansk rand',
       ZMW: 'zambisk kwacha',
     },
+    c: 'SEK',
   },
 
-  sv_AX: {},
+  sv_AX: {
+    c: 'EUR',
+  },
 
   sv_SE: {},
 };

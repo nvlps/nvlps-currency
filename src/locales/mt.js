@@ -203,7 +203,9 @@ const MT = {
     },
   },
 
-  mt_MT: {},
+  mt_MT: {
+    c: 'EUR',
+  },
 };
 
 registerLocales(MT);

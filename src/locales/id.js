@@ -216,6 +216,7 @@ const ID = {
       ZAR: 'Rand Afrika Selatan',
       ZMW: 'Kwacha Zambia',
     },
+    c: 'IDR',
   },
 
   id_ID: {},

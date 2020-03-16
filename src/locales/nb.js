@@ -217,9 +217,13 @@ const NB = {
     },
   },
 
-  nb_NO: {},
+  nb_NO: {
+    c: 'NOK',
+  },
 
-  nb_SJ: {},
+  nb_SJ: {
+    c: 'NOK',
+  },
 };
 
 registerLocales(NB);

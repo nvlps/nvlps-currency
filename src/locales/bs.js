@@ -218,6 +218,7 @@ const BS = {
       ZAR: 'Južnoafrički rand',
       ZMW: 'Zambijska kvača',
     },
+    c: 'BAM',
   },
 
   bs_Cyrl_BA: {

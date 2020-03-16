@@ -214,12 +214,14 @@ const RO = {
       ZAR: 'rand sud-african',
       ZMW: 'kwacha zambian',
     },
+    c: 'RON',
   },
 
   ro_MD: {
     cs: {
       MDL: 'L',
     },
+    c: 'MDL',
   },
 
   ro_RO: {},

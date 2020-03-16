@@ -214,7 +214,9 @@ const KA = {
     },
   },
 
-  ka_GE: {},
+  ka_GE: {
+    c: 'GEL',
+  },
 };
 
 registerLocales(KA);

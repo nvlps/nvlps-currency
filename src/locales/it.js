@@ -215,6 +215,7 @@ const IT = {
       ZAR: 'rand sudafricano',
       ZMW: 'kwacha dello Zambia',
     },
+    c: 'EUR',
   },
 
   it_IT: {},

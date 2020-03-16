@@ -109,7 +109,9 @@ const RN = {
     },
   },
 
-  rn_BI: {},
+  rn_BI: {
+    c: 'BIF',
+  },
 };
 
 registerLocales(RN);

@@ -110,7 +110,9 @@ const BM = {
     },
   },
 
-  bm_ML: {},
+  bm_ML: {
+    c: 'XOF',
+  },
 };
 
 registerLocales(BM);

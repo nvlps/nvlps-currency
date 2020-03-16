@@ -212,6 +212,7 @@ const POSIX = {
       ZAR: 'South African Rand',
       ZMW: 'Zambian Kwacha',
     },
+    c: 'USD',
   },
 
   en_US: {},

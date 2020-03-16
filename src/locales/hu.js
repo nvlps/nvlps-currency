@@ -215,6 +215,7 @@ const HU = {
       ZAR: 'dél-afrikai rand',
       ZMW: 'zambiai kwacha',
     },
+    c: 'HUF',
   },
 
   hu_HU: {},

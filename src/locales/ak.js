@@ -110,7 +110,9 @@ const AK = {
     },
   },
 
-  ak_GH: {},
+  ak_GH: {
+    c: 'GHS',
+  },
 };
 
 registerLocales(AK);

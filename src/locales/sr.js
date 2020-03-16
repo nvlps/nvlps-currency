@@ -379,6 +379,7 @@ const SR = {
       ZAR: 'Južnoafrički rand',
       ZMW: 'Zambijska kvača',
     },
+    c: 'EUR',
   },
 
   sr_Latn_RS: {
@@ -543,6 +544,7 @@ const SR = {
       ZAR: 'Južnoafrički rand',
       ZMW: 'Zambijska kvača',
     },
+    c: 'RSD',
   },
 };
 

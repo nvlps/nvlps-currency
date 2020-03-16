@@ -215,7 +215,9 @@ const HI = {
     },
   },
 
-  hi_IN: {},
+  hi_IN: {
+    c: 'INR',
+  },
 };
 
 registerLocales(HI);

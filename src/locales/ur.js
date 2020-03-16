@@ -216,7 +216,9 @@ const UR = {
     },
   },
 
-  ur_PK: {},
+  ur_PK: {
+    c: 'PKR',
+  },
 };
 
 registerLocales(UR);

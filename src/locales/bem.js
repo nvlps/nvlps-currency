@@ -60,7 +60,9 @@ const BEM = {
     cn: {},
   },
 
-  bem_ZM: {},
+  bem_ZM: {
+    c: 'ZMW',
+  },
 };
 
 registerLocales(BEM);

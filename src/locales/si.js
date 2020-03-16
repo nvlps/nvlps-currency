@@ -233,7 +233,9 @@ const SI = {
     },
   },
 
-  si_LK: {},
+  si_LK: {
+    c: 'LKR',
+  },
 };
 
 registerLocales(SI);

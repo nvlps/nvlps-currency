@@ -36,7 +36,13 @@ export default class Money {
     } else if (typeof amt === 'number') {
       this.amt = new Decimal(amt);
     } else if (typeof amt === 'string') {
-      this.amt = new Decimal(locale.parseNumber(amt));
+      if ((ccy !== null) && (ccy instanceof Locale)) {
+        // Handles Call Signature new Money(String, Locale)
+        this.amt = new Decimal(ccy.parseNumber(amt));
+      }
+      else {
+        this.amt = new Decimal(locale.parseNumber(amt));
+      }
     } else {
       throw new Error(`Failed to parse amount of type ${typeof amt}`);
     }

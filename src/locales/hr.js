@@ -216,7 +216,9 @@ const HR = {
     },
   },
 
-  hr_HR: {},
+  hr_HR: {
+    c: 'HRK',
+  },
 };
 
 registerLocales(HR);

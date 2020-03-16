@@ -232,25 +232,40 @@ const FR = {
       ZAR: 'rand sud-africain',
       ZMW: 'kwacha zambien',
     },
+    c: 'EUR',
   },
 
-  fr_BF: {},
+  fr_BF: {
+    c: 'XOF',
+  },
 
-  fr_BJ: {},
+  fr_BJ: {
+    c: 'XOF',
+  },
 
   fr_BL: {},
 
-  fr_CF: {},
+  fr_CF: {
+    c: 'XAF',
+  },
 
-  fr_CG: {},
+  fr_CG: {
+    c: 'XAF',
+  },
 
-  fr_CI: {},
+  fr_CI: {
+    c: 'XOF',
+  },
 
-  fr_CM: {},
+  fr_CM: {
+    c: 'XAF',
+  },
 
   fr_FR: {},
 
-  fr_GA: {},
+  fr_GA: {
+    c: 'XAF',
+  },
 
   fr_GF: {},
 
@@ -258,6 +273,7 @@ const FR = {
     cs: {
       GNF: 'FG',
     },
+    c: 'GNF',
   },
 
   fr_GP: {},
@@ -266,6 +282,7 @@ const FR = {
     cs: {
       HTG: 'G',
     },
+    c: 'HTG',
   },
 
   fr_LU: {
@@ -278,9 +295,13 @@ const FR = {
 
   fr_MQ: {},
 
-  fr_NC: {},
+  fr_NC: {
+    c: 'XPF',
+  },
 
-  fr_PF: {},
+  fr_PF: {
+    c: 'XPF',
+  },
 
   fr_PM: {},
 
@@ -290,13 +311,20 @@ const FR = {
     cs: {
       SCR: 'SR',
     },
+    c: 'SCR',
   },
 
-  fr_TD: {},
+  fr_TD: {
+    c: 'XAF',
+  },
 
-  fr_TG: {},
+  fr_TG: {
+    c: 'XOF',
+  },
 
-  fr_WF: {},
+  fr_WF: {
+    c: 'XPF',
+  },
 
   fr_YT: {},
 };

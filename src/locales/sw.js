@@ -233,6 +233,7 @@ const SW = {
       XAF: 'Faranga CFA BEAC',
       XOF: 'Faranga CFA BCEAO',
     },
+    c: 'CDF',
   },
 
   sw_KE: {
@@ -320,14 +321,18 @@ const SW = {
       XXX: 'Sarafu Isiyojulikana',
       YER: 'Riali ya Yemeni',
     },
+    c: 'KES',
   },
 
-  sw_TZ: {},
+  sw_TZ: {
+    c: 'TZS',
+  },
 
   sw_UG: {
     cs: {
       UGX: 'USh',
     },
+    c: 'UGX',
   },
 };
 

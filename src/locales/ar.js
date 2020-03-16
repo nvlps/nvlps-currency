@@ -234,67 +234,99 @@ const AR = {
       ZAR: 'راند جنوب أفريقيا',
       ZMW: 'كواشا زامبي',
     },
+    c: 'SYP',
   },
 
-  ar_AE: {},
+  ar_AE: {
+    c: 'AED',
+  },
 
-  ar_BH: {},
+  ar_BH: {
+    c: 'BHD',
+  },
 
   ar_DZ: {
     d: ',',
     g: '.',
+    c: 'DZD',
   },
 
-  ar_EG: {},
+  ar_EG: {
+    c: 'EGP',
+  },
 
-  ar_EH: {},
+  ar_EH: {
+    c: 'MAD',
+  },
 
-  ar_IQ: {},
+  ar_IQ: {
+    c: 'IQD',
+  },
 
-  ar_JO: {},
+  ar_JO: {
+    c: 'JOD',
+  },
 
   ar_KM: {
     cs: {
       KMF: 'CF',
     },
+    c: 'KMF',
   },
 
-  ar_KW: {},
+  ar_KW: {
+    c: 'KWD',
+  },
 
   ar_LB: {
     d: ',',
     g: '.',
+    c: 'LBP',
   },
 
   ar_LY: {
     d: ',',
     g: '.',
+    c: 'LYD',
   },
 
   ar_MA: {
     d: ',',
     g: '.',
+    c: 'MAD',
   },
 
   ar_MR: {
     d: ',',
     g: '.',
+    c: 'MRU',
   },
 
-  ar_OM: {},
+  ar_OM: {
+    c: 'OMR',
+  },
 
-  ar_PS: {},
+  ar_PS: {
+    c: 'ILS',
+  },
 
-  ar_QA: {},
+  ar_QA: {
+    c: 'QAR',
+  },
 
-  ar_SA: {},
+  ar_SA: {
+    c: 'SAR',
+  },
 
-  ar_SD: {},
+  ar_SD: {
+    c: 'SDG',
+  },
 
   ar_SS: {
     cs: {
       GBP: 'GB£',
     },
+    c: 'SSP',
   },
 
   ar_SY: {},
@@ -302,9 +334,12 @@ const AR = {
   ar_TN: {
     d: ',',
     g: '.',
+    c: 'TND',
   },
 
-  ar_YE: {},
+  ar_YE: {
+    c: 'YER',
+  },
 };
 
 registerLocales(AR);

@@ -215,6 +215,7 @@ const ES = {
       ZAR: 'rand',
       ZMW: 'kuacha zambiano',
     },
+    c: 'EUR',
   },
 
   es_AR: {
@@ -232,6 +233,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'ARS',
   },
 
   es_BO: {
@@ -250,6 +252,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'BOB',
   },
 
   es_CL: {
@@ -268,6 +271,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'CLP',
   },
 
   es_CO: {
@@ -285,6 +289,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'COP',
   },
 
   es_CR: {
@@ -304,6 +309,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'CRC',
   },
 
   es_CU: {
@@ -323,6 +329,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'CUP',
   },
 
   es_DO: {
@@ -342,6 +349,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'DOP',
   },
 
   es_EA: {},
@@ -361,6 +369,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'USD',
   },
 
   es_ES: {},
@@ -370,6 +379,7 @@ const ES = {
     cs: {
       XAF: 'FCFA',
     },
+    c: 'XAF',
   },
 
   es_GT: {
@@ -391,6 +401,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'GTQ',
   },
 
   es_HN: {
@@ -411,6 +422,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'HNL',
   },
 
   es_IC: {},
@@ -442,6 +454,7 @@ const ES = {
       VND: 'dong vietnamita',
       ZMW: 'kwacha zambiano',
     },
+    c: 'MXN',
   },
 
   es_NI: {
@@ -462,6 +475,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'NIO',
   },
 
   es_PA: {
@@ -482,6 +496,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'PAB',
   },
 
   es_PE: {
@@ -502,6 +517,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'PEN',
   },
 
   es_PR: {
@@ -521,6 +537,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'USD',
   },
 
   es_PY: {
@@ -539,6 +556,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'PYG',
   },
 
   es_SV: {
@@ -558,6 +576,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'USD',
   },
 
   es_UY: {
@@ -575,6 +594,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'UYU',
   },
 
   es_VE: {
@@ -592,6 +612,7 @@ const ES = {
       THB: 'baht tailandes',
       UZS: 'som uzbeko',
     },
+    c: 'VES',
   },
 };
 

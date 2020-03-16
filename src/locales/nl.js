@@ -217,24 +217,28 @@ const NL = {
       ZAR: 'Zuid-Afrikaanse rand',
       ZMW: 'Zambiaanse kwacha',
     },
+    c: 'EUR',
   },
 
   nl_AW: {
     cs: {
       AWG: 'Afl.',
     },
+    c: 'AWG',
   },
 
   nl_BQ: {
     cs: {
       USD: '$',
     },
+    c: 'USD',
   },
 
   nl_CW: {
     cs: {
       ANG: 'NAf.',
     },
+    c: 'ANG',
   },
 
   nl_NL: {},
@@ -243,6 +247,7 @@ const NL = {
     cs: {
       SRD: '$',
     },
+    c: 'SRD',
   },
 };
 

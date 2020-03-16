@@ -217,7 +217,9 @@ const BN = {
     },
   },
 
-  bn_BD: {},
+  bn_BD: {
+    c: 'BDT',
+  },
 };
 
 registerLocales(BN);

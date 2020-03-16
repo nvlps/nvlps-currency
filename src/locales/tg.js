@@ -70,7 +70,9 @@ const TG = {
     },
   },
 
-  tg_TJ: {},
+  tg_TJ: {
+    c: 'TJS',
+  },
 };
 
 registerLocales(TG);

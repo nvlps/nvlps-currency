@@ -215,7 +215,9 @@ const AM = {
     },
   },
 
-  am_ET: {},
+  am_ET: {
+    c: 'ETB',
+  },
 };
 
 registerLocales(AM);

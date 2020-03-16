@@ -215,9 +215,13 @@ const SQ = {
     },
   },
 
-  sq_AL: {},
+  sq_AL: {
+    c: 'ALL',
+  },
 
-  sq_XK: {},
+  sq_XK: {
+    c: 'EUR',
+  },
 };
 
 registerLocales(SQ);

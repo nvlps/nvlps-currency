@@ -215,6 +215,7 @@ const PL = {
       ZAR: 'rand południowoafrykański',
       ZMW: 'kwacha zambijska',
     },
+    c: 'PLN',
   },
 
   pl_PL: {},

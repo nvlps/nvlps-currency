@@ -215,6 +215,7 @@ const DE = {
       ZAR: 'Südafrikanischer Rand',
       ZMW: 'Kwacha',
     },
+    c: 'EUR',
   },
 
   de_AT: {
@@ -229,6 +230,7 @@ const DE = {
       BYN: 'Weissrussischer Rubel',
       STN: 'São-toméischer Dobra (2018)',
     },
+    c: 'CHF',
   },
 
   de_DE: {},
@@ -237,6 +239,7 @@ const DE = {
     d: '.',
     g: '’',
     cp: '¤ #,##0.00',
+    c: 'CHF',
   },
 };
 

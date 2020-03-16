@@ -260,7 +260,9 @@ const KY = {
     },
   },
 
-  ky_KG: {},
+  ky_KG: {
+    c: 'KGS',
+  },
 };
 
 registerLocales(KY);

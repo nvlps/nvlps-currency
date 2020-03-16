@@ -359,6 +359,7 @@ const ZH = {
       ZAR: '南非蘭特',
       ZMW: '贊比亞克瓦查',
     },
+    c: 'HKD',
   },
 
   zh_Hant_MO: {
@@ -505,6 +506,7 @@ const ZH = {
       ZAR: '南非蘭特',
       ZMW: '贊比亞克瓦查',
     },
+    c: 'MOP',
   },
 
   zh_Hant_TW: {
@@ -660,6 +662,7 @@ const ZH = {
       ZAR: '南非蘭特',
       ZMW: '尚比亞克瓦查',
     },
+    c: 'TWD',
   },
 };
 

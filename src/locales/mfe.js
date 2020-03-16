@@ -111,7 +111,9 @@ const MFE = {
     },
   },
 
-  mfe_MU: {},
+  mfe_MU: {
+    c: 'MUR',
+  },
 };
 
 registerLocales(MFE);

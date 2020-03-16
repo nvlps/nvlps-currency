@@ -343,7 +343,9 @@ const MN = {
     },
   },
 
-  mn_MN: {},
+  mn_MN: {
+    c: 'MNT',
+  },
 };
 
 registerLocales(MN);

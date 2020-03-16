@@ -220,6 +220,7 @@ const AF = {
     cs: {
       NAD: '$',
     },
+    c: 'ZAR',
   },
 };
 

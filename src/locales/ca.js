@@ -215,6 +215,7 @@ const CA = {
       ZAR: 'rand sud-africà',
       ZMW: 'kwacha zambià',
     },
+    c: 'EUR',
   },
 
   ca_AD: {},

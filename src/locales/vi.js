@@ -218,7 +218,9 @@ const VI = {
     },
   },
 
-  vi_VN: {},
+  vi_VN: {
+    c: 'VND',
+  },
 };
 
 registerLocales(VI);

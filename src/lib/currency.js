@@ -29,7 +29,6 @@ const ccyRegistry = Object.create(null);
  * @property {String} currencyCode ISO 4127 Currency Code
  * @property {Number} numericCode  ISO 4127 Numeric Code
  * @property {Number} precision    Number of Fractional Digits
- * @property {String} country      ISO 3166 Country Code
  *
  * Represents a currency. Currencies are identified by their ISO 4217 currency
  * codes. Visit the ISO web site for more information.
@@ -44,14 +43,12 @@ class CurrencyData {
    * @param {String} ccyCode      ISO 4127 Currency Code
    * @param {Number} numericCode  ISO 4127 Numeric Code
    * @param {Number} precision    Number of Fractional Digits
-   * @param {String} country   ISO 3166 Country Code for the Currency's Home
    * @return {Currency} New Currency Object
    */
-  constructor(ccyCode, numericCode, precision, country) {
+  constructor(ccyCode, numericCode, precision) {
     this.currencyCode = ccyCode;
     this.numericCode = numericCode;
     this.precision = precision;
-    this.country = country;
     Object.freeze(this);
   }
 
@@ -102,36 +99,10 @@ function Currency(code) {
 }
 
 /**
- * Get the default Currency for a Country
- * @param {String} countryCode ISO 3166 Country Code
- * @return {Currency} default currency for the country
- * @static
- *
- * Iterates through all registered Currency items to find the first one which
- * matches the given country. If no currencies match, the Unknown Currency
- * is returned.
- */
-Currency.forCountry = function forCountry(countryCode) {
-  let ccy = Currency('XXX');
-  const ucCode = countryCode.toUpperCase();
-
-  // Iterate Registry to find Country Code
-  Object.keys(ccyRegistry).forEach((code) => {
-    if (ccyRegistry[code].country === ucCode) {
-      ccy = ccyRegistry[code];
-    }
-  });
-
-  // Return Result or Unknown Currency
-  return ccy;
-};
-
-/**
  * Define a new Currency Object
  * @param {String} currencyCode ISO 4127 Currency Code
  * @param {Number} numericCode  ISO 4127 Numeric Code
  * @param {Number} precision    Number of Fractional Digits
- * @param {String} country   ISO 3166 Country Code for the Currency's Home
  * @return {CurrencyData} New Currency Object
  * @static
  *
@@ -144,8 +115,7 @@ Currency.forCountry = function forCountry(countryCode) {
 Currency.register = function registerCurrency(
   currencyCode,
   numericCode,
-  precision,
-  country,
+  precision
 ) {
   const ucCode = currencyCode.toUpperCase();
   if (Object.prototype.hasOwnProperty.call(ccyRegistry, ucCode)) {
@@ -156,8 +126,7 @@ Currency.register = function registerCurrency(
   ccyRegistry[ucCode] = new CurrencyData(
     currencyCode,
     numericCode,
-    precision,
-    country,
+    precision
   );
 
   // Return the Currency Data object
@@ -193,8 +162,8 @@ export default Currency;
 // Load Currency Data
 (function loadCurrencyData() {
   Object.keys(ccyData).forEach((ccy) => {
-    const { n, p, c } = ccyData[ccy];
+    const { n, p } = ccyData[ccy];
 
-    Currency.register(ccy, n, p, c);
+    Currency.register(ccy, n, p);
   });
 })();

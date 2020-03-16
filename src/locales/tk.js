@@ -213,7 +213,9 @@ const TK = {
     },
   },
 
-  tk_TM: {},
+  tk_TM: {
+    c: 'TMT',
+  },
 };
 
 registerLocales(TK);

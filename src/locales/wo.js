@@ -70,7 +70,9 @@ const WO = {
     },
   },
 
-  wo_SN: {},
+  wo_SN: {
+    c: 'XOF',
+  },
 };
 
 registerLocales(WO);

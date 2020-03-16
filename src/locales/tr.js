@@ -216,6 +216,7 @@ const TR = {
       ZAR: 'Güney Afrika Randı',
       ZMW: 'Zambiya Kvaçası',
     },
+    c: 'TRY',
   },
 
   tr_TR: {},

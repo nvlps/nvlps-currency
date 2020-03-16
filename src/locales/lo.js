@@ -344,7 +344,9 @@ const LO = {
     },
   },
 
-  lo_LA: {},
+  lo_LA: {
+    c: 'LAK',
+  },
 };
 
 registerLocales(LO);

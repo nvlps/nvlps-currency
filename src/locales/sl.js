@@ -214,6 +214,7 @@ const SL = {
       ZAR: 'južnoafriški rand',
       ZMW: 'zambijska kvača',
     },
+    c: 'EUR',
   },
 
   sl_SI: {},

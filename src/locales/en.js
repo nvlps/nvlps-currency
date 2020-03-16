@@ -30,6 +30,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'XCD',
   },
 
   en_AI: {
@@ -43,6 +44,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'XCD',
   },
 
   en_AS: {},
@@ -67,6 +69,7 @@ const EN = {
       SRD: 'Suriname Dollar',
       UYU: 'Peso Uruguayo',
     },
+    c: 'AUD',
   },
 
   en_BB: {
@@ -80,6 +83,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'BBD',
   },
 
   en_BE: {
@@ -96,6 +100,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'EUR',
   },
 
   en_BM: {
@@ -109,6 +114,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'BMD',
   },
 
   en_BS: {
@@ -122,6 +128,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'BSD',
   },
 
   en_BW: {
@@ -135,6 +142,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'BWP',
   },
 
   en_BZ: {
@@ -148,6 +156,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'BZD',
   },
 
   en_CA: {
@@ -162,6 +171,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'CAD',
   },
 
   en_CC: {
@@ -175,6 +185,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'AUD',
   },
 
   en_CK: {
@@ -188,6 +199,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'NZD',
   },
 
   en_CX: {
@@ -201,6 +213,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'AUD',
   },
 
   en_DG: {
@@ -226,6 +239,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'XCD',
   },
 
   en_FJ: {
@@ -239,6 +253,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'FJD',
   },
 
   en_FK: {
@@ -253,6 +268,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'FKP',
   },
 
   en_FM: {
@@ -277,6 +293,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'GBP',
   },
 
   en_GD: {
@@ -290,6 +307,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'XCD',
   },
 
   en_GG: {
@@ -303,6 +321,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'GBP',
   },
 
   en_GI: {
@@ -317,6 +336,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'GIP',
   },
 
   en_GM: {
@@ -330,6 +350,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'GMD',
   },
 
   en_GU: {},
@@ -345,6 +366,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'GYD',
   },
 
   en_IE: {
@@ -357,6 +379,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'EUR',
   },
 
   en_IM: {
@@ -370,6 +393,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'GBP',
   },
 
   en_IO: {
@@ -395,6 +419,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'GBP',
   },
 
   en_JM: {
@@ -408,6 +433,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'JMD',
   },
 
   en_KI: {
@@ -421,6 +447,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'AUD',
   },
 
   en_KN: {
@@ -434,6 +461,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'XCD',
   },
 
   en_KY: {
@@ -447,6 +475,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'KYD',
   },
 
   en_LC: {
@@ -460,6 +489,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'XCD',
   },
 
   en_LR: {
@@ -473,6 +503,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'LRD',
   },
 
   en_LS: {
@@ -486,6 +517,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'ZAR',
   },
 
   en_MH: {},
@@ -503,6 +535,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'XCD',
   },
 
   en_MW: {
@@ -516,6 +549,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'MWK',
   },
 
   en_NF: {
@@ -529,6 +563,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'AUD',
   },
 
   en_NG: {
@@ -542,6 +577,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'NGN',
   },
 
   en_NR: {
@@ -555,6 +591,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'AUD',
   },
 
   en_NU: {
@@ -568,6 +605,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'NZD',
   },
 
   en_NZ: {
@@ -581,6 +619,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'NZD',
   },
 
   en_PG: {
@@ -594,6 +633,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'PGK',
   },
 
   en_PH: {
@@ -607,6 +647,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'PHP',
   },
 
   en_PN: {
@@ -620,6 +661,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'NZD',
   },
 
   en_PW: {
@@ -645,6 +687,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'SBD',
   },
 
   en_SG: {
@@ -658,6 +701,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'SGD',
   },
 
   en_SH: {
@@ -672,6 +716,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'SHP',
   },
 
   en_SL: {
@@ -685,6 +730,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'SLL',
   },
 
   en_SX: {
@@ -698,6 +744,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'ANG',
   },
 
   en_SZ: {
@@ -711,6 +758,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'SZL',
   },
 
   en_TC: {
@@ -736,6 +784,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'NZD',
   },
 
   en_TT: {
@@ -749,6 +798,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'TTD',
   },
 
   en_TV: {
@@ -762,6 +812,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'AUD',
   },
 
   en_UM: {},
@@ -777,6 +828,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'XCD',
   },
 
   en_VG: {
@@ -804,6 +856,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'VUV',
   },
 
   en_WS: {
@@ -817,6 +870,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'WST',
   },
 
   en_ZA: {
@@ -832,6 +886,7 @@ const EN = {
       RUB: 'Russian Rouble',
       SHP: 'St Helena Pound',
     },
+    c: 'ZAR',
   },
 };
 

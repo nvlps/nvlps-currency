@@ -215,6 +215,7 @@ const PT = {
       ZAR: 'Rand sul-africano',
       ZMW: 'Kwacha zambiano',
     },
+    c: 'EUR',
   },
 
   pt_AO: {
@@ -379,9 +380,12 @@ const PT = {
       ZAR: 'rand sul-africano',
       ZMW: 'kwacha zambiano',
     },
+    c: 'AOA',
   },
 
-  pt_BR: {},
+  pt_BR: {
+    c: 'BRL',
+  },
 
   pt_GW: {
     g: ' ',
@@ -542,6 +546,7 @@ const PT = {
       ZAR: 'rand sul-africano',
       ZMW: 'kwacha zambiano',
     },
+    c: 'XOF',
   },
 
   pt_MZ: {
@@ -706,6 +711,7 @@ const PT = {
       ZAR: 'rand sul-africano',
       ZMW: 'kwacha zambiano',
     },
+    c: 'MZN',
   },
 
   pt_PT: {
@@ -1031,6 +1037,7 @@ const PT = {
       ZAR: 'rand sul-africano',
       ZMW: 'kwacha zambiano',
     },
+    c: 'STN',
   },
 
   pt_TL: {
@@ -1192,6 +1199,7 @@ const PT = {
       ZAR: 'rand sul-africano',
       ZMW: 'kwacha zambiano',
     },
+    c: 'USD',
   },
 };
 

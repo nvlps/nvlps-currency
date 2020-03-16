@@ -215,7 +215,9 @@ const BE = {
     },
   },
 
-  be_BY: {},
+  be_BY: {
+    c: 'BYN',
+  },
 };
 
 registerLocales(BE);

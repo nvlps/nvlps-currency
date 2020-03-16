@@ -60,7 +60,9 @@ const RW = {
     cn: {},
   },
 
-  rw_RW: {},
+  rw_RW: {
+    c: 'RWF',
+  },
 };
 
 registerLocales(RW);

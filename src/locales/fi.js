@@ -217,6 +217,7 @@ const FI = {
       ZAR: 'Etelä-Afrikan randi',
       ZMW: 'Sambian kwacha',
     },
+    c: 'EUR',
   },
 
   fi_FI: {},

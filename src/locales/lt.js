@@ -214,6 +214,7 @@ const LT = {
       ZAR: 'Pietų Afrikos Respublikos randas',
       ZMW: 'Zambijos kvača',
     },
+    c: 'EUR',
   },
 
   lt_LT: {},

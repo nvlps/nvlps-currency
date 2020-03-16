@@ -215,6 +215,7 @@ const ET = {
       ZAR: 'Lõuna-Aafrika rand',
       ZMW: 'Sambia kvatša',
     },
+    c: 'EUR',
   },
 
   et_EE: {},

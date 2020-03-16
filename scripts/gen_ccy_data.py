@@ -17,7 +17,6 @@ Sources:
 '''
 
 import argparse
-import json
 import os
 import requests
 import sys
@@ -27,43 +26,9 @@ try:
 except ImportError:
     from xml.etree import ElementTree
 
-from babel.core import get_global
 from jinja2 import Environment, FileSystemLoader
 
 from ccy_lists import NVLPS_CURRENCY_LIST
-
-# Manually-Created Map of Global Currencies to Home Territory
-GLOBAL_CURRENCIES = {
-    'ANG': 'NL',    # Netherlands
-    'AUD': 'AU',    # Australia
-    'CHF': 'CH',    # Switzerland
-    'DKK': 'DK',    # Denmark
-    'EGP': 'EG',    # Egypt
-    'ETB': 'ET',    # Ethiopia
-    'EUR': 'DE',    # Germany (Assigned)
-    'GBP': 'GB',    # England
-    'IDR': 'ID',    # Indonesia
-    'ILS': 'IS',    # Israel
-    'INR': 'IN',    # India
-    'JMD': 'JM',    # Jamaica
-    'JOD': 'JO',    # Jordan
-    'JPY': 'JP',    # Japan
-    'KMF': 'KM',    # Comoros
-    'MAD': 'MA',    # Morocco
-    'MYR': 'MY',    # Malaysia
-    'NOK': 'NO',    # Norway
-    'NZD': 'NZ',    # New Zealand
-    'PKR': 'PK',    # Pakistan
-    'SDG': 'SD',    # Sudan
-    'SEK': 'SE',    # Sweden
-    'SHP': 'SH',    # Saint Helena
-    'USD': 'US',    # United States
-    'XAF': 'CM',    # Cameroon (Assigned)
-    'XOF': 'SN',    # Senegal (Assigned)
-    'XPF': 'PF',    # French Polynesia (Assigned)
-    'XCD': 'SL',    # Saint Lucia (Assigned)
-    'ZAR': 'ZA',    # South Africa
-}
 
 ISO4217_URL = 'https://www.currency-iso.org/dam/downloads/lists/list_one.xml'
 XE_ISO4217_URL = 'https://www.xe.com/iso4217.php'
@@ -78,7 +43,6 @@ def parse_iso4217_data(url):
             name => ccyName,
             number => ccyNumber,
             minor => ccyMinorUnits,
-            countries => [ countryName, ... ],
         }
     }
     '''
@@ -93,7 +57,7 @@ def parse_iso4217_data(url):
         ccyName = entry.find('CcyNm')
         ccyNumber = entry.find('CcyNbr')
         ccyMinor = entry.find('CcyMnrUnts')
-        ccyCountry = entry.find('CtryNm')
+        ccyCountry = entry.find('Cntry')
 
         if ccyCode is None:
             continue
@@ -118,7 +82,6 @@ def parse_iso4217_data(url):
                 'name': ccyName.text,
                 'number': ccyNumber,
                 'minor': ccyMinor,
-                'countries': [ ccyCountry.text ]
             }
 
         else:
@@ -140,8 +103,6 @@ def parse_iso4217_data(url):
                     (ccyCode.text, ccyCountry.text))
                 continue
 
-            currencies[ccyCode.text]['countries'].append(ccyCountry.text)
-
     return currencies
 
 
@@ -161,27 +122,6 @@ def save_js_modules(data, js_filename):
         f.write(template.render(data=data))
 
 
-def import_currency_locales():
-    '''Import Unicode CLDR Data from Babel (map Currency to home Locale)'''
-    locale_map = {}
-    all_currencies = get_global('all_currencies')
-
-    for ccy in NVLPS_CURRENCY_LIST:
-        regions = all_currencies[ccy]
-        if len(regions) == 1:
-            locale_map[ccy] = regions[0]
-        elif ccy in GLOBAL_CURRENCIES:
-            locale_map[ccy] = GLOBAL_CURRENCIES[ccy]
-        elif ccy == 'XXX':
-            continue
-        else:
-            raise RuntimeError(
-                'Failed to find home territory for Currency {}'.format(ccy)
-            )
-
-    return locale_map
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Generate nvlps Currency Data from ISO 4217'
@@ -197,7 +137,6 @@ if __name__ == '__main__':
 
     # Download xe.com and ISO 4217 Data
     ccyData = parse_iso4217_data(ISO4217_URL)
-    ccyCountries = import_currency_locales()
 
     # Add the 'XXX' Unknown Currency placeholder
     ccyData['XXX'] = {
@@ -206,7 +145,6 @@ if __name__ == '__main__':
         'minor': 6,
         'country': [ ],
     }
-    ccyCountries['XXX'] = None
 
     # nvlps by default supports all the currencies from xe.com
     nvlpsCcyList = list(NVLPS_CURRENCY_LIST)
@@ -216,8 +154,7 @@ if __name__ == '__main__':
     for ccy in nvlpsCcyList:
         data[ccy] = {
             'n': ccyData[ccy]['number'],
-            'p': ccyData[ccy]['minor'],
-            'c': json.dumps(ccyCountries[ccy]).replace('"', "'"),
+            'p': ccyData[ccy]['minor']
         }
 
     # Store Currency Data in Javascript

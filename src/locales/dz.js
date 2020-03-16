@@ -135,7 +135,9 @@ const DZ = {
     },
   },
 
-  dz_BT: {},
+  dz_BT: {
+    c: 'INR',
+  },
 };
 
 registerLocales(DZ);

@@ -214,6 +214,7 @@ const SK = {
       ZAR: 'juhoafrický rand',
       ZMW: 'zambijská kwacha',
     },
+    c: 'EUR',
   },
 
   sk_SK: {},
