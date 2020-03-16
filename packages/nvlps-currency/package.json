@@ -1,8 +1,8 @@
 {
-  "name": "nvlps-currency-core",
+  "name": "nvlps-currency",
   "version": "0.9.3",
   "description": "Localized Currency and Money handling library for nvlps'",
-  "main": "nvlps-currency-core.bundle.js",
+  "main": "nvlps-currency.bundle.js",
   "module": "src/index.js",
   "scripts": {
     "build": "cross-env BABEL_ENV=build node build",
@@ -46,5 +46,5 @@
     "rollup-plugin-terser": "^5.3.0",
     "terser": "^4.6.6"
   },
-  "gitHead": "c7b658380946bbf6d9530f919589d9ed61847d48"
+  "gitHead": "2ce9d65ee2fe12020d6ec973fe7ae2adb95849ec"
 }

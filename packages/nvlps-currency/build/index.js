@@ -27,13 +27,13 @@ async function build(options) {
     // Build Library for Web Use
     await build(configFactoryDist({
       input: './src/index.js',
-      fileName: '../../dist/nvlps-currency-core.min.js',
+      fileName: '../../dist/nvlps-currency.min.js',
     }));
 
     // Build Library for NodeJS (includes locales)
     await build(configFactoryLib({
       input: './src/index.js',
-      fileName: './nvlps-currency-core.bundle.js',
+      fileName: './nvlps-currency.bundle.js',
     }));
   }
   catch (e) {

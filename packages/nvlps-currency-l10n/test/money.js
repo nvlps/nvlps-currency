@@ -5,7 +5,7 @@ import {
   Locale,
   Money,
   POSIX,
-} from 'nvlps-currency-core';
+} from 'nvlps-currency';
 
 import '../src/locales/de';
 import '../src/locales/en';

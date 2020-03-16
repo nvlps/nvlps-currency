@@ -1,5 +1,5 @@
 {
-  "name": "nvlps-currency-test",
+  "name": "@nvlps-currency/test",
   "version": "0.9.3",
   "description": "",
   "private": true,
@@ -10,8 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nvlps-currency-core": "^0.9.3",
-    "nvlps-currency-l10n": "^0.9.3"
+    "@nvlps-currency/l10n": "^0.9.3",
+    "nvlps-currency": "^0.9.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",

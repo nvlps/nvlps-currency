@@ -1,5 +1,5 @@
 {
-  "name": "nvlps-currency-l10n",
+  "name": "@nvlps-currency/l10n",
   "version": "0.9.3",
   "description": "Localization Data for nvlps'",
   "main": "nvlps-currency-l10n.bundle.js",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/nvlps/nvlps-currency#readme",
   "dependencies": {
-    "nvlps-currency-core": "^0.9.3"
+    "nvlps-currency": "^0.9.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -46,5 +46,5 @@
     "rollup-plugin-terser": "^5.3.0",
     "terser": "^4.6.6"
   },
-  "gitHead": "c7b658380946bbf6d9530f919589d9ed61847d48"
+  "gitHead": "2ce9d65ee2fe12020d6ec973fe7ae2adb95849ec"
 }
