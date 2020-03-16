@@ -1,6 +1,6 @@
 {
   "name": "nvlps-currency",
-  "version": "0.9.3",
+  "version": "0.10.0",
   "description": "Localized Currency and Money handling library for nvlps'",
   "main": "nvlps-currency.bundle.js",
   "module": "src/index.js",
