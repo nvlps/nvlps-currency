@@ -45,5 +45,6 @@
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-terser": "^5.3.0",
     "terser": "^4.6.6"
-  }
+  },
+  "gitHead": "c7b658380946bbf6d9530f919589d9ed61847d48"
 }
