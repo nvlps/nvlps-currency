@@ -155,7 +155,10 @@ export default class Money {
       }
       return new Money(this.amt.plus(otherAmt.amt), this.currency);
     }
-    return new Money(this.amt.plus(new Decimal(otherAmt.toString())), this.currency);
+    return new Money(
+      this.amt.plus(new Decimal(otherAmt.toString())),
+      this.currency,
+    );
   }
 
   /**
@@ -178,7 +181,10 @@ export default class Money {
       }
       return new Money(this.amt.minus(otherAmt.amt), this.currency);
     }
-    return new Money(this.amt.minus(new Decimal(otherAmt.toString())), this.currency);
+    return new Money(
+      this.amt.minus(new Decimal(otherAmt.toString())),
+      this.currency,
+    );
   }
 
   /**
