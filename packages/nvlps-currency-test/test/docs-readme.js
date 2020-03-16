@@ -3,12 +3,11 @@ import { expect } from 'chai';
 // Import Library per README.md script
 import {
   Money, Currency, Locale
-} from '../src/lib';
+} from 'nvlps-currency-core';
 
 // Load l10n information dynamically (only en_US and en_US_POSIX are loaded
 // by default). In the browser, include with a <script> tag instead.
-import '../src/locales/de';
-import '../src/locales/en';
+import { EN, DE } from 'nvlps-currency-l10n';
 
 describe('nvlps-currency: README.md', function() {
   it('should contain a demo script which executes correctly', function() {

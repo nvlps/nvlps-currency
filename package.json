@@ -6,9 +6,6 @@
   "module": "src/nvlps-currency.js",
   "scripts": {
     "build": "cross-env BABEL_ENV=build node build",
-    "build-ccy": "pipenv run python scripts/gen_ccy_data.py ./src/lib/ccy-data.js && prettier --write ./src/lib/ccy-data.js",
-    "build-l10n": "pipenv run python scripts/gen_ccy_l10n.py --posix ./src/lib/posix.js  --index ./src/nvlps-locales.js --lib ./src/lib ./src/locales && prettier --write ./src/lib/posix.js && prettier --write ./src/nvlps-locales.js && prettier --write ./src/locales/*.js",
-    "dist-l10n": "for f in `ls src/locales/web/*.js` ; do npx terser $f -o dist/nvlps-l10n.$(basename $f) -c -m ; done",
     "lint": "eslint ./src && prettier --check ./src/**/*.js",
     "pylint": "flake8",
     "test": "cross-env BABEL_ENV=test npm run mocha",

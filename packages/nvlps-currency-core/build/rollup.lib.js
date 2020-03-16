@@ -17,14 +17,14 @@ module.exports = (config) => {
           exclude: 'node_modules/**',
         }),
       ],
+      external: [
+        'decimal.js-light',
+      ],
     },
     output: {
       file: fileName,
       format: 'cjs',
       plugins: [ terser.terser() ],
     },
-    external: [
-      'decimal.js-light',
-    ],
   };
 };

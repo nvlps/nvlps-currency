@@ -36,13 +36,14 @@ export default class Money {
     } else if (typeof amt === 'number') {
       this.amt = new Decimal(amt);
     } else if (typeof amt === 'string') {
-      if ((ccy !== null) && (ccy instanceof Locale)) {
+      if (ccy !== null && ccy instanceof Locale) {
         // Handles Call Signature new Money(String, Locale)
         this.amt = new Decimal(ccy.parseNumber(amt));
-      }
-      else {
+      } else {
         this.amt = new Decimal(locale.parseNumber(amt));
       }
+    } else if (typeof amt === 'object') {
+      this.amt = new Decimal(amt.toString());
     } else {
       throw new Error(`Failed to parse amount of type ${typeof amt}`);
     }
@@ -154,7 +155,7 @@ export default class Money {
       }
       return new Money(this.amt.plus(otherAmt.amt), this.currency);
     }
-    return new Money(this.amt.plus(new Decimal(otherAmt)), this.currency);
+    return new Money(this.amt.plus(new Decimal(otherAmt.toString())), this.currency);
   }
 
   /**
@@ -177,7 +178,7 @@ export default class Money {
       }
       return new Money(this.amt.minus(otherAmt.amt), this.currency);
     }
-    return new Money(this.amt.minus(new Decimal(otherAmt)), this.currency);
+    return new Money(this.amt.minus(new Decimal(otherAmt.toString())), this.currency);
   }
 
   /**
@@ -201,7 +202,7 @@ export default class Money {
     }
     return new Money(
       this.amt
-        .times(new Decimal(factor))
+        .times(new Decimal(factor.toString()))
         .todp(this.ccy.precision, roundingMode),
     );
   }

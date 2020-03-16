@@ -115,7 +115,7 @@ function Currency(code) {
 Currency.register = function registerCurrency(
   currencyCode,
   numericCode,
-  precision
+  precision,
 ) {
   const ucCode = currencyCode.toUpperCase();
   if (Object.prototype.hasOwnProperty.call(ccyRegistry, ucCode)) {
@@ -123,11 +123,7 @@ Currency.register = function registerCurrency(
   }
 
   // Add new Currency Data to the Registry
-  ccyRegistry[ucCode] = new CurrencyData(
-    currencyCode,
-    numericCode,
-    precision
-  );
+  ccyRegistry[ucCode] = new CurrencyData(currencyCode, numericCode, precision);
 
   // Return the Currency Data object
   return ccyRegistry[ucCode];

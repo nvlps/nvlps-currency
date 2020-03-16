@@ -1,8 +1,11 @@
 import { expect } from 'chai';
 import Decimal from 'decimal.js-light';
-import { Locale, POSIX } from '../src/lib/locale';
-import Money from '../src/lib/money';
-import Currency from '../src/lib/currency';
+import {
+  Currency,
+  Locale,
+  Money,
+  POSIX,
+} from 'nvlps-currency-core';
 
 import '../src/locales/de';
 import '../src/locales/en';
@@ -47,23 +50,23 @@ describe('nvlps-currency: Money', function() {
 
     it('should accept Numeric amounts', function() {
       var testObj = new Money(1.23);
-      expect(testObj.amount).to.deep.equal(new Decimal(1.23));
+      expect(testObj.amount.toString()).to.equal(new Decimal(1.23).toString());
     });
 
     it('should accept Decimal amounts', function() {
       var testObj = new Money(new Decimal(2.34));
-      expect(testObj.amount).to.deep.equal(new Decimal(2.34));
+      expect(testObj.amount.toString()).to.equal(new Decimal(2.34).toString());
     });
 
     it('should accept String amounts', function() {
       var testObj = new Money('3.45');
-      expect(testObj.amount).to.deep.equal(new Decimal(3.45));
+      expect(testObj.amount.toString()).to.equal(new Decimal(3.45).toString());
     });
 
     it('should accept localized String amounts', function() {
       var testObj = new Money('3 456.78', new Locale('fr_FR'));
       expect(testObj.currency).to.equal(new Currency('EUR'));
-      expect(testObj.amount).to.deep.equal(new Decimal(3456.78));
+      expect(testObj.amount.toString()).to.equal(new Decimal(3456.78).toString());
     });
 
     it('should use locale-default currency if not specified', function() {
@@ -77,7 +80,7 @@ describe('nvlps-currency: Money', function() {
     });
 
     it('should throw errors for incorrect amount types', function() {
-      var testFn = function() { new Money([ '1.30' ]) };
+      var testFn = function() { new Money({ amount: '1.30' }) };
       expect(testFn).to.throw();
     });
   });
@@ -97,22 +100,22 @@ describe('nvlps-currency: Money', function() {
       expect(m2).to.not.equal(m1);
       expect(m2).to.have.property('currency', m1.currency);
       expect(m2).to.have.property('amount');
-      expect(m2.amount).to.deep.equal(new Decimal('2.52'));
+      expect(m2.amount.toString()).to.equal(new Decimal('2.52').toString());
 
       expect(m3).to.not.equal(m1);
       expect(m3).to.have.property('currency', m1.currency);
       expect(m3).to.have.property('amount');
-      expect(m3.amount).to.deep.equal(new Decimal('2.52'));
+      expect(m3.amount.toString()).to.equal(new Decimal('2.52').toString());
 
       expect(m4).to.not.equal(m1);
       expect(m4).to.have.property('currency', m1.currency);
       expect(m4).to.have.property('amount');
-      expect(m4.amount).to.deep.equal(new Decimal('2.52'));
+      expect(m4.amount.toString()).to.equal(new Decimal('2.52').toString());
 
       expect(m5).to.not.equal(m1);
       expect(m5).to.have.property('currency', m1.currency);
       expect(m5).to.have.property('amount');
-      expect(m5.amount).to.deep.equal(new Decimal('2.52'));
+      expect(m5.amount.toString()).to.equal(new Decimal('2.52').toString());
     });
 
     it('should support subtracting money values', function() {
@@ -124,22 +127,22 @@ describe('nvlps-currency: Money', function() {
       expect(m2).to.not.equal(m1);
       expect(m2).to.have.property('currency', m1.currency);
       expect(m2).to.have.property('amount');
-      expect(m2.amount).to.deep.equal(new Decimal('2.50'));
+      expect(m2.amount.toString()).to.equal(new Decimal('2.50').toString());
 
       expect(m3).to.not.equal(m1);
       expect(m3).to.have.property('currency', m1.currency);
       expect(m3).to.have.property('amount');
-      expect(m3.amount).to.deep.equal(new Decimal('2.50'));
+      expect(m3.amount.toString()).to.equal(new Decimal('2.50').toString());
 
       expect(m4).to.not.equal(m1);
       expect(m4).to.have.property('currency', m1.currency);
       expect(m4).to.have.property('amount');
-      expect(m4.amount).to.deep.equal(new Decimal('2.50'));
+      expect(m4.amount.toString()).to.equal(new Decimal('2.50').toString());
 
       expect(m5).to.not.equal(m1);
       expect(m5).to.have.property('currency', m1.currency);
       expect(m5).to.have.property('amount');
-      expect(m5.amount).to.deep.equal(new Decimal('2.50'));
+      expect(m5.amount.toString()).to.equal(new Decimal('2.50').toString());
     });
 
     it('should throw an error for math involving two different currencies', function() {
@@ -155,9 +158,9 @@ describe('nvlps-currency: Money', function() {
       var m1 = new Money('1.11', 'XXX');
       var m2 = new Money('1.11', 'USD');
       var testFn = function() { return m1.multiply(m2) };
-      expect(m1.multiply(1.01).amount).to.deep.equal(new Decimal('1.1211'));
-      expect(m2.multiply(1.01).amount).to.deep.equal(new Decimal('1.12'));
-      expect(m2.multiply(1.01, Decimal.ROUND_UP).amount).to.deep.equal(new Decimal('1.13'));
+      expect(m1.multiply(1.01).amount.toString()).to.equal(new Decimal('1.1211').toString());
+      expect(m2.multiply(1.01).amount.toString()).to.equal(new Decimal('1.12').toString());
+      expect(m2.multiply(1.01, Decimal.ROUND_UP).amount.toString()).to.equal(new Decimal('1.13').toString());
       expect(testFn).to.throw();
     });
 
@@ -290,7 +293,7 @@ describe('nvlps-currency: Money', function() {
       expect(m2).to.not.equal(m1);
       expect(m2).to.have.property('currency', m1.currency);
       expect(m2).to.have.property('amount');
-      expect(m2.amount).to.deep.equal(new Decimal('2.54'));
+      expect(m2.amount.toString()).to.equal(new Decimal('2.54').toString());
     });
 
     it('should support localized formatting', function() {

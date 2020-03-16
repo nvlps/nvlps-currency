@@ -1,14 +1,12 @@
 import { expect } from 'chai';
-import Currency from '../src/lib/currency';
 import {
+  Currency,
   Locale,
   POSIX,
+  availableLocales,
   parseLocale,
   registerLocale,
-  registerLocales,
-  availableLocales,
-  availableLanguages,
-} from '../src/lib/locale';
+ } from 'nvlps-currency-core';
 
 import '../src/locales/de';
 import '../src/locales/en';

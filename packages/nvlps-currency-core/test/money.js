@@ -73,7 +73,7 @@ describe('nvlps-currency: Money', function() {
     });
 
     it('should throw errors for incorrect amount types', function() {
-      var testFn = function() { new Money([ '1.30' ]) };
+      var testFn = function() { new Money({ amount: '1.30' }) };
       expect(testFn).to.throw();
     });
   });
