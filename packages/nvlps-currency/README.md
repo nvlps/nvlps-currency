@@ -10,12 +10,7 @@ Using nvlps-currency is easy:
 ```javascript
 import {
   Money, Currency, Locale
-} from 'nvlps-currency-core';
-
-// Load l10n information dynamically (only en_US and en_US_POSIX are loaded
-// by default). In the browser, include with a <script> tag instead. This
-// requires the 'nvlps-currency-l10n' package to be installed.
-import { DE, EN } from 'nvlps-currency-l10n';
+} from '@nvlps/currency';
 
 // Create a Money Object with USD $4.00
 const m = new Money('4.00', 'USD');
@@ -25,11 +20,6 @@ const m2 = m.add(1).subtract('0.50');
 
 // Format into a localized string
 m2.format(new Locale('en_US'));     // $4.50
-m2.format(new Locale('de_DE'));     // 4,50 $
-
-// Localized parsing works too, with default currency for the locale
-const m3 = new Money('1 234,56', new Locale('fr_FR'));
-m3.format(new Locale('en_US'));     // €1,234.56
 ```
 
 Features
@@ -51,7 +41,7 @@ Installation
 Install nvlps-currency by running:
 
 ```shell
-npm install nvlps-currency-core
+npm install @nvlps/currency
 ```
 
 Contribute
