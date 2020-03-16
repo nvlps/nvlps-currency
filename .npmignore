@@ -7,7 +7,6 @@ yarn.lock
 package-lock.json
 
 # dev
-src
 test
 demo
 dist
@@ -17,7 +16,7 @@ build
 .editorconfig
 .esdoc.json
 .eslintrc.json
-.pretterrc.json
+.prettierrc.json
 .nyc_output
 
 # python scripts
