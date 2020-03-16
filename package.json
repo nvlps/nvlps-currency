@@ -3,15 +3,20 @@
   "private": "true",
   "license": "BSD-3-Clause",
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "build": "make build",
     "lint": "make lint",
     "test": "make test",
-    "size": "make build && size-limit"
+    "size": "size-limit"
   },
   "size-limit": [
     {
-      "limit": "135 KB",
-      "path": "lib/nvlps-currency.min.js"
+      "limit": "15 KB",
+      "path": "packages/nvlps-currency/nvlps-currency.bundle.js"
+    },
+    {
+      "limit": "150 KB",
+      "path": "packages/nvlps-l10n/nvlps-l10n.bundle.js"
     },
     {
       "limit": "15 KB",
@@ -51,6 +56,8 @@
     "rollup-plugin-resolve": "0.0.1-predev.1",
     "rollup-plugin-terser": "^5.3.0",
     "size-limit": "^4.4.0",
-    "typescript": "^3.8.3"
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   }
 }

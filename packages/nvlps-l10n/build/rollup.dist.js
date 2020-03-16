@@ -18,7 +18,7 @@ module.exports = (config) => {
         }),
       ],
       external: [
-        'nvlps-currency',
+        '@nvlps/currency',
       ],
     },
     output: {
@@ -27,7 +27,7 @@ module.exports = (config) => {
       name: name || 'nvlps_l10n',
       plugins: [ terser.terser() ],
       globals: {
-        'nvlps-currency': 'nvlps'
+        '@nvlps/currency': 'nvlps'
       },
     },
   };

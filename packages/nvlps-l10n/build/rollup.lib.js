@@ -18,7 +18,7 @@ module.exports = (config) => {
         }),
       ],
       external: [
-        'nvlps-currency',
+        '@nvlps/currency',
       ],
     },
     output: {

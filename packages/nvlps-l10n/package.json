@@ -9,6 +9,45 @@
     "build": "cross-env BABEL_ENV=build node build",
     "test": "cross-env BABEL_ENV=test mocha --require @babel/register test/ --check-leaks --globals navigator,process"
   },
+  "sideEffects": false,
+  "size-limit": [
+    {
+      "name": "CommonJS",
+      "limit": "140 KB",
+      "path": "./nvlps-currency-l10n.bundle.js"
+    },
+    {
+      "name": "ES6 (Full)",
+      "limit": "140 KB",
+      "path": "./src/index.js"
+    },
+    {
+      "name": "ES6 (Tree Shaken)",
+      "limit": "15 KB",
+      "import": "{ EN }",
+      "path": "./src/index.js"
+    },
+    {
+      "name": "Web English Localizations (non-POSIX)",
+      "limit": "1 KB",
+      "path": "../../dist/nvlps-l10n.en.js"
+    },
+    {
+      "name": "Web German Localizations",
+      "limit": "2.5 KB",
+      "path": "../../dist/nvlps-l10n.de.js"
+    },
+    {
+      "name": "Web Spanish Localizations",
+      "limit": "2.5 KB",
+      "path": "../../dist/nvlps-l10n.es.js"
+    },
+    {
+      "name": "Web French Localizations",
+      "limit": "2.5 KB",
+      "path": "../../dist/nvlps-l10n.fr.js"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/nvlps/nvlps-currency.git"
@@ -38,6 +77,7 @@
     "@babel/register": "^7.8.6",
     "@rollup/plugin-commonjs": "^11.0.2",
     "@rollup/plugin-node-resolve": "^7.1.1",
+    "@size-limit/preset-big-lib": "^4.4.0",
     "chai": "^4.2.0",
     "cross-env": "^7.0.2",
     "decimal.js-light": "^2.5.0",
@@ -45,6 +85,7 @@
     "rollup": "^1.32.1",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-terser": "^5.3.0",
+    "size-limit": "^4.4.0",
     "terser": "^4.6.6"
   },
   "gitHead": "a822e8ac694c212964dd02bcce447fc4945d4128"
