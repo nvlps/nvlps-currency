@@ -1,6 +1,6 @@
 {
   "name": "nvlps-currency-l10n",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "Localization Data for nvlps'",
   "main": "nvlps-currency-l10n.bundle.js",
   "module": "src/index.js",
@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/nvlps/nvlps-currency#readme",
   "dependencies": {
-    "nvlps-currency-core": "^0.9.2"
+    "nvlps-currency-core": "^0.9.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
