@@ -1,4 +1,4 @@
-/* eslint object-curly-newline: 0 */
+/* eslint-disable */
 /**
  * nvlps-currency Currency Library for nvlps.io
  *

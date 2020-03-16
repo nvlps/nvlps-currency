@@ -33,28 +33,22 @@ export default class Money {
     // Load Amount, using localized parser if not a Numeric or Currency value
     if (amt instanceof Decimal) {
       this.amt = amt;
-    }
-    else if (typeof amt === 'number') {
+    } else if (typeof amt === 'number') {
       this.amt = new Decimal(amt);
-    }
-    else if (typeof amt === 'string') {
+    } else if (typeof amt === 'string') {
       this.amt = new Decimal(locale.parseNumber(amt));
-    }
-    else {
+    } else {
       throw new Error(`Failed to parse amount of type ${typeof amt}`);
     }
 
     // Load Currency (defaults to Unknown Currency)
     if (ccy === null) {
       this.ccy = Currency('XXX');
-    }
-    else if (ccy instanceof Locale) {
+    } else if (ccy instanceof Locale) {
       this.ccy = ccy.currency;
-    }
-    else if (! Currency.isCurrency(ccy)) {
+    } else if (!Currency.isCurrency(ccy)) {
       this.ccy = Currency(ccy);
-    }
-    else {
+    } else {
       this.ccy = ccy;
     }
 
@@ -77,7 +71,9 @@ export default class Money {
   cmp(otherAmt) {
     if (otherAmt instanceof Money) {
       if (otherAmt.currency !== this.currency) {
-        throw new Error(`Cannot compare money of currency ${otherAmt.currency.currencyCode} to currency ${this.currency.currencyCode}`);
+        throw new Error(
+          `Cannot compare money of currency ${otherAmt.currency.currencyCode} to currency ${this.currency.currencyCode}`,
+        );
       }
       return this.amt.cmp(otherAmt.amt);
     }
@@ -146,7 +142,9 @@ export default class Money {
   add(otherAmt) {
     if (otherAmt instanceof Money) {
       if (otherAmt.currency !== this.currency) {
-        throw new Error(`Cannot add money of currency ${otherAmt.currency.currencyCode} to currency ${this.currency.currencyCode}`);
+        throw new Error(
+          `Cannot add money of currency ${otherAmt.currency.currencyCode} to currency ${this.currency.currencyCode}`,
+        );
       }
       return new Money(this.amt.plus(otherAmt.amt), this.currency);
     }
@@ -167,7 +165,9 @@ export default class Money {
   subtract(otherAmt) {
     if (otherAmt instanceof Money) {
       if (otherAmt.currency !== this.currency) {
-        throw new Error(`Cannot subtract money of currency ${otherAmt.currency.currencyCode} from currency ${this.currency.currencyCode}`);
+        throw new Error(
+          `Cannot subtract money of currency ${otherAmt.currency.currencyCode} from currency ${this.currency.currencyCode}`,
+        );
       }
       return new Money(this.amt.minus(otherAmt.amt), this.currency);
     }
@@ -194,12 +194,9 @@ export default class Money {
       throw new Error('Cannot multiply two Money objects together');
     }
     return new Money(
-      this.amt.times(
-        new Decimal(factor),
-      ).todp(
-        this.ccy.precision,
-        roundingMode,
-      ),
+      this.amt
+        .times(new Decimal(factor))
+        .todp(this.ccy.precision, roundingMode),
     );
   }
 
@@ -209,11 +206,21 @@ export default class Money {
    * @return {Array} array of allocated values
    */
   distributeRatios(ratios) {
-    if (! ((typeof ratios === 'object') && Array.isArray(ratios) && ratios.length > 0)) {
-      throw new Error('Money objects must be distributed by an array of ratios');
+    if (
+      !(
+        typeof ratios === 'object' &&
+        Array.isArray(ratios) &&
+        ratios.length > 0
+      )
+    ) {
+      throw new Error(
+        'Money objects must be distributed by an array of ratios',
+      );
     }
 
-    const amtCents = this.amount.times(new Decimal(10).pow(this.currency.precision)).toint();
+    const amtCents = this.amount
+      .times(new Decimal(10).pow(this.currency.precision))
+      .toint();
     const results = [];
     let remainder = amtCents;
     let total = 0;
@@ -227,7 +234,10 @@ export default class Money {
     // Allocate Money
     for (let i = 0; i < ratios.length; i += 1) {
       // ROUND_FLOOR is important here to ensure remainder stays positive
-      const cents = new Decimal(amtCents).times(ratios[i]).div(total).todp(0, Decimal.ROUND_FLOOR);
+      const cents = new Decimal(amtCents)
+        .times(ratios[i])
+        .div(total)
+        .todp(0, Decimal.ROUND_FLOOR);
       results[i] = new Money(
         cents.times(new Decimal(10).pow(-this.currency.precision)),
         this.currency,
@@ -236,7 +246,7 @@ export default class Money {
     }
 
     // Allocate Remainder
-    const cent = (new Decimal(10)).pow(-this.currency.precision);
+    const cent = new Decimal(10).pow(-this.currency.precision);
     for (let i = 0; i < remainder; i += 1) {
       results[i] = results[i].add(cent);
     }
@@ -259,7 +269,9 @@ export default class Money {
     if (typeof n === 'object') {
       return this.distributeRatios(n);
     }
-    throw new Error('Money must be allocated into a number of groups or by an array of ratios');
+    throw new Error(
+      'Money must be allocated into a number of groups or by an array of ratios',
+    );
   }
 
   /** Currency Object */
@@ -278,13 +290,7 @@ export default class Money {
    * @param {String} formatType either 'standard' or 'accounting'
    */
   format(locale = POSIX, formatType = 'standard') {
-    return locale.formatCurrency(
-      this.amt,
-      this.ccy,
-      true,
-      formatType,
-      true,
-    );
+    return locale.formatCurrency(this.amt, this.ccy, true, formatType, true);
   }
 
   /**

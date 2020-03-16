@@ -77,7 +77,9 @@ function Currency(code) {
   }
   if (typeof code === 'string') {
     // Direct Lookup from Registry
-    if (! Object.prototype.hasOwnProperty.call(ccyRegistry, code.toUpperCase())) {
+    if (
+      !Object.prototype.hasOwnProperty.call(ccyRegistry, code.toUpperCase())
+    ) {
       throw new Error(`Currency '${code}' is not defined`);
     }
 
@@ -139,7 +141,12 @@ Currency.forCountry = function forCountry(countryCode) {
  *
  * If the currency already exists, an Error will be thrown.
  */
-Currency.register = function registerCurrency(currencyCode, numericCode, precision, country) {
+Currency.register = function registerCurrency(
+  currencyCode,
+  numericCode,
+  precision,
+  country,
+) {
   const ucCode = currencyCode.toUpperCase();
   if (Object.prototype.hasOwnProperty.call(ccyRegistry, ucCode)) {
     throw new Error(`Currency '${currencyCode}' has already been defined`);
@@ -147,7 +154,10 @@ Currency.register = function registerCurrency(currencyCode, numericCode, precisi
 
   // Add new Currency Data to the Registry
   ccyRegistry[ucCode] = new CurrencyData(
-    currencyCode, numericCode, precision, country,
+    currencyCode,
+    numericCode,
+    precision,
+    country,
   );
 
   // Return the Currency Data object
@@ -174,7 +184,7 @@ Currency.all = function allCurrencies() {
  * @static
  */
 Currency.isCurrency = function isCurrency(obj) {
-  return (obj instanceof CurrencyData);
+  return obj instanceof CurrencyData;
 };
 
 // Export the Currency function
@@ -183,10 +193,8 @@ export default Currency;
 // Load Currency Data
 (function loadCurrencyData() {
   Object.keys(ccyData).forEach((ccy) => {
-    const {
-      n, p, c,
-    } = ccyData[ccy];
+    const { n, p, c } = ccyData[ccy];
 
     Currency.register(ccy, n, p, c);
   });
-}());
+})();

@@ -23,20 +23,51 @@ import posixData from './posix';
 /* eslint-disable */
 // Language Aliases
 const LOCALE_ALIASES = {
-  'ar': 'ar_SY', 'bg': 'bg_BG', 'bs': 'bs_BA', 'ca': 'ca_ES', 'cs': 'cs_CZ',
-  'da': 'da_DK', 'de': 'de_DE', 'el': 'el_GR', 'en': 'en_US', 'es': 'es_ES',
-  'et': 'et_EE', 'fa': 'fa_IR', 'fi': 'fi_FI', 'fr': 'fr_FR', 'gl': 'gl_ES',
-  'he': 'he_IL', 'hu': 'hu_HU', 'id': 'id_ID', 'is': 'is_IS', 'it': 'it_IT',
-  'ja': 'ja_JP', 'km': 'km_KH', 'ko': 'ko_KR', 'lt': 'lt_LT', 'lv': 'lv_LV',
-  'mk': 'mk_MK', 'nl': 'nl_NL', 'nn': 'nn_NO', 'no': 'nb_NO', 'pl': 'pl_PL',
-  'pt': 'pt_PT', 'ro': 'ro_RO', 'ru': 'ru_RU', 'sk': 'sk_SK', 'sl': 'sl_SI',
-  'sv': 'sv_SE', 'th': 'th_TH', 'tr': 'tr_TR', 'uk': 'uk_UA'
+  ar: 'ar_SY',
+  bg: 'bg_BG',
+  bs: 'bs_BA',
+  ca: 'ca_ES',
+  cs: 'cs_CZ',
+  da: 'da_DK',
+  de: 'de_DE',
+  el: 'el_GR',
+  en: 'en_US',
+  es: 'es_ES',
+  et: 'et_EE',
+  fa: 'fa_IR',
+  fi: 'fi_FI',
+  fr: 'fr_FR',
+  gl: 'gl_ES',
+  he: 'he_IL',
+  hu: 'hu_HU',
+  id: 'id_ID',
+  is: 'is_IS',
+  it: 'it_IT',
+  ja: 'ja_JP',
+  km: 'km_KH',
+  ko: 'ko_KR',
+  lt: 'lt_LT',
+  lv: 'lv_LV',
+  mk: 'mk_MK',
+  nl: 'nl_NL',
+  nn: 'nn_NO',
+  no: 'nb_NO',
+  pl: 'pl_PL',
+  pt: 'pt_PT',
+  ro: 'ro_RO',
+  ru: 'ru_RU',
+  sk: 'sk_SK',
+  sl: 'sl_SI',
+  sv: 'sv_SE',
+  th: 'th_TH',
+  tr: 'tr_TR',
+  uk: 'uk_UA',
 };
 /* eslint-enable */
 
 // String Shims
-const isalpha = (s) => (s.match(/^[A-Za-z]+$/) !== null);
-const isdigit = (s) => (s.match(/^\d+$/) !== null);
+const isalpha = (s) => s.match(/^[A-Za-z]+$/) !== null;
+const isdigit = (s) => s.match(/^\d+$/) !== null;
 
 /**
  * Parse a Locale Identifier into its parts
@@ -52,24 +83,24 @@ export function parseLocale(identifier, sep = '_') {
 
   if (ident.indexOf('.') !== -1) {
     // this is probably the charset/encoding, which we don't care about
-    [ ident ] = ident.split('.', 1);
+    [ident] = ident.split('.', 1);
   }
 
   if (ident.indexOf('@') !== -1) {
     // this is a locale modifier such as @euro, which we don't care about either
-    [ ident ] = ident.split('@', 1);
+    [ident] = ident.split('@', 1);
   }
 
   const parts = ident.split(sep);
   const language = parts.shift().toLowerCase();
 
-  if (! isalpha(language)) {
+  if (!isalpha(language)) {
     throw new Error(`Invalid locale language "${language}"`);
   }
 
   if (parts.length > 0) {
     // Parse script to Title Case
-    if ((parts[0].length === 4) && isalpha(parts[0])) {
+    if (parts[0].length === 4 && isalpha(parts[0])) {
       script = parts.shift().toLowerCase();
       script = script[0].toUpperCase() + script.substr(1);
     }
@@ -77,18 +108,19 @@ export function parseLocale(identifier, sep = '_') {
 
   if (parts.length > 0) {
     // Parse territory
-    if ((parts[0].length === 2) && isalpha(parts[0])) {
+    if (parts[0].length === 2 && isalpha(parts[0])) {
       territory = parts.shift().toUpperCase();
-    }
-    else if ((parts[0].length === 3) && isdigit(parts[0])) {
+    } else if (parts[0].length === 3 && isdigit(parts[0])) {
       territory = parts.shift();
     }
   }
 
   if (parts.length > 0) {
     // Parse variant
-    if (((parts[0].length === 4) && isdigit(parts[0][0]))
-      || ((parts[0].length >= 5) && isalpha(parts[0][0]))) {
+    if (
+      (parts[0].length === 4 && isdigit(parts[0][0])) ||
+      (parts[0].length >= 5 && isalpha(parts[0][0]))
+    ) {
       variant = parts.shift();
     }
   }
@@ -108,18 +140,13 @@ export function parseLocale(identifier, sep = '_') {
  * @return {String} locale identifier
  */
 export function generateLocale(parts, sep = '_') {
-  const {
-    language,
-    territory,
-    script,
-    variant,
-  } = parts;
+  const { language, territory, script, variant } = parts;
 
   if (typeof language !== 'string') {
     throw new Error('"language" key must be provided');
   }
 
-  return [ language, script, territory, variant ].filter((x) => (x)).join(sep);
+  return [language, script, territory, variant].filter((x) => x).join(sep);
 }
 
 /**
@@ -169,7 +196,12 @@ export function generateLocale(parts, sep = '_') {
  * dictionary to this function, or you can bypass the behavior althogher by
  * setting the `aliases` parameter to `null`.
  */
-export function negotiateLocale(preferred, available, sep = '_', aliases = LOCALE_ALIASES) {
+export function negotiateLocale(
+  preferred,
+  available,
+  sep = '_',
+  aliases = LOCALE_ALIASES,
+) {
   const avail = available.map((s) => s.toLowerCase());
   for (let i = 0; i < preferred.length; i += 1) {
     const locale = preferred[i];
@@ -191,7 +223,7 @@ export function negotiateLocale(preferred, available, sep = '_', aliases = LOCAL
     }
 
     const parts = locale.split(sep);
-    if (parts && (avail.indexOf(parts[0].toLowerCase()) !== -1)) {
+    if (parts && avail.indexOf(parts[0].toLowerCase()) !== -1) {
       return parts[0];
     }
   }
@@ -202,9 +234,15 @@ export function negotiateLocale(preferred, available, sep = '_', aliases = LOCAL
 // Get the Global Object
 function getGlobal() {
   /* eslint-disable */
-  if (typeof self !== 'undefined') { return self; }
-  if (typeof window !== 'undefined') { return window; }
-  if (typeof global !== 'undefined') { return global; }
+  if (typeof self !== 'undefined') {
+    return self;
+  }
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+  if (typeof global !== 'undefined') {
+    return global;
+  }
   /* eslint-enable */
   /* istanbul ignore next this is exceptional and too difficult to mock */
   throw new Error('unable to locate global object');
@@ -251,36 +289,34 @@ export function defaultLocale(category = null, aliases = LOCALE_ALIASES) {
   }
 
   // Check if we are running in node.js
-  if (! has(globals, 'process') || ! has(process, 'env')) {
+  if (!has(globals, 'process') || !has(process, 'env')) {
     /* istanbul ignore next this is exceptional and difficult to mock */
     return null;
   }
 
   // Load from environment variables
-  const filtered = varnames.filter((x) => (x));
+  const filtered = varnames.filter((x) => x);
   for (let i = 0; i < filtered.length; i += 1) {
     const name = filtered[i];
 
     locale = process.env[name];
     if (locale) {
-      if ((name === 'LANGUAGE') && (locale.indexOf(':') !== -1)) {
+      if (name === 'LANGUAGE' && locale.indexOf(':') !== -1) {
         // the LANGUAGE variable may contain a colon-separated list of
         // language codes; we just pick the language on the list
-        [ locale ] = locale.split(':', 1);
+        [locale] = locale.split(':', 1);
       }
 
-      const [ tryDefaultLocale ] = locale.split('.', 1);
-      if ((tryDefaultLocale === 'C') || (tryDefaultLocale === 'POSIX')) {
+      const [tryDefaultLocale] = locale.split('.', 1);
+      if (tryDefaultLocale === 'C' || tryDefaultLocale === 'POSIX') {
         locale = 'en_US_POSIX';
-      }
-      else if (aliases && has(aliases, locale)) {
+      } else if (aliases && has(aliases, locale)) {
         locale = aliases[locale];
       }
 
       try {
         return generateLocale(parseLocale(locale));
-      }
-      catch (err) {
+      } catch (err) {
         /* Continue to next locale */
       }
     }
@@ -317,17 +353,19 @@ export class Locale {
     let lang;
 
     // Lookup Locale and Parent Language from Registry
-    if (! hasOwnProperty(localeRegistry, normTag)) {
+    if (!hasOwnProperty(localeRegistry, normTag)) {
       throw new Error(`Locale '${normTag}' is not defined`);
     }
 
     const loc = localeRegistry[normTag];
-    if ((loc.lang !== null) && (loc.lang !== normTag)) {
-      if (! hasOwnProperty(localeRegistry, loc.lang)) {
+    if (loc.lang !== null && loc.lang !== normTag) {
+      if (!hasOwnProperty(localeRegistry, loc.lang)) {
         /* istanbul ignore next
            this should never occur unless someone messes with localeRegistry
         */
-        throw new Error(`Internal Error: Language '${loc.lang}' is not defined`);
+        throw new Error(
+          `Internal Error: Language '${loc.lang}' is not defined`,
+        );
       }
 
       lang = localeRegistry[loc.lang];
@@ -371,7 +409,7 @@ export class Locale {
       return this.m_data[key];
     }
 
-    if ((this.m_lang !== null) && hasOwnProperty(this.m_lang, key)) {
+    if (this.m_lang !== null && hasOwnProperty(this.m_lang, key)) {
       return this.m_lang[key];
     }
 
@@ -387,7 +425,7 @@ export class Locale {
       }
     }
 
-    if ((this.m_lang !== null) && (hasOwnProperty(this.m_lang, dataKey))) {
+    if (this.m_lang !== null && hasOwnProperty(this.m_lang, dataKey)) {
       if (hasOwnProperty(this.m_lang[dataKey], dictKey)) {
         return this.m_lang[dataKey][dictKey];
       }
@@ -456,7 +494,7 @@ export class Locale {
     } = parseLocale(this.tag);
 
     if (territory === null) {
-      if (! hasOwnProperty(LOCALE_ALIASES, language)) {
+      if (!hasOwnProperty(LOCALE_ALIASES, language)) {
         return Currency('XXX');
       }
       ({ territory } = parseLocale(LOCALE_ALIASES[language]));
@@ -486,7 +524,7 @@ export class Locale {
     let ccyObj = ccy;
 
     // Ensure we have a normalized Currency Code
-    if (! (ccy instanceof Currency)) {
+    if (!(ccy instanceof Currency)) {
       ccyObj = Currency(ccy);
     }
     const ccyCode = ccyObj.currencyCode;
@@ -521,7 +559,7 @@ export class Locale {
     let ccyObj = ccy;
 
     // Ensure we have a normalized Currency Code
-    if (! (ccy instanceof Currency)) {
+    if (!(ccy instanceof Currency)) {
       ccyObj = Currency(ccy);
     }
     const ccyCode = ccyObj.currencyCode;
@@ -547,10 +585,14 @@ export class Locale {
    *                           numbers to the format pattern (default: true)
    * @return {String} formatted string
    */
-  formatNumberWithPattern(number, pattern, currency = null,
-    currencyDigits = true, quantize = true)
-  {
-    return (new NumberPattern(pattern)).apply(
+  formatNumberWithPattern(
+    number,
+    pattern,
+    currency = null,
+    currencyDigits = true,
+    quantize = true,
+  ) {
+    return new NumberPattern(pattern).apply(
       number,
       this,
       currency,
@@ -582,13 +624,20 @@ export class Locale {
    *                           quantized to produce a formatted output strictly
    *                           matching the CLDR definition for the locale
    */
-  formatCurrency(number, currency, currencyDigits = true,
-    formatType = 'standard', quantize = true)
-  {
-    if ((typeof formatType !== 'string')
-      || ((formatType !== 'standard')
-      && (formatType !== 'accounting'))) {
-      throw new Error(`Unknown currency formatting type ${formatType.toString()}`);
+  formatCurrency(
+    number,
+    currency,
+    currencyDigits = true,
+    formatType = 'standard',
+    quantize = true,
+  ) {
+    if (
+      typeof formatType !== 'string' ||
+      (formatType !== 'standard' && formatType !== 'accounting')
+    ) {
+      throw new Error(
+        `Unknown currency formatting type ${formatType.toString()}`,
+      );
     }
 
     if (formatType === 'accounting') {
@@ -628,38 +677,57 @@ export class Locale {
     const d = this.decimal;
     const g = this.group;
 
-    if ((! strict)
-      && ((g === '\u00a0') // if the grouping symbol is U+00A0 NO-BREAK SPACE,
-       || (g === '\u202f')) // or U+202F NARROW NO-BREAK SPACE
-      && (string.indexOf(g) === -1) // and the string to be parsed does not contain it
-      && (string.indexOf(' ') !== -1)) { // but instead contains a space
+    if (
+      !strict &&
+      (g === '\u00a0' || // if the grouping symbol is U+00A0 NO-BREAK SPACE,
+        g === '\u202f') && // or U+202F NARROW NO-BREAK SPACE
+      string.indexOf(g) === -1 && // and the string to be parsed does not contain it
+      string.indexOf(' ') !== -1
+    ) {
+      // but instead contains a space
       // then it's reasonable to assume it is taking the place of the
       // grouping symbol
       s = s.split(' ').join(g);
     }
 
     // Try to parse as a POSIX number
-    const parsed = new Decimal(s.split(g).join('').split(d).join('.'));
+    const parsed = new Decimal(
+      s
+        .split(g)
+        .join('')
+        .split(d)
+        .join('.'),
+    );
 
     // Check that the number can be re-formatted to original
-    if (strict && (s.indexOf(g) !== -1)) {
+    if (strict && s.indexOf(g) !== -1) {
       const proper = this.formatNumber(parsed, false);
-      if ((string !== proper) && (string.replace(/0*$/, '') !== proper + d)) {
+      if (string !== proper && string.replace(/0*$/, '') !== proper + d) {
         try {
-          parsedAlt = new Decimal(s.split(d).join('').split(g).join('.'));
-        }
-        catch (e) {
+          parsedAlt = new Decimal(
+            s
+              .split(d)
+              .join('')
+              .split(g)
+              .join('.'),
+          );
+        } catch (e) {
           if (e instanceof Error && /DecimalError/.test(e.message)) {
-            throw new Error(`${string} is not a properly formatted decimal number. Did you mean ${proper}?`);
+            throw new Error(
+              `${string} is not a properly formatted decimal number. Did you mean ${proper}?`,
+            );
           }
         }
 
         const properAlt = this.formatNumber(parsedAlt, false);
         if (properAlt === proper) {
-          throw new Error(`${string} is not a properly formatted decimal number. Did you mean ${proper}?`);
-        }
-        else {
-          throw new Error(`${string} is not a properly formatted decimal number. Did you mean ${proper} or ${properAlt}?`);
+          throw new Error(
+            `${string} is not a properly formatted decimal number. Did you mean ${proper}?`,
+          );
+        } else {
+          throw new Error(
+            `${string} is not a properly formatted decimal number. Did you mean ${proper} or ${properAlt}?`,
+          );
         }
       }
     }
@@ -684,26 +752,34 @@ export function registerLocale(tag, data) {
     throw new Error(`Locale '${normTag}' has already been defined`);
   }
 
-  const {
-    language: lang, territory, script, variant,
-  } = tagItems;
+  const { language: lang, territory, script, variant } = tagItems;
 
-  if ((territory === null) && (script === null) && (variant === null)) {
+  if (territory === null && script === null && variant === null) {
     // Ensure all properties are defined if this is a Language
     const needed = [
-      'd', 'g', 'p', 'm', 'pc', 'pm', 'e', 'x',
-      'inf', 'nan',
-      'np', 'cp', 'ap',
-      'cs', 'cn',
+      'd',
+      'g',
+      'p',
+      'm',
+      'pc',
+      'pm',
+      'e',
+      'x',
+      'inf',
+      'nan',
+      'np',
+      'cp',
+      'ap',
+      'cs',
+      'cn',
     ];
 
     needed.forEach((i) => {
-      if (! Object.prototype.hasOwnProperty.call(data, i)) {
+      if (!Object.prototype.hasOwnProperty.call(data, i)) {
         throw new Error(`Locale Data for ${normTag} is missing key ${i}`);
       }
     });
-  }
-  else if (! Object.prototype.hasOwnProperty.call(localeRegistry, lang)) {
+  } else if (!Object.prototype.hasOwnProperty.call(localeRegistry, lang)) {
     // Ensure the Parent Language exists if this is a Territory
     throw new Error(`Locale '${lang}' was not registered before '${normTag}'`);
   }

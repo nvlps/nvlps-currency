@@ -275,15 +275,16 @@ function parsePattern(pattern) {
 function formatSignificant(value, min, max) {
   const exp = value.exponent();
   const scale = max - 1 - exp;
-  const digits = String(value.times(new Decimal(10).pow(scale)).toDecimalPlaces(0));
+  const digits = String(
+    value.times(new Decimal(10).pow(scale)).toDecimalPlaces(0),
+  );
   let result;
 
   if (scale <= 0) {
     // Initial value had too much precision; pad with zeros to get to
     // original number of integer digits.
     result = digits + '0'.repeat(-scale);
-  }
-  else {
+  } else {
     // Initial value did not have enough digits, so pad the fractional part
     // with zeros to achieve the correct number of significant digits.
     const intpart = digits.substr(0, digits.length - scale);
@@ -295,7 +296,9 @@ function formatSignificant(value, min, max) {
       '0'.repeat(-Math.min(exp + 1, 0)),
       digits.substr(i, j),
       digits.substr(j).replace(/0*$/g, ''),
-    ].join('').replace(/\.*$/g, '');
+    ]
+      .join('')
+      .replace(/\.*$/g, '');
   }
 
   return result;
@@ -323,9 +326,7 @@ export default class NumberPattern {
    * with the scale at all and keep it to 0.
    */
   computeScale() {
-    const {
-      pPrefix, nPrefix, pSuffix, nSuffix,
-    } = this.parsed;
+    const { pPrefix, nPrefix, pSuffix, nSuffix } = this.parsed;
     const fixes = `${pPrefix}${pSuffix}${nPrefix}${nSuffix}`;
     if (fixes.indexOf('%') !== -1) {
       return 2;
@@ -360,8 +361,7 @@ export default class NumberPattern {
     let expSign = '';
     if (exp < 0) {
       expSign = locale.minusSign;
-    }
-    else if (this.parsed.ePlus) {
+    } else if (this.parsed.ePlus) {
       expSign = locale.plusSign;
     }
 
@@ -424,10 +424,10 @@ export default class NumberPattern {
     if (svalue.length < min) {
       svalue += '0'.repeat(min - svalue.length);
     }
-    if ((max === 0) || ((min === 0) && (parseInt(svalue, 10) === 0))) {
+    if (max === 0 || (min === 0 && parseInt(svalue, 10) === 0)) {
       return '';
     }
-    while ((svalue.length > min) && (svalue.charAt(svalue.length - 1) === '0')) {
+    while (svalue.length > min && svalue.charAt(svalue.length - 1) === '0') {
       svalue = svalue.substring(0, svalue.length - 1);
     }
     return locale.decimal + svalue;
@@ -446,7 +446,12 @@ export default class NumberPattern {
    */
   quantizeValue(value, locale, fracPrec) {
     const [int, frac] = value.toFixed(fracPrec.max).split('.', 2);
-    const intPart = this.formatInt(int, this.parsed.iPrec.min, this.parsed.iPrec.max, locale);
+    const intPart = this.formatInt(
+      int,
+      this.parsed.iPrec.min,
+      this.parsed.iPrec.max,
+      locale,
+    );
     const fracPart = this.formatFrac(frac, locale, fracPrec);
     return intPart + fracPart;
   }
@@ -465,9 +470,13 @@ export default class NumberPattern {
    *                           matching the CLDR definition for the locale
    * @return {String} formatted decimal string
    */
-  apply(value, locale, currency = null,
-    currencyDigits = true, quantize = true)
-  {
+  apply(
+    value,
+    locale,
+    currency = null,
+    currencyDigits = true,
+    quantize = true,
+  ) {
     let dval;
     let exp;
     let expSign;
@@ -478,11 +487,9 @@ export default class NumberPattern {
     // Generate a Decimal value to work on
     if (value instanceof Decimal) {
       dval = value;
-    }
-    else if (typeof value === 'number') {
+    } else if (typeof value === 'number') {
       dval = new Decimal(value);
-    }
-    else {
+    } else {
       dval = new Decimal(String(value));
     }
 
@@ -495,7 +502,10 @@ export default class NumberPattern {
 
     // Prepare Scientific Notation Metadata
     if (this.parsed.ePrec != null) {
-      ({ value: dval, exp, expSign } = this.scientificNotationElements(dval, locale));
+      ({ value: dval, exp, expSign } = this.scientificNotationElements(
+        dval,
+        locale,
+      ));
     }
 
     // Force fractional precision based on currency defaults
@@ -509,9 +519,10 @@ export default class NumberPattern {
     // notation pattern has a missing mandatory fractional part (as in the
     // default '#E0' pattern). This special case has been extensively
     // discussed at https://github.com/python-babel/babel/pull/494#issuecomment-307649969 .
-    if ((! quantize)
-      || ((this.parsed.ePrec !== null)
-      && (fracPrec.min === 0 && fracPrec.max === 0))) {
+    if (
+      !quantize ||
+      (this.parsed.ePrec !== null && fracPrec.min === 0 && fracPrec.max === 0)
+    ) {
       fracPrec = {
         min: fracPrec.min,
         max: Math.max(fracPrec.max, dval.dp()),
@@ -540,7 +551,7 @@ export default class NumberPattern {
         this.parsed.iPrec.min,
         this.parsed.iPrec.max,
       );
-      const [ int, frac ] = text.split('.', 2);
+      const [int, frac] = text.split('.', 2);
       number = this.formatInt(int, 0, 1000, locale);
       if (frac) {
         number += locale.decimal + frac;
@@ -564,8 +575,7 @@ export default class NumberPattern {
       let ccyCode;
       if (Currency.isCurrency(currency)) {
         ccyCode = currency.currencyCode;
-      }
-      else {
+      } else {
         const c = Currency(currency);
         ccyCode = c.currencyCode;
       }
