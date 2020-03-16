@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "Javascript Currency Library for nvlps",
   "private": true,
-  "main": "src/nvlps-currency.js",
+  "main": "lib/nvlps-currency.cjs.js",
+  "module": "lib/nvlps-currency.es.js",
   "scripts": {
     "build": "babel src --out-dir ./dist --source-maps",
     "build-ccy": "pipenv run python scripts/gen_ccy_data.py ./src/lib/ccy-data.js && prettier --write ./src/lib/ccy-data.js",
@@ -38,6 +39,8 @@
     "@babel/node": "^7.8.7",
     "@babel/preset-env": "^7.8.7",
     "@babel/register": "^7.8.6",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
     "babel-plugin-inline-json-import": "^0.3.2",
@@ -52,9 +55,10 @@
     "mocha": "^7.1.0",
     "nyc": "^15.0.0",
     "prettier": "~1.19.1",
-    "typescript": "^3.8.3",
-    "webpack": "^4.42.0",
-    "webpack-cli": "^3.3.11"
+    "rollup": "^1.32.1",
+    "rollup-plugin-resolve": "0.0.1-predev.1",
+    "rollup-plugin-terser": "^5.3.0",
+    "typescript": "^3.8.3"
   },
   "dependencies": {
     "decimal.js-light": "^2.5.0"
