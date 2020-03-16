@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import Decimal from 'decimal.js-light';
-import Currency from '../src/currency';
-import { Locale } from '../src/locale';
-import NumberPattern from '../src/numpattern';
+import Currency from '../src/lib/currency';
+import { Locale } from '../src/lib/locale';
+import NumberPattern from '../src/lib/numpattern';
 
 describe('nvlps-currency: NumberPattern', function() {
   describe('NumberPattern Parser', function() {

@@ -96,7 +96,11 @@
       </div>
     </div>
     <script type="text/javascript" src="../dist/nvlps-currency.bundle.js"></script>
-
+    <script type="text/javascript" src="../src/locales/web/de.js"></script>
+    <script type="text/javascript" src="../src/locales/web/en.js"></script>
+    <script type="text/javascript" src="../src/locales/web/fr.js"></script>
+    <!-- <script type="text/javascript" src="../src/locales/de.js"></script> -->
+    <!-- <script type="text/javascript" src="../src/locales/en.js"></script> -->
     <script>
 
       // getQueryString Utility Function
@@ -108,35 +112,47 @@
       };
 
       // Application State
-      var defaultLocale = nvlps.currency.POSIX;
-      var defaultCcy = nvlps.currency.Currency('USD');
+      var defaultLocale = nvlps.POSIX;
+      var defaultCcy = nvlps.Currency('USD');
       var defaultAmt = 0;
 
       if (getQueryString('locale')) {
-        defaultLocale = new nvlps.currency.Locale(getQueryString('locale'));
+        defaultLocale = new nvlps.Locale(getQueryString('locale'));
       }
       if (getQueryString('currency')) {
-        defaultCcy = nvlps.currency.Currency(getQueryString('currency'));
+        defaultCcy = nvlps.Currency(getQueryString('currency'));
       }
 
       var state = {
         locale: defaultLocale,                          // Selected Locale
         currency: defaultCcy,                           // Selected Currency
         amount: 0,                                      // Input Amount
-        money: new nvlps.currency.Money(0, defaultCcy), // Input Money
+        money: new nvlps.Money(0, defaultCcy), // Input Money
       };
+
+      // Helper to encode special characters
+      function showEscaped(s) {
+        if (s === encodeURI(s)) {
+          return s;
+        }
+
+        const encoded = s.replace(/[^\0-~]/g, function(c) {
+          return '\\u' + ('000' + c.charCodeAt().toString(16)).slice(-4);
+        });
+        return `${s} [${encoded}]`
+      }
 
       // Update Data for selected Currency
       function updateCurrencyData() {
         const ccySym = state.locale.currencySymbol(state.currency);
         document.getElementById('dCcyCode').innerHTML = `<code>${state.currency.currencyCode}</code>`;
-        document.getElementById('dCcySym').innerHTML = `<code>${ccySym}</code>`;
+        document.getElementById('dCcySym').innerHTML = `<code>${showEscaped(ccySym)}</code>`;
       }
 
       // Update Data for selected Locale
       function updateLocaleData() {
-        document.getElementById('dDecimal').innerHTML = `<code>${state.locale.decimal}</code>`;
-        document.getElementById('dGrouping').innerHTML = `<code>${state.locale.group}</code>`;
+        document.getElementById('dDecimal').innerHTML = `<code>${showEscaped(state.locale.decimal)}</code>`;
+        document.getElementById('dGrouping').innerHTML = `<code>${showEscaped(state.locale.group)}</code>`;
         document.getElementById('dNumPattern').innerHTML = `<code>${state.locale.m_np.pattern}</code>`;
         document.getElementById('dCcyPattern').innerHTML = `<code>${state.locale.m_cp.pattern}</code>`;
         document.getElementById('dAcctPattern').innerHTML = `<code>${state.locale.m_ap.pattern}</code>`;
@@ -145,7 +161,7 @@
         var c = null;
         if (s !== null) {
           for (let i = 0; i < s.options.length; i += 1) {
-            c = nvlps.currency.Currency(s.options[i].value);
+            c = nvlps.Currency(s.options[i].value);
             s.options[i].text = `${c.currencyCode} – ${state.locale.currencyName(c)}`;
           }
         }
@@ -160,7 +176,7 @@
           const parsed = state.locale.parseNumber(value, true);
 
           state.amount = parsed;
-          state.money = new nvlps.currency.Money(parsed, state.currency);
+          state.money = new nvlps.Money(parsed, state.currency);
 
           document.getElementById('oParsed').innerHTML = `<code>${state.amount.toString()}</code>`;
           document.getElementById('oNumber').innerHTML = `<code>${state.locale.formatNumber(state.amount)}</code>`;
@@ -183,7 +199,7 @@
 
       // Set the Locale
       function setLocale(l) {
-        const L = new nvlps.currency.Locale(l);
+        const L = new nvlps.Locale(l);
         state.locale = L;
 
         updateLocaleData();
@@ -193,7 +209,7 @@
 
       // Set the Currency
       function setCurrency(c) {
-        const C = nvlps.currency.Currency(c);
+        const C = nvlps.Currency(c);
         state.currency = C;
 
         updateCurrencyData();
@@ -216,7 +232,7 @@
       // Initialize Select Items
       function loadLocales(e) {
         var i = s = 0;
-        nvlps.currency.availableLocales().map((l) => {
+        nvlps.availableLocales().sort().map((l) => {
           var opt = document.createElement('option');
           opt.text = l;
           opt.value = l;
@@ -231,7 +247,7 @@
 
       function loadCurrencies(e) {
         var i = s = 0;
-        nvlps.currency.Currency.all().map((c) => {
+        nvlps.Currency.all().map((c) => {
           var opt = document.createElement('option');
           opt.value = c.currencyCode;
           e.add(opt);

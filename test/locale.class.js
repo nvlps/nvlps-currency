@@ -1,18 +1,23 @@
 import { expect } from 'chai';
-import Currency from '../src/currency';
+import Currency from '../src/lib/currency';
 import {
   Locale,
   POSIX,
   parseLocale,
   registerLocale,
+  registerLocales,
   availableLocales,
   availableLanguages,
-} from '../src/locale';
+} from '../src/lib/locale';
 
-import '../src/locales/de';
-import '../src/locales/en';
-import '../src/locales/fr';
-import '../src/locales/hi';
+import { EN, DE, FR, HI } from '../src/locales/es6';
+
+before(function() {
+  registerLocales(EN);
+  registerLocales(DE);
+  registerLocales(FR);
+  registerLocales(HI);
+});
 
 describe('nvlps-currency: Locale', function() {
   describe('Accessors', function() {

@@ -4,7 +4,7 @@ import {
   generateLocale,
   negotiateLocale,
   defaultLocale,
-} from '../src/locale';
+} from '../src/lib/locale';
 
 describe('nvlps-currency: locale utilities', function() {
   describe('parseLocale', function() {

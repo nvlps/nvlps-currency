@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import Decimal from 'decimal.js-light';
-import { Locale, POSIX } from '../src/locale';
-import Money from '../src/money';
-import Currency from '../src/currency';
+import { Locale, POSIX } from '../src/lib/locale';
+import Money from '../src/lib/money';
+import Currency from '../src/lib/currency';
 
 describe('nvlps-currency: Money', function() {
   describe('Constructors', function() {

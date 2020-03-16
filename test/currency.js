@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import Currency from '../src/currency';
+import Currency from '../src/lib/currency';
 
 describe('nvlps-currency: Currency', function() {
   describe('Accessors', function() {
