@@ -1,50 +1,29 @@
 {
-  "name": "nvlps-currency",
-  "version": "0.8.0",
-  "description": "Javascript Currency Library for nvlps",
-  "main": "lib/nvlps-currency.min.js",
-  "module": "src/nvlps-currency.js",
+  "name": "nvlps",
+  "private": "true",
+  "license": "BSD-3-Clause",
   "scripts": {
-    "build": "cross-env BABEL_ENV=build node build",
-    "build-ccy": "pipenv run python scripts/gen_ccy_data.py ./src/lib/ccy-data.js && prettier --write ./src/lib/ccy-data.js",
-    "build-l10n": "pipenv run python scripts/gen_ccy_l10n.py --posix ./src/lib/posix.js  --index ./src/nvlps-locales.js --lib ./src/lib ./src/locales && prettier --write ./src/lib/posix.js && prettier --write ./src/nvlps-locales.js && prettier --write ./src/locales/*.js",
-    "dist-l10n": "for f in `ls src/locales/web/*.js` ; do npx terser $f -o dist/nvlps-l10n.$(basename $f) -c -m ; done",
-    "lint": "eslint ./src && prettier --check ./src/**/*.js",
-    "pylint": "flake8",
-    "test": "cross-env BABEL_ENV=test npm run mocha",
-    "mocha": "mocha --require @babel/register test/ --check-leaks --globals navigator,process",
-    "size": "npm run build && size-limit",
-    "coverage": "nyc npm test && nyc report"
+    "bootstrap": "lerna bootstrap",
+    "build": "make build",
+    "lint": "make lint",
+    "test": "make test",
+    "size": "size-limit"
   },
   "size-limit": [
     {
-      "limit": "135 KB",
-      "path": "lib/nvlps-currency.min.js"
+      "limit": "15 KB",
+      "path": "packages/nvlps-currency/nvlps-currency.bundle.js"
+    },
+    {
+      "limit": "150 KB",
+      "path": "packages/nvlps-l10n/nvlps-l10n.bundle.js"
     },
     {
       "limit": "15 KB",
       "path": "dist/nvlps-currency.min.js"
     }
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nvlps/nvlps-currency.git"
-  },
-  "bugs": {
-    "url": "https://github.com/nvlps/nvlps-currency/issues"
-  },
-  "homepage": "https://github.com/nvlps/nvlps-currency#readme",
-  "keywords": [
-    "currency",
-    "money",
-    "parse",
-    "format",
-    "validate",
-    "i18n",
-    "l10n"
-  ],
   "author": "Jonathan Krauss <jkrauss@asymworks.com>",
-  "license": "BSD-3-Clause",
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.8.7",
@@ -68,6 +47,7 @@
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-prettier": "^3.1.2",
     "glob": "^7.1.6",
+    "lerna": "^3.20.2",
     "mocha": "^7.1.0",
     "nyc": "^15.0.0",
     "prettier": "~1.19.1",
@@ -76,9 +56,8 @@
     "rollup-plugin-resolve": "0.0.1-predev.1",
     "rollup-plugin-terser": "^5.3.0",
     "size-limit": "^4.4.0",
-    "typescript": "^3.8.3"
-  },
-  "dependencies": {
-    "decimal.js-light": "^2.5.0"
+    "typescript": "^3.8.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   }
 }
