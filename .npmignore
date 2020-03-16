@@ -1,0 +1,33 @@
+# OSX
+.DS_Store
+
+# npm
+node_modules
+yarn.lock
+package-lock.json
+
+# dev
+src
+test
+demo
+dist
+types
+build
+.babelrc
+.editorconfig
+.esdoc.json
+.eslintrc.json
+.pretterrc.json
+.nyc_output
+
+# python scripts
+scripts
+Pipfile
+Pipfile.lock
+tox.ini
+
+#doc
+CONTRIBUTING.md
+docs
+
+#other
