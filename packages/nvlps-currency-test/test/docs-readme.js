@@ -7,7 +7,7 @@ import {
 
 // Load l10n information dynamically (only en_US and en_US_POSIX are loaded
 // by default). In the browser, include with a <script> tag instead.
-import { EN, DE } from '@nvlps-currency/l10n';
+import { EN, DE } from 'nvlps-currency-l10n';
 
 describe('nvlps-currency: README.md', function() {
   it('should contain a demo script which executes correctly', function() {

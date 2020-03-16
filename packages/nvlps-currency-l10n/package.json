@@ -1,5 +1,5 @@
 {
-  "name": "@nvlps-currency/l10n",
+  "name": "nvlps-currency-l10n",
   "version": "0.10.0",
   "description": "Localization Data for nvlps'",
   "main": "nvlps-currency-l10n.bundle.js",
@@ -46,5 +46,5 @@
     "rollup-plugin-terser": "^5.3.0",
     "terser": "^4.6.6"
   },
-  "gitHead": "2ce9d65ee2fe12020d6ec973fe7ae2adb95849ec"
+  "gitHead": "b97b9a1b22269671611bd75921768dbeb5210126"
 }
