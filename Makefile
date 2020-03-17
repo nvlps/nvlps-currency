@@ -16,7 +16,7 @@ eslint:
 	npx prettier --check ./packages/*/src/**/*.js
 
 pylint:
-	flake8 ./scripts
+	pipenv run flake8 ./scripts
 
 lint: eslint pylint
 
