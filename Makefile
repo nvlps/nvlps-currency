@@ -56,4 +56,8 @@ dist: build-core build-l10n
 
 clean: clean-data clean-dist
 
+size:
+	cd packages/nvlps-currency && npm run size
+	cd packages/nvlps-l10n && npm run size
+
 .PHONY: dist build test

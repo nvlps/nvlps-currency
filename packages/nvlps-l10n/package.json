@@ -7,7 +7,8 @@
   "module": "src/index.js",
   "scripts": {
     "build": "cross-env BABEL_ENV=build node build",
-    "test": "cross-env BABEL_ENV=test mocha --require @babel/register test/ --check-leaks --globals navigator,process"
+    "test": "cross-env BABEL_ENV=test mocha --require @babel/register test/ --check-leaks --globals navigator,process",
+    "size": "size-limit"
   },
   "sideEffects": false,
   "size-limit": [
