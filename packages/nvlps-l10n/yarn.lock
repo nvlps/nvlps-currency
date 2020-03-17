@@ -765,10 +765,10 @@
     "@nodelib/fs.scandir" "2.1.3"
     fastq "^1.6.0"
 
-"@nvlps/currency@^0.10.2":
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/@nvlps/currency/-/currency-0.10.2.tgz#83ea587364e0b823590d6ecc6c8d5d5249f036ac"
-  integrity sha512-x0KLm+rH3R0hzhQjveSf/xbOcK9CfBIyI4fZo8YZ4Mb2gM/hjZrYnWW/aKWXHIdoQ4EsXUIWvY88kE3+iffmaw==
+"@nvlps/currency@^0.10.3":
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/@nvlps/currency/-/currency-0.10.3.tgz#444319c6559a908f8238af2835a0faa2361fcc24"
+  integrity sha512-ao7urF3BFxRfuwmMY1g9FNlJZAAyuRMdYLIOb0aqiCs9EUBAho+ub+TXooE7eKHxIcgdDiwfNjsQ4oD8uZV3Dw==
   dependencies:
     decimal.js-light "^2.5.0"
 
