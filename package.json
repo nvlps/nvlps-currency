@@ -7,7 +7,8 @@
     "build": "make build",
     "lint": "make lint",
     "test": "make test",
-    "size": "size-limit"
+    "size": "size-limit",
+    "coverage": "nyc npm test"
   },
   "size-limit": [
     {
@@ -38,6 +39,7 @@
     "babel-plugin-inline-json-import": "^0.3.2",
     "benchmark": "^2.1.4",
     "chai": "^4.2.0",
+    "codecov": "^3.6.5",
     "cross-env": "^7.0.2",
     "esdoc": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",

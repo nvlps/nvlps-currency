@@ -5,6 +5,11 @@ node_js:
   - '12'
   - '10'
   - '8'
+install:
+  - yarn --frozen-lockfile
+  - cd packages/nvlps-currency && yarn --frozen-lockfile
+  - cd packages/nvlps-l10n && yarn --frozen-lockfile
+  - cd packages/nvlps-test && yarn --frozen-lockfile
 script:
   - npm run lint
   - npm run bootstrap
